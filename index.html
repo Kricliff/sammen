@@ -400,14 +400,19 @@ const MOODS = [
 ];
 
 const EXERCISES = [
-  { id: "breath", icon: "\u{1F300}", title: "Pusteøvelse", desc: "Rolig pust med visuell rytme", min: 5, type: "breath" },
+  { id: "breath", icon: "\u{1F300}", title: "Pusteøvelse", desc: "Rolig pust med visuell rytme", min: 5, type: "breath",
+    audio: "assets/audio/pust.m4a" },
   { id: "ground", icon: "\u{1F9ED}", title: "5-4-3-2-1 jording", desc: "Hent deg inn med sansene", min: 4, type: "guided",
+    audio: "assets/audio/jording.m4a",
     steps: ["Finn 5 ting du kan se rundt deg.", "Legg merke til 4 ting du kan ta på.", "Lytt etter 3 lyder.", "Finn 2 ting du kan lukte.", "Kjenn 1 ting du kan smake — eller ta en slurk vann.", "Pust rolig ut. Du er her, nå."] },
   { id: "reframe", icon: "\u{1F501}", title: "Snu tanken", desc: "Kort kognitiv øvelse", min: 6, type: "guided",
+    audio: "assets/audio/snu-tanken.m4a",
     steps: ["Hva er tanken som plager deg akkurat nå? Si den til deg selv, kort.", "Hvor sann er den, fra 0 til 100 %?", "Hva ville du sagt til en god kamerat som tenkte det samme?", "Formuler en mer balansert versjon av tanken.", "Legg merke til om kroppen slapper litt mer av."] },
   { id: "move", icon: "⚡", title: "Fysisk aktivering", desc: "Få ut spenning på 3 minutter", min: 3, type: "guided",
+    audio: "assets/audio/aktivering.m4a",
     steps: ["Reis deg opp. Rist løs i armer og bein i 20 sekunder.", "10 rolige knebøy — kjenn at beina jobber.", "Strekk armene over hodet, hold i 10 sekunder.", "Rull skuldrene bakover 10 ganger.", "Stå stille. Tre dype pust. Ferdig."] },
   { id: "visual", icon: "\u{1F3D4}️", title: "Trygt sted", desc: "Visualisering for ro", min: 7, type: "guided",
+    audio: "assets/audio/trygt-sted.m4a",
     steps: ["Lukk øynene eller senk blikket.", "Se for deg et sted du kjenner deg helt rolig. Ekte eller forestilt.", "Hva ser du der? Legg til detaljer.", "Hva hører du? Hva kjenner du mot huden?", "Bli værende der i noen rolige åndedrag.", "Ta med deg roen tilbake hit."] },
 ];
 
@@ -748,30 +753,55 @@ function completeExercise(id) {
 function openExercise(id) {
   const e = EXERCISES.find(x => x.id === id);
   if (e.type === "breath") return openBreath();
-  // Guided step-based exercise
-  let step = 0;
-  const show = () => {
+
+  if (e.audio) {
+    // Audio player mode — text steps shown as collapsible guide below
     openModal(`
       <h3>${e.icon} ${e.title}</h3>
-      <div class="sub">Steg ${step + 1} av ${e.steps.length}</div>
-      <div class="articleBody"><p style="font-size:1.05rem">${e.steps[step]}</p></div>
-      <div style="display:flex;gap:8px;margin-top:16px">
-        ${step > 0 ? `<button class="btn secondary" style="flex:1" id="exPrev">Tilbake</button>` : ""}
-        <button class="btn" style="flex:2" id="exNext">${step < e.steps.length - 1 ? "Neste" : "Fullf&oslash;r"}</button>
-      </div>`);
-    const prev = document.getElementById("exPrev");
-    if (prev) prev.onclick = () => { step--; show(); };
-    document.getElementById("exNext").onclick = () => {
-      if (step < e.steps.length - 1) { step++; show(); }
-      else { closeModal(); completeExercise(e.id); }
+      <div class="sub">${e.min} minutter &mdash; trykk play og lukk øynene</div>
+      <div id="audioWrap" style="background:var(--teal-light);border-radius:14px;padding:18px 16px;margin:14px 0;text-align:center">
+        <audio id="exAudio" src="${e.audio}" style="width:100%;accent-color:var(--teal)" preload="auto" controls
+          onerror="this.parentElement.innerHTML='<p style=\\'font-size:0.88rem;color:var(--text-soft);margin:0\\'>Lydfil ikke lastet opp ennå &mdash; bruk tekstguiden under</p>'">
+        </audio>
+      </div>
+      <details style="margin:0 0 6px">
+        <summary style="font-size:0.85rem;color:var(--text-soft);cursor:pointer;padding:6px 0;list-style:none;display:flex;align-items:center;gap:6px">
+          <span style="font-size:1rem">&#9656;</span> Vis tekstguide
+        </summary>
+        <div style="margin-top:8px;padding:4px 0">
+          ${e.steps.map((s, i) => `<div style="font-size:0.88rem;line-height:1.45;padding:7px 0;border-bottom:1px solid var(--border)">${i + 1}. ${s}</div>`).join("")}
+        </div>
+      </details>
+      <button class="btn" style="width:100%;margin-top:10px" onclick="(function(){const a=document.getElementById('exAudio');if(a)a.pause();closeModal();completeExercise('${e.id}')})()">Fullf&oslash;rt</button>
+    `);
+  } else {
+    // Text step fallback (used when no audio property set)
+    let step = 0;
+    const show = () => {
+      openModal(`
+        <h3>${e.icon} ${e.title}</h3>
+        <div class="sub">Steg ${step + 1} av ${e.steps.length}</div>
+        <div class="articleBody"><p style="font-size:1.05rem">${e.steps[step]}</p></div>
+        <div style="display:flex;gap:8px;margin-top:16px">
+          ${step > 0 ? `<button class="btn secondary" style="flex:1" id="exPrev">Tilbake</button>` : ""}
+          <button class="btn" style="flex:2" id="exNext">${step < e.steps.length - 1 ? "Neste" : "Fullf&oslash;r"}</button>
+        </div>`);
+      const prev = document.getElementById("exPrev");
+      if (prev) prev.onclick = () => { step--; show(); };
+      document.getElementById("exNext").onclick = () => {
+        if (step < e.steps.length - 1) { step++; show(); }
+        else { closeModal(); completeExercise(e.id); }
+      };
     };
-  };
-  show();
+    show();
+  }
 }
 
 /* ---------- Breathing exercise (PRD 4.2 / 6) ---------- */
 let breathTimer = null;
 function openBreath() {
+  const breathEx = EXERCISES.find(e => e.id === "breath");
+  const audioSrc = breathEx && breathEx.audio ? breathEx.audio : null;
   const ov = document.createElement("div");
   ov.id = "breathOverlay";
   ov.innerHTML = `
@@ -782,6 +812,13 @@ function openBreath() {
       <div class="tempo">Tempo: <b id="tempoVal">4</b> sek per fase
         <input type="range" id="tempoRange" min="3" max="6" step="0.5" value="4">
       </div>
+      ${audioSrc ? `<div style="margin-top:4px;font-size:0.82rem;opacity:0.8;text-align:center">
+        <label style="display:flex;align-items:center;gap:8px;justify-content:center;cursor:pointer">
+          <input type="checkbox" id="voiceToggle" style="accent-color:#fff;width:15px;height:15px">
+          Stemme-guide
+        </label>
+        <audio id="breathAudio" src="${audioSrc}" preload="auto" style="display:none"></audio>
+      </div>` : ""}
     </div>
     <div class="controls">
       <button class="btn" id="breathStart">Start</button>
@@ -794,13 +831,19 @@ function openBreath() {
 }
 function toggleBreath() {
   const btn = document.getElementById("breathStart");
+  const voiceAudio = document.getElementById("breathAudio");
   if (breathTimer) {
     stopBreathCycle();
     btn.textContent = "Start";
     document.getElementById("breathPhase").textContent = "Pause — fortsett når du vil";
+    if (voiceAudio) voiceAudio.pause();
     return;
   }
   btn.textContent = "Stopp";
+  if (voiceAudio && document.getElementById("voiceToggle")?.checked) {
+    voiceAudio.currentTime = 0;
+    voiceAudio.play().catch(() => {});
+  }
   runBreathCycle();
 }
 function runBreathCycle() {
@@ -831,6 +874,8 @@ function stopBreathCycle() {
 }
 function closeBreath() {
   stopBreathCycle();
+  const a = document.getElementById("breathAudio");
+  if (a) { a.pause(); a.currentTime = 0; }
   const ov = document.getElementById("breathOverlay");
   if (ov) ov.remove();
 }
