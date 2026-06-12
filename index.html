@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sammen — mental trening for menn</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="2" y="2" width="96" height="96" rx="22" fill="%231F4F4F"/><circle cx="40" cy="50" r="20" fill="%237FB8B8"/><circle cx="60" cy="50" r="20" fill="%23E8806A"/><path d="M50 32.7 A20 20 0 0 1 50 67.3 A20 20 0 0 1 50 32.7 Z" fill="%23F5F4F2"/></svg>'>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1f4f4f">
+<link rel="apple-touch-icon" href="assets/ikon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Sammen">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7f7f;
+    --teal-dark: #1f6363;
+    --teal-light: #e3f0f0;
+    --coral: #e8806a;
+    --coral-light: #fdeae5;
+    --bg: #f5f4f2;
+    --card: #ffffff;
+    --text: #2b2f33;
+    --text-soft: #6b7278;
+    --border: #e6e3df;
+    --radius: 16px;
+    --shadow: 0 1px 4px rgba(40, 45, 50, 0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #dcdad6;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+  }
+  #app {
+    width: 100%;
+    max-width: 460px;
+    min-height: 100vh;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 0 30px rgba(0,0,0,0.15);
+  }
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 18px 90px;
+  }
+  h1 { font-size: 1.45rem; font-weight: 700; margin-bottom: 2px; }
+  h2 { font-size: 1.05rem; font-weight: 600; margin: 22px 0 10px; }
+  .sub { color: var(--text-soft); font-size: 0.9rem; margin-bottom: 18px; }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+  }
+  .btn {
+    display: inline-block;
+    border: none;
+    border-radius: 12px;
+    padding: 11px 18px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--teal);
+    color: #fff;
+    font-family: inherit;
+  }
+  .btn:active { background: var(--teal-dark); }
+  .btn.secondary { background: var(--teal-light); color: var(--teal-dark); }
+  .btn.ghost { background: transparent; color: var(--teal-dark); padding: 8px 10px; }
+  .btn.small { padding: 7px 12px; font-size: 0.85rem; }
+  .btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* Topbar with SOS */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px 0;
+  }
+  .brand { display: flex; align-items: center; gap: 8px; font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight: 500; color: #1f4f4f; font-size: 1.15rem; letter-spacing: 0.4px; }
+  .brand svg { display: block; }
+  h1 { font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0.2px; }
+  #sosBtn {
+    background: var(--coral-light);
+    color: #b9503c;
+    border: 1px solid #f2c4b8;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Bottom nav */
+  nav {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 6px 4px calc(8px + env(safe-area-inset-bottom));
+  }
+  nav button {
+    flex: 1;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 0.68rem;
+    color: var(--text-soft);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 0;
+  }
+  nav button .ico { font-size: 1.25rem; line-height: 1; }
+  nav button.active { color: var(--teal-dark); font-weight: 700; }
+
+  /* Mood picker */
+  .moodRow { display: flex; gap: 10px; justify-content: space-between; margin: 12px 0 4px; }
+  .moodRow button {
+    flex: 1;
+    font-size: 1.7rem;
+    background: var(--bg);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 10px 0 6px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-family: inherit;
+  }
+  .moodRow button span { font-size: 0.65rem; color: var(--text-soft); }
+  .moodRow button.selected { border-color: var(--teal); background: var(--teal-light); }
+  textarea, input[type=text], input[type=tel] {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    resize: vertical;
+    background: #fff;
+    color: var(--text);
+  }
+  textarea:focus, input:focus { outline: 2px solid var(--teal-light); border-color: var(--teal); }
+
+  /* Suggestion / nudge cards */
+  .nudge { border-left: 4px solid var(--teal); }
+  .nudge.warm { border-left-color: var(--coral); background: #fffaf8; }
+  .nudge p { font-size: 0.92rem; }
+  .nudge .actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* Exercise cards */
+  .exCard { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+  .exIcon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: var(--teal-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .exCard .meta { flex: 1; }
+  .exCard .meta b { font-size: 0.95rem; display: block; }
+  .exCard .meta span { font-size: 0.8rem; color: var(--text-soft); }
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border-radius: 999px;
+    padding: 3px 9px;
+    margin-right: 5px;
+  }
+  .tag.coral { background: var(--coral-light); color: #b9503c; }
+
+  /* Breathing exercise */
+  #breathOverlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(170deg, #194d4d, #2a7f7f);
+    z-index: 40;
+    display: flex; flex-direction: column;
+    align-items: center;
+    color: #eaf4f4;
+    padding: 20px;
+  }
+  #breathOverlay .closeRow { width: 100%; display: flex; justify-content: flex-end; }
+  #breathOverlay .closeRow button {
+    background: rgba(255,255,255,0.15); color: #fff; border: none;
+    border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer;
+  }
+  #breathStage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; width: 100%; }
+  /* Fixed-size box so the scale() animation never overlaps the labels below */
+  #breathBox { width: 240px; height: 240px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  #breathCircle {
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    border: 3px solid rgba(255,255,255,0.65);
+    transform: scale(1);
+  }
+  #breathPhase { font-size: 1.2rem; font-weight: 600; min-height: 1.6em; }
+  #breathOverlay .tempo { width: 100%; max-width: 280px; text-align: center; font-size: 0.85rem; }
+  #breathOverlay input[type=range] { width: 100%; margin-top: 8px; accent-color: #fff; }
+  #breathOverlay .controls { padding-bottom: 26px; display: flex; gap: 12px; }
+  #breathOverlay .btn { background: #fff; color: var(--teal-dark); }
+
+  /* Community */
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 6px; }
+  .chips button {
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    color: var(--text-soft);
+  }
+  .chips button.active { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
+  .post .head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--teal-light); color: var(--teal-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+  }
+  .post .head .who b { font-size: 0.9rem; display: block; }
+  .post .head .who span { font-size: 0.74rem; color: var(--text-soft); }
+  .post .body { font-size: 0.93rem; line-height: 1.45; white-space: pre-wrap; }
+  .post .foot { display: flex; gap: 6px; margin-top: 10px; align-items: center; }
+  .post .foot button {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: 0.78rem;
+    font-family: inherit;
+    cursor: pointer;
+    color: var(--text-soft);
+  }
+  .post .foot button.on { background: var(--teal-light); border-color: var(--teal); color: var(--teal-dark); font-weight: 600; }
+  .post .foot .report { margin-left: auto; border: none; background: none; font-size: 0.72rem; }
+  .promptCard { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; }
+  .promptCard .tag { background: rgba(255,255,255,0.2); color: #fff; }
+  .promptCard p { font-size: 1.02rem; font-weight: 600; margin: 8px 0 12px; }
+
+  /* Modal */
+  .modalWrap {
+    position: absolute; inset: 0;
+    background: rgba(30,35,40,0.5);
+    z-index: 50;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .modal {
+    background: var(--card);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    padding: 22px 20px 30px;
+    max-height: 85%;
+    overflow-y: auto;
+  }
+  .modal h3 { font-size: 1.15rem; margin-bottom: 6px; }
+  .modal .sub { margin-bottom: 14px; }
+  .callBtn {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: none; border-radius: 14px;
+    padding: 16px;
+    font-size: 1rem; font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 10px;
+    text-decoration: none;
+  }
+  .callBtn small { font-weight: 400; opacity: 0.85; display: block; font-size: 0.78rem; }
+  .callBtn.urgent { background: #c0392b; }
+
+  /* Profile chart */
+  .barChart { display: flex; align-items: flex-end; gap: 4px; height: 90px; margin: 10px 0 4px; }
+  .barChart .bar { flex: 1; background: var(--teal); border-radius: 4px 4px 0 0; min-height: 4px; opacity: 0.85; }
+  .barChart .bar.empty { background: var(--border); }
+  .chartLabels { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-soft); }
+  .statRow { display: flex; gap: 10px; }
+  .statRow .card { flex: 1; text-align: center; margin-bottom: 0; }
+  .statRow .num { font-size: 1.5rem; font-weight: 700; color: var(--teal-dark); }
+  .statRow .lbl { font-size: 0.74rem; color: var(--text-soft); }
+  .setRow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .setRow:last-child { border-bottom: none; }
+  .setRow span { font-size: 0.92rem; }
+  .switch { position: relative; width: 44px; height: 25px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch .sl {
+    position: absolute; inset: 0; background: var(--border); border-radius: 999px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .switch .sl::before {
+    content: ""; position: absolute; width: 19px; height: 19px; left: 3px; top: 3px;
+    background: #fff; border-radius: 50%; transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+  .switch input:checked + .sl { background: var(--teal); }
+  .switch input:checked + .sl::before { transform: translateX(19px); }
+
+  /* Program progress */
+  .progBar { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; margin: 8px 0 4px; }
+  .progBar div { height: 100%; background: var(--teal); border-radius: 999px; }
+
+  /* Article overlay */
+  .articleBody { font-size: 0.95rem; line-height: 1.6; }
+  .articleBody p { margin-bottom: 12px; }
+
+  .feedItem { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .feedItem:last-child { border-bottom: none; }
+  .feedItem .dot { font-size: 1rem; }
+  .empty { color: var(--text-soft); font-size: 0.88rem; text-align: center; padding: 14px 0; }
+  .toast {
+    position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%);
+    background: var(--text); color: #fff;
+    padding: 10px 18px; border-radius: 999px;
+    font-size: 0.85rem; z-index: 60;
+    white-space: nowrap;
+    animation: toastIn 0.25s ease;
+  }
+  @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="38" cy="50" r="24" fill="#2a7f7f"/>
+        <circle cx="62" cy="50" r="24" fill="#e8806a"/>
+        <path d="M50 29.2 A24 24 0 0 1 50 70.8 A24 24 0 0 1 50 29.2 Z" fill="#1f4f4f"/>
+      </svg>
+      sammen
+    </div>
+    <button id="sosBtn" title="Akutthjelp — alltid tilgjengelig">&#10084;&#65039; Akutthjelp</button>
+  </header>
+  <main id="main"></main>
+  <nav id="nav"></nav>
+</div>
+
+<script>
+"use strict";
+
+/* ---------- State & storage ---------- */
+const LS_KEY = "mt_state_v1";
+const todayStr = () => new Date().toISOString().slice(0, 10);
+
+const defaultState = {
+  pseudonym: "Stillhet" + Math.floor(100 + Math.random() * 900),
+  moods: {},               // { "2026-06-12": { level: 3, note: "" } }
+  completedExercises: [],  // [{ id, date }]
+  activeProgram: null,     // { id, startDate }
+  posts: [],               // user posts
+  reactions: {},           // { postId: { support: bool, beenThere: bool } }
+  settings: { notifications: true, crisisContact: "" },
+  dismissedNudges: {},     // { nudgeKey: dateDismissed }
+};
+
+let state = loadState();
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return Object.assign(structuredClone(defaultState), JSON.parse(raw));
+  } catch (e) { /* corrupt storage -> start fresh */ }
+  return structuredClone(defaultState);
+}
+function save() { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+/* ---------- Static content ---------- */
+const MOODS = [
+  { level: 1, emoji: "\u{1F4A7}", label: "Tungt" },
+  { level: 2, emoji: "\u{1F32B}️", label: "Trått" },
+  { level: 3, emoji: "\u{1F324}️", label: "Greit" },
+  { level: 4, emoji: "☀️", label: "Bra" },
+];
+
+const EXERCISES = [
+  { id: "breath", icon: "\u{1F300}", title: "Pusteøvelse", desc: "Rolig pust med visuell rytme", min: 5, type: "breath" },
+  { id: "ground", icon: "\u{1F9ED}", title: "5-4-3-2-1 jording", desc: "Hent deg inn med sansene", min: 4, type: "guided",
+    steps: ["Finn 5 ting du kan se rundt deg.", "Legg merke til 4 ting du kan ta på.", "Lytt etter 3 lyder.", "Finn 2 ting du kan lukte.", "Kjenn 1 ting du kan smake — eller ta en slurk vann.", "Pust rolig ut. Du er her, nå."] },
+  { id: "reframe", icon: "\u{1F501}", title: "Snu tanken", desc: "Kort kognitiv øvelse", min: 6, type: "guided",
+    steps: ["Hva er tanken som plager deg akkurat nå? Si den til deg selv, kort.", "Hvor sann er den, fra 0 til 100 %?", "Hva ville du sagt til en god kamerat som tenkte det samme?", "Formuler en mer balansert versjon av tanken.", "Legg merke til om kroppen slapper litt mer av."] },
+  { id: "move", icon: "⚡", title: "Fysisk aktivering", desc: "Få ut spenning på 3 minutter", min: 3, type: "guided",
+    steps: ["Reis deg opp. Rist løs i armer og bein i 20 sekunder.", "10 rolige knebøy — kjenn at beina jobber.", "Strekk armene over hodet, hold i 10 sekunder.", "Rull skuldrene bakover 10 ganger.", "Stå stille. Tre dype pust. Ferdig."] },
+  { id: "visual", icon: "\u{1F3D4}️", title: "Trygt sted", desc: "Visualisering for ro", min: 7, type: "guided",
+    steps: ["Lukk øynene eller senk blikket.", "Se for deg et sted du kjenner deg helt rolig. Ekte eller forestilt.", "Hva ser du der? Legg til detaljer.", "Hva hører du? Hva kjenner du mot huden?", "Bli værende der i noen rolige åndedrag.", "Ta med deg roen tilbake hit."] },
+];
+
+const PROGRAMS = [
+  { id: "sleep", title: "Bedre søvn", days: 21, icon: "\u{1F634}", desc: "Ro ned kvelden og bygg en søvnrutine som holder." },
+  { id: "transition", title: "Håndtere overgang", days: 14, icon: "\u{1F9ED}", desc: "Stødig gjennom jobbskifte, brudd eller andre store endringer." },
+  { id: "confidence", title: "Selvtillit og prestasjon", days: 21, icon: "\u{1F3AF}", desc: "Tren tryggheten din — på jobb, i idrett, i livet." },
+  { id: "father", title: "Tryggere far og partner", days: 30, icon: "\u{1F46A}", desc: "Verktøy for nærvær, tålmodighet og kommunikasjon hjemme." },
+];
+
+const CHANNELS = ["Alle", "Jobb", "Samliv", "Far-rolle", "Sorg", "Generelt"];
+
+const DAILY_PROMPTS = [
+  "Hva har vært tyngst denne uken?",
+  "Hva er du litt stolt av at du sto i nylig?",
+  "Hva skulle du ønske noen hadde sagt til deg denne uken?",
+  "Hva gjør du når hodet ikke vil roe seg?",
+  "Hvem savner du å snakke ordentlig med?",
+  "Hva har gitt deg litt energi de siste dagene?",
+  "Hva er det vanskeligste med rollen din akkurat nå — jobb, far, partner?",
+];
+
+const SEED_POSTS = [
+  { id: "s1", who: "Fjellmann74", channel: "Jobb", age: "2 t",
+    text: "Ble omorganisert bort fra teamet jeg bygde opp. Sitter igjen med en rolle jeg ikke kjenner meg igjen i. Noen som har stått i det samme?",
+    support: 14, beenThere: 9, comments: 4 },
+  { id: "s2", who: "Stillhet88", channel: "Far-rolle", age: "5 t",
+    text: "Kjefta på minstemann i dag for noe som egentlig handlet om min egen stressdag. La han meg, sa unnskyld. Han bare klemte meg. Unger er rause.",
+    support: 31, beenThere: 18, comments: 7 },
+  { id: "s3", who: "NordvestN", channel: "Samliv", age: "i går",
+    text: "Etter bruddet er kveldene det verste. Har begynt å gå en runde rundt kvartalet i stedet for å scrolle. Hjelper litt. Ikke mye, men litt.",
+    support: 22, beenThere: 15, comments: 5 },
+  { id: "s4", who: "RoligBris", channel: "Sorg", age: "i går",
+    text: "Far gikk bort i vinter. Folk spør hvordan det går med mor. Ingen spør hvordan det går med meg. Skriver det her i stedet.",
+    support: 40, beenThere: 12, comments: 9 },
+  { id: "s5", who: "Kompass42", channel: "Generelt", age: "2 d",
+    text: "Tre uker med pusteøvelsen hver morgen nå. Høres teit ut, men jeg er merkbart mindre kort i lunta. Anbefales.",
+    support: 17, beenThere: 6, comments: 3 },
+];
+
+const ARTICLES = [
+  { id: "a1", icon: "\u{1F3A4}", title: "Prestasjonsangst — når kravene tar over", min: 3, cat: "Prestasjon", program: "confidence",
+    body: ["Prestasjonsangst handler sjelden om selve oppgaven. Den handler om hva du tror det betyr om deg hvis det går dårlig.", "Kroppens alarmrespons — hjertebank, uro, tankekjør — er den samme enten trusselen er en bjørn eller en presentasjon. Hjernen din prøver å beskytte deg. Den er bare litt overivrig.", "Det som hjelper: senk innsatsen i hodet ('dette er ett møte, ikke en dom'), pust lengre ut enn inn, og tren på situasjonen i små doser i stedet for å unngå den.", "Unngåelse gir ro i dag og mer angst i morgen. Eksponering i små steg gjør det motsatte."] },
+  { id: "a2", icon: "\u{1F525}", title: "Sinne er ofte noe annet", min: 3, cat: "Sinnemestring", program: "father",
+    body: ["For mange menn er sinne den eneste følelsen som føles 'lovlig' å vise. Under ligger ofte noe annet: bekymring, skam, avmakt, sårhet.", "Neste gang du kjenner det koke: prøv å sette ord på hva som skjedde sekundet før. Følte du deg overkjørt? Ikke hørt? Redd for å mislykkes?", "Sinne i seg selv er ikke farlig. Det er informasjon. Spørsmålet er hva du gjør med det — og om de rundt deg må bære kostnaden.", "En praktisk regel: ta pause før du svarer når pulsen er høy. Du kan alltid komme tilbake til samtalen. Det du sier i fullt sinne, kan du sjelden ta tilbake."] },
+  { id: "a3", icon: "\u{1F9CD}", title: "Ensomhet blant menn — det ingen sier høyt", min: 4, cat: "Ensomhet", program: null,
+    body: ["Mange menn har kollegaer, treningskamerater og familie — og er likevel ensomme. Fordi ingen av relasjonene har rom for det som egentlig tynger.", "Mannlig vennskap bygges ofte rundt aktivitet, ikke samtale. Det er ikke feil, men det betyr at de tunge tingene aldri får plass.", "Det fine: det skal mindre til enn du tror. Én ærlig setning — 'det har vært en tung periode, egentlig' — åpner mer enn hundre overfladiske samtaler.", "Start med den kameraten du tror tåler det best. Sannsynligvis har han ventet på en anledning til å si noe ekte selv."] },
+  { id: "a4", icon: "\u{1F504}", title: "Hvem er jeg uten jobben?", min: 3, cat: "Identitet", program: "transition",
+    body: ["Når identiteten din i stor grad er bygget på hva du presterer, blir et karriereskifte, en permittering eller pensjon mer enn praktisk — det blir eksistensielt.", "Spør deg selv: hva ved meg satte folk pris på før tittelen min? Humøret? Roen? Evnen til å fikse ting? Det forsvinner ikke med jobben.", "Overgangsfaser er ubehagelige fordi det gamle er borte og det nye ikke har tatt form ennå. Det er en mellomfase, ikke en endestasjon.", "Bruk perioden til å teste, ikke konkludere. Identitet bygges gjennom handling, ikke grubling."] },
+  { id: "a5", icon: "\u{1F476}", title: "Far for første gang — det ærlige bildet", min: 4, cat: "Farskap", program: "father",
+    body: ["Mange fedre kjenner på en blanding av kjærlighet, fremmedfølelse og utilstrekkelighet de første månedene. Det er vanlig — og nesten ingen snakker om det.", "Tilknytning er ikke alltid lyn fra klar himmel. For mange bygges den gradvis, gjennom stell, bæring og våkenetter. Det teller like mye.", "Du trenger ikke være perfekt. Forskningen er tydelig: 'god nok' og reparasjon etter feil er det som bygger trygge barn.", "Og: ta vare på parforholdet. Småbarnsfasen er en av de tøffeste periodene for samliv. Korte, ærlige statusoppdateringer med partneren din er undervurdert."] },
+];
+
+const MYTHS = [
+  { myth: "Ekte menn klarer seg selv.", fact: "Å be om hjelp krever mer trygghet enn å late som alt er greit. De fleste som har gjort det, angrer bare på at de ventet så lenge." },
+  { myth: "Å snakke om problemer gjør dem større.", fact: "Forskning viser det motsatte: å sette ord på følelser senker aktiviteten i hjernens alarmsystem." },
+  { myth: "Terapi er for folk i krise.", fact: "Mental trening fungerer som fysisk trening — det er mest effektivt før det blir akutt." },
+  { myth: "Medisin er eneste løsning hvis det er alvorlig.", fact: "Samtale, fysisk aktivitet, søvn og fellesskap har dokumentert effekt, alene eller i kombinasjon." },
+];
+
+const CRISIS_PATTERNS = /selvmord|ta livet|ikke orker (å )?leve|orker ikke leve|avslutte alt|gjøre slutt på (alt|meg)|vil ikke våkne|skade meg selv|selvskading|ikke verdt å leve/i;
+
+/* ---------- Helpers ---------- */
+function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+function moodOn(dateStr) { return state.moods[dateStr] ? state.moods[dateStr].level : null; }
+function lastNDates(n) { const out = []; for (let i = n - 1; i >= 0; i--) out.push(daysAgo(i)); return out; }
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function toast(msg) {
+  const t = document.createElement("div");
+  t.className = "toast"; t.textContent = msg;
+  document.getElementById("app").appendChild(t);
+  setTimeout(() => t.remove(), 2600);
+}
+function streak() {
+  let n = 0;
+  for (let i = 0; ; i++) {
+    if (state.moods[daysAgo(i)]) n++;
+    else if (i === 0) continue; // today not logged yet doesn't break streak
+    else break;
+  }
+  return n;
+}
+
+/* ---------- Smart suggestion logic (PRD 4.1) ---------- */
+function computeNudges() {
+  const nudges = [];
+  const dismissed = (key) => state.dismissedNudges[key] === todayStr();
+
+  // Low mood 3 days in a row -> suggest program
+  const last3 = [daysAgo(0), daysAgo(1), daysAgo(2)].map(moodOn);
+  if (last3.every(l => l !== null && l <= 2) && !dismissed("low3")) {
+    nudges.push({ key: "low3", warm: false,
+      text: "Du har logget noen tunge dager på rad. Vil du ha noe konkret å ta tak i? Programmene tar én dag om gangen — du styrer tempoet.",
+      actions: [{ label: "Vis meg programmene", fn: () => { currentTab = "trening"; render(); } }] });
+  }
+
+  // Big jump up/down vs yesterday -> soft optional question
+  const t = moodOn(todayStr()), y = moodOn(daysAgo(1));
+  if (t !== null && y !== null && Math.abs(t - y) >= 2 && !dismissed("jump")) {
+    nudges.push({ key: "jump", warm: false,
+      text: "I dag ser ganske annerledes ut enn i går. Noe spesielt som skjedde? Du trenger ikke svare — men noen ganger rydder det i hodet å få det ned i to linjer.",
+      actions: [{ label: "Skriv to linjer", fn: () => { focusNote = true; render(); } }] });
+  }
+
+  // Consistently low 14+ days -> suggest professional help / Akutthjelp
+  const last14 = lastNDates(14).map(moodOn).filter(l => l !== null);
+  if (last14.length >= 10 && last14.every(l => l <= 2) && !dismissed("low14")) {
+    nudges.push({ key: "low14", warm: true,
+      text: "Loggen din har vært tung i et par uker nå. Å stå i det så lenge tærer på — og du må ikke stå i det alene. En prat med noen som kan dette, forplikter ikke til noe.",
+      actions: [{ label: "Se hvem du kan snakke med", fn: openSOS }] });
+  }
+
+  // Consistently high -> soft suggestion to share in community
+  const last7 = lastNDates(7).map(moodOn).filter(l => l !== null);
+  if (last7.length >= 5 && last7.every(l => l >= 3) && !dismissed("high")) {
+    nudges.push({ key: "high", warm: false,
+      text: "En god periode i loggen din. Hva er det som funker om dagen? Akkurat det du har funnet ut, kan være det en annen trenger å lese.",
+      actions: [{ label: "Del det i Fellesskap", fn: () => { currentTab = "fellesskap"; render(); } }] });
+  }
+
+  return nudges;
+}
+
+// No registration 4+ days -> friendly reminder (computed for display on Hjem)
+function inactivityNudge() {
+  for (let i = 0; i < 4; i++) if (state.moods[daysAgo(i)]) return null;
+  if (Object.keys(state.moods).length === 0) return null; // brand new user, no nagging
+  return "Godt å se deg igjen. Dagene går — ingen forklaring nødvendig. Hvordan er det i dag?";
+}
+
+/* ---------- Rendering ---------- */
+let currentTab = "hjem";
+let currentChannel = "Alle";
+let focusNote = false;
+const main = document.getElementById("main");
+
+const TABS = [
+  { id: "hjem", label: "Hjem", ico: "\u{1F3E0}" },
+  { id: "trening", label: "Trening", ico: "\u{1F9D8}" },
+  { id: "fellesskap", label: "Fellesskap", ico: "\u{1F4AC}" },
+  { id: "laere", label: "Lære", ico: "\u{1F4D6}" },
+  { id: "profil", label: "Profil", ico: "\u{1F464}" },
+];
+
+function renderNav() {
+  document.getElementById("nav").innerHTML = TABS.map(t =>
+    `<button class="${t.id === currentTab ? "active" : ""}" onclick="goTab('${t.id}')">
+       <span class="ico">${t.ico}</span>${t.label}</button>`).join("");
+}
+function goTab(id) { currentTab = id; render(); main.scrollTop = 0; }
+
+function render() {
+  renderNav();
+  if (currentTab === "hjem") renderHjem();
+  else if (currentTab === "trening") renderTrening();
+  else if (currentTab === "fellesskap") renderFellesskap();
+  else if (currentTab === "laere") renderLaere();
+  else if (currentTab === "profil") renderProfil();
+}
+
+/* ---------- Hjem ---------- */
+function suggestedExercise() {
+  const t = moodOn(todayStr());
+  if (t === null) return EXERCISES[0];
+  if (t === 1) return EXERCISES.find(e => e.id === "ground");
+  if (t === 2) return EXERCISES.find(e => e.id === "breath");
+  if (t === 3) return EXERCISES.find(e => e.id === "reframe");
+  return EXERCISES.find(e => e.id === "move");
+}
+
+function renderHjem() {
+  const today = state.moods[todayStr()];
+  const greeting = new Date().getHours() < 12 ? "God morgen" : new Date().getHours() < 18 ? "God dag" : "God kveld";
+  const inact = inactivityNudge();
+  const nudges = computeNudges();
+  const ex = suggestedExercise();
+
+  let html = `<h1>${greeting}</h1><div class="sub">Hvordan er det i dag — egentlig?</div>`;
+
+  if (inact && !today) html += `<div class="card nudge"><p>${inact}</p></div>`;
+
+  // Mood check-in
+  html += `<div class="card">
+    <b style="font-size:0.95rem">Dagens humør</b>
+    <div class="moodRow">${MOODS.map(m =>
+      `<button class="${today && today.level === m.level ? "selected" : ""}" onclick="setMood(${m.level})">${m.emoji}<span>${m.label}</span></button>`).join("")}
+    </div>`;
+  if (today) {
+    html += `<div style="margin-top:10px">
+      <textarea id="moodNote" rows="2" placeholder="Noen ord om dagen? Valgfritt — og helt privat.">${esc(today.note || "")}</textarea>
+      <div style="text-align:right;margin-top:6px"><button class="btn small secondary" onclick="saveNote()">Lagre notat</button></div>
+    </div>`;
+  }
+  html += `</div>`;
+
+  // Smart nudges
+  for (const n of nudges) {
+    html += `<div class="card nudge${n.warm ? " warm" : ""}"><p>${n.text}</p>
+      <div class="actions">${n.actions.map((a, i) =>
+        `<button class="btn small" onclick="nudgeAction('${n.key}',${i})">${a.label}</button>`).join("")}
+        <button class="btn small ghost" onclick="dismissNudge('${n.key}')">Ikke nå</button>
+      </div></div>`;
+  }
+
+  // Daily exercise
+  html += `<h2>Dagens øvelse</h2>
+    <div class="card exCard" onclick="openExercise('${ex.id}')">
+      <div class="exIcon">${ex.icon}</div>
+      <div class="meta"><b>${ex.title}</b><span>${ex.desc} &middot; ${ex.min} min</span></div>
+      <button class="btn small">Start</button>
+    </div>`;
+
+  // Activity feed
+  html += `<h2>Siste fra Fellesskap</h2><div class="card">`;
+  const myPosts = state.posts.length;
+  const feedItems = [];
+  if (myPosts > 0) {
+    feedItems.push({ dot: "\u{1F4AC}", text: `Innlegget ditt har fått ${3 + myPosts * 2} støtte-reaksjoner` });
+    feedItems.push({ dot: "\u{1FAC2}", text: `2 menn trykket «jeg har vært der» på innlegget ditt` });
+  }
+  feedItems.push({ dot: "\u{1F4DD}", text: `Ny prompt i feeden: «${dailyPrompt()}»` });
+  feedItems.push({ dot: "\u{1F525}", text: "5 nye innlegg i kanalen Far-rolle i dag" });
+  html += feedItems.map(f => `<div class="feedItem"><span class="dot">${f.dot}</span><span>${f.text}</span></div>`).join("");
+  html += `</div>`;
+
+  main.innerHTML = html;
+  if (focusNote) { focusNote = false; const ta = document.getElementById("moodNote"); if (ta) ta.focus(); }
+}
+
+function setMood(level) {
+  const existing = state.moods[todayStr()] || { note: "" };
+  state.moods[todayStr()] = { level, note: existing.note };
+  save(); render();
+}
+function saveNote() {
+  const ta = document.getElementById("moodNote");
+  if (ta && state.moods[todayStr()]) {
+    state.moods[todayStr()].note = ta.value;
+    save(); toast("Notat lagret — kun synlig for deg");
+  }
+}
+let _nudgeCache = null;
+function nudgeAction(key, i) {
+  const n = computeNudges().find(x => x.key === key);
+  if (n) n.actions[i].fn();
+}
+function dismissNudge(key) {
+  state.dismissedNudges[key] = todayStr();
+  save(); render();
+}
+
+/* ---------- Trening ---------- */
+function renderTrening() {
+  let html = `<h1>Trening</h1><div class="sub">Korte verktøy. Ingen krav, bare litt om gangen.</div>`;
+
+  // Active program
+  if (state.activeProgram) {
+    const p = PROGRAMS.find(x => x.id === state.activeProgram.id);
+    const start = new Date(state.activeProgram.startDate);
+    const day = Math.min(p.days, Math.floor((new Date() - start) / 86400000) + 1);
+    const pct = Math.round((day / p.days) * 100);
+    html += `<div class="card">
+      <span class="tag">P&Aring;G&Aring;ENDE PROGRAM</span>
+      <h2 style="margin:8px 0 2px">${p.icon} ${p.title}</h2>
+      <div class="sub" style="margin-bottom:4px">Dag ${day} av ${p.days}</div>
+      <div class="progBar"><div style="width:${pct}%"></div></div>
+      <div class="actions" style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn small" onclick="openProgramDay('${p.id}', ${day})">Dagens innhold</button>
+        <button class="btn small ghost" onclick="quitProgram()">Avslutt program</button>
+      </div></div>`;
+  }
+
+  html += `<h2>Mikroøvelser <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">3&ndash;10 min</span></h2>`;
+  html += EXERCISES.map(e => `
+    <div class="card exCard" onclick="openExercise('${e.id}')">
+      <div class="exIcon">${e.icon}</div>
+      <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
+    </div>`).join("");
+
+  html += `<h2>Programmer <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 dager</span></h2>`;
+  html += PROGRAMS.map(p => `
+    <div class="card">
+      <div class="exCard" style="cursor:default">
+        <div class="exIcon">${p.icon}</div>
+        <div class="meta"><b>${p.title}</b><span>${p.desc}</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <span class="tag">${p.days} DAGER</span>
+        ${state.activeProgram && state.activeProgram.id === p.id
+          ? `<span style="font-size:0.8rem;color:var(--teal-dark);font-weight:600">P&aring;g&aring;r</span>`
+          : `<button class="btn small secondary" onclick="startProgram('${p.id}')">Start</button>`}
+      </div>
+    </div>`).join("");
+
+  main.innerHTML = html;
+}
+
+function startProgram(id) {
+  state.activeProgram = { id, startDate: todayStr() };
+  save(); render();
+  toast("Programmet er i gang. Én dag om gangen.");
+}
+function quitProgram() {
+  state.activeProgram = null; save(); render();
+}
+function openProgramDay(id, day) {
+  const p = PROGRAMS.find(x => x.id === id);
+  openModal(`
+    <h3>${p.icon} ${p.title} — dag ${day}</h3>
+    <div class="sub">Kort innhold + øvelse + refleksjon</div>
+    <div class="articleBody">
+      <p><b>Dagens fokus:</b> ${programDayFocus(id, day)}</p>
+      <p><b>Øvelse:</b> Gjør dagens pusteøvelse (5 min) før du legger deg, eller når du trenger en pause.</p>
+      <p><b>Refleksjon:</b> Hva er én liten ting som fungerte i dag? Skriv den gjerne i humør-notatet på Hjem.</p>
+    </div>
+    <button class="btn" style="width:100%;margin-top:14px" onclick="completeExercise('program-${id}-${day}'); closeModal()">Marker dagen som fullført</button>
+  `);
+}
+function programDayFocus(id, day) {
+  const focuses = {
+    sleep: ["Kartlegg kveldsrutinen din slik den faktisk er.", "Skjerm bort skjermen siste 30 min før du legger deg.", "Fast leggetid — også i helgen.", "Soverommet: mørkt, kjølig, stille."],
+    transition: ["Sett ord på hva som faktisk er tapt — og hva som består.", "Hva har du kontroll over i dag? Gjør én av de tingene.", "Snakk med én person om hvordan du egentlig har det.", "Små rutiner gir stabilitet når det store er i endring."],
+    confidence: ["Skriv ned tre situasjoner du har mestret før.", "Tren på å ta plass: si én mening høyt i dag.", "Erstatt «jeg må prestere» med «jeg skal bidra».", "Kroppsholdning påvirker følelsen — test det i dag."],
+    father: ["Ti minutter udelt oppmerksomhet — uten mobil.", "Si unnskyld hvis du tråkker feil. Det bygger trygghet.", "Legg merke til hva som trigger utålmodigheten din.", "Fortell partneren din én ting du setter pris på."],
+  };
+  const f = focuses[id] || focuses.sleep;
+  return f[(day - 1) % f.length];
+}
+
+function completeExercise(id) {
+  state.completedExercises.push({ id, date: todayStr() });
+  save();
+  toast("Bra jobba. Det teller.");
+  render();
+}
+
+/* ---------- Exercise overlays ---------- */
+function openExercise(id) {
+  const e = EXERCISES.find(x => x.id === id);
+  if (e.type === "breath") return openBreath();
+  // Guided step-based exercise
+  let step = 0;
+  const show = () => {
+    openModal(`
+      <h3>${e.icon} ${e.title}</h3>
+      <div class="sub">Steg ${step + 1} av ${e.steps.length}</div>
+      <div class="articleBody"><p style="font-size:1.05rem">${e.steps[step]}</p></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        ${step > 0 ? `<button class="btn secondary" style="flex:1" id="exPrev">Tilbake</button>` : ""}
+        <button class="btn" style="flex:2" id="exNext">${step < e.steps.length - 1 ? "Neste" : "Fullf&oslash;r"}</button>
+      </div>`);
+    const prev = document.getElementById("exPrev");
+    if (prev) prev.onclick = () => { step--; show(); };
+    document.getElementById("exNext").onclick = () => {
+      if (step < e.steps.length - 1) { step++; show(); }
+      else { closeModal(); completeExercise(e.id); }
+    };
+  };
+  show();
+}
+
+/* ---------- Breathing exercise (PRD 4.2 / 6) ---------- */
+let breathTimer = null;
+function openBreath() {
+  const ov = document.createElement("div");
+  ov.id = "breathOverlay";
+  ov.innerHTML = `
+    <div class="closeRow"><button onclick="closeBreath()">&#10005;</button></div>
+    <div id="breathStage">
+      <div id="breathBox"><div id="breathCircle"></div></div>
+      <div id="breathPhase">Klar n&aring;r du er</div>
+      <div class="tempo">Tempo: <b id="tempoVal">4</b> sek per fase
+        <input type="range" id="tempoRange" min="3" max="6" step="0.5" value="4">
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="breathStart">Start</button>
+    </div>`;
+  document.getElementById("app").appendChild(ov);
+  document.getElementById("tempoRange").oninput = (ev) => {
+    document.getElementById("tempoVal").textContent = ev.target.value;
+  };
+  document.getElementById("breathStart").onclick = toggleBreath;
+}
+function toggleBreath() {
+  const btn = document.getElementById("breathStart");
+  if (breathTimer) {
+    stopBreathCycle();
+    btn.textContent = "Start";
+    document.getElementById("breathPhase").textContent = "Pause — fortsett når du vil";
+    return;
+  }
+  btn.textContent = "Stopp";
+  runBreathCycle();
+}
+function runBreathCycle() {
+  const circle = document.getElementById("breathCircle");
+  const phaseEl = document.getElementById("breathPhase");
+  const phases = [
+    { name: "Pust inn", scale: 1.8 },
+    { name: "Hold", scale: 1.8 },
+    { name: "Pust ut", scale: 1.0 },
+    { name: "Hold", scale: 1.0 },
+  ];
+  let i = 0;
+  const step = () => {
+    if (!document.getElementById("breathCircle")) return stopBreathCycle();
+    const tempo = parseFloat(document.getElementById("tempoRange").value) * 1000;
+    const ph = phases[i % 4];
+    phaseEl.textContent = ph.name;
+    circle.style.transition = `transform ${tempo}ms ease-in-out`;
+    circle.style.transform = `scale(${ph.scale})`;
+    i++;
+    if (i === 8) completeExercise("breath"); // ~2 full cycles = counted as done
+    breathTimer = setTimeout(step, tempo);
+  };
+  step();
+}
+function stopBreathCycle() {
+  if (breathTimer) { clearTimeout(breathTimer); breathTimer = null; }
+}
+function closeBreath() {
+  stopBreathCycle();
+  const ov = document.getElementById("breathOverlay");
+  if (ov) ov.remove();
+}
+
+/* ---------- Fellesskap ---------- */
+function dailyPrompt() {
+  const dayIdx = Math.floor(new Date() / 86400000) % DAILY_PROMPTS.length;
+  return DAILY_PROMPTS[dayIdx];
+}
+
+function renderFellesskap() {
+  let html = `<h1>Fellesskap</h1><div class="sub">Anonymt. &Aring;pent. Menn som skj&oslash;nner.</div>`;
+
+  html += `<div class="chips">${CHANNELS.map(c =>
+    `<button class="${c === currentChannel ? "active" : ""}" onclick="setChannel('${c}')">${c}</button>`).join("")}</div>`;
+
+  html += `<div class="card promptCard">
+    <span class="tag">DAGENS PROMPT</span>
+    <p>${dailyPrompt()}</p>
+    <button class="btn small" style="background:#fff;color:var(--teal-dark)" onclick="openComposer()">Svar anonymt</button>
+  </div>`;
+
+  html += `<div style="text-align:right;margin-bottom:10px">
+    <button class="btn small secondary" onclick="openComposer()">+ Nytt innlegg</button></div>`;
+
+  const all = [...state.posts.map(p => ({ ...p, mine: true })), ...SEED_POSTS];
+  const filtered = currentChannel === "Alle" ? all : all.filter(p => p.channel === currentChannel);
+
+  if (filtered.length === 0) html += `<div class="empty">Ingen innlegg i denne kanalen enn&aring;. Bli den f&oslash;rste.</div>`;
+
+  html += filtered.map(p => {
+    const r = state.reactions[p.id] || {};
+    const sup = (p.support || 0) + (r.support ? 1 : 0);
+    const bt = (p.beenThere || 0) + (r.beenThere ? 1 : 0);
+    return `<div class="card post">
+      <div class="head">
+        <div class="avatar">${esc(p.who.slice(0, 2).toUpperCase())}</div>
+        <div class="who"><b>${esc(p.who)}${p.mine ? ' <span style="font-weight:400;color:var(--text-soft)">(deg)</span>' : ""}</b>
+        <span>${p.channel} &middot; ${p.age || "n&aring;"}</span></div>
+      </div>
+      <div class="body">${esc(p.text)}</div>
+      <div class="foot">
+        <button class="${r.support ? "on" : ""}" onclick="react('${p.id}','support')">&#129309; St&oslash;tte &middot; ${sup}</button>
+        <button class="${r.beenThere ? "on" : ""}" onclick="react('${p.id}','beenThere')">&#129730; Jeg har v&aelig;rt der &middot; ${bt}</button>
+        <button class="report" onclick="reportPost('${p.id}')">Rapporter</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  main.innerHTML = html;
+}
+
+function setChannel(c) { currentChannel = c; render(); }
+function react(postId, kind) {
+  const r = state.reactions[postId] || (state.reactions[postId] = {});
+  r[kind] = !r[kind];
+  save(); render();
+}
+function reportPost(postId) {
+  openModal(`
+    <h3>Rapporter innlegg</h3>
+    <div class="sub">Takk for at du sier ifra. Hva gjelder det?</div>
+    ${["Hatefullt eller giftig innhold", "Bekymring for forfatteren", "Spam eller reklame", "Annet"].map(reason =>
+      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="closeModal(); toast('Rapport sendt. Vi ser på det.')">${reason}</button>`).join("")}
+  `);
+}
+
+function openComposer() {
+  openModal(`
+    <h3>Nytt innlegg</h3>
+    <div class="sub">Du poster som <b>${esc(state.pseudonym)}</b> — aldri med ekte navn.</div>
+    <div style="margin-bottom:10px">
+      <select id="postChannel" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);font-family:inherit;font-size:0.92rem">
+        ${CHANNELS.slice(1).map(c => `<option>${c}</option>`).join("")}
+      </select>
+    </div>
+    <textarea id="postText" rows="5" placeholder="Skriv det som det er. Ingen trenger polerte ord her."></textarea>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="submitPost()">Publiser anonymt</button>
+  `);
+}
+
+function submitPost() {
+  const text = document.getElementById("postText").value.trim();
+  const channel = document.getElementById("postChannel").value;
+  if (!text) return;
+
+  // Crisis-language safety filter (PRD 4.3): never blocks or deletes — responds with care.
+  if (CRISIS_PATTERNS.test(text)) {
+    closeModal();
+    openModal(`
+      <h3>Vi ser deg &#129505;</h3>
+      <div class="articleBody">
+        <p>Det du skriver h&oslash;res tungt ut, og vi er glade for at du setter ord p&aring; det. Innlegget ditt blir publisert — men f&oslash;rst vil vi minne deg p&aring; at det finnes folk som er klare til &aring; snakke med deg n&aring;, hele d&oslash;gnet:</p>
+      </div>
+      <a class="callBtn" href="tel:116123"><span>Mental Helse Hjelpetelefonen<small>Gratis, d&oslash;gn&aring;pent</small></span><span>116 123</span></a>
+      <a class="callBtn urgent" href="tel:113"><span>Akutt fare for liv<small>Medisinsk n&oslash;dtelefon</small></span><span>113</span></a>
+      <button class="btn secondary" style="width:100%;margin-top:6px" onclick="finalizePost()">Publiser innlegget mitt</button>
+    `);
+    pendingPost = { text, channel };
+    return;
+  }
+  doPublish(text, channel);
+}
+let pendingPost = null;
+function finalizePost() { if (pendingPost) { doPublish(pendingPost.text, pendingPost.channel); pendingPost = null; } }
+function doPublish(text, channel) {
+  state.posts.unshift({ id: "u" + Date.now(), who: state.pseudonym, channel, text, support: 0, beenThere: 0, comments: 0, age: "nå" });
+  save(); closeModal();
+  currentTab = "fellesskap"; render();
+  toast("Publisert. Du er ikke alene om dette.");
+}
+
+/* ---------- Lære ---------- */
+function renderLaere() {
+  let html = `<h1>L&aelig;re</h1><div class="sub">Korte svar p&aring; ekte sp&oslash;rsm&aring;l. 2&ndash;4 min lesetid.</div>`;
+
+  html += ARTICLES.map(a => `
+    <div class="card exCard" onclick="openArticle('${a.id}')">
+      <div class="exIcon">${a.icon}</div>
+      <div class="meta"><b>${a.title}</b><span>${a.cat} &middot; ${a.min} min</span></div>
+    </div>`).join("");
+
+  html += `<h2>Myter vs. fakta</h2>`;
+  html += MYTHS.map(m => `
+    <div class="card">
+      <span class="tag coral">MYTE</span> <span style="font-size:0.92rem;font-style:italic">&laquo;${m.myth}&raquo;</span>
+      <div style="margin-top:10px"><span class="tag">FAKTA</span> <span style="font-size:0.92rem">${m.fact}</span></div>
+    </div>`).join("");
+
+  main.innerHTML = html;
+}
+
+function openArticle(id) {
+  const a = ARTICLES.find(x => x.id === id);
+  const prog = a.program ? PROGRAMS.find(p => p.id === a.program) : null;
+  openModal(`
+    <h3>${a.icon} ${a.title}</h3>
+    <div class="sub">${a.cat} &middot; ${a.min} min lesetid</div>
+    <div class="articleBody">${a.body.map(p => `<p>${p}</p>`).join("")}</div>
+    ${prog ? `<div class="card nudge" style="margin-top:14px"><p>Vil du jobbe videre med dette? Programmet <b>${prog.title}</b> (${prog.days} dager) tar deg gjennom det steg for steg.</p>
+      <div class="actions"><button class="btn small" onclick="closeModal(); startProgram('${prog.id}'); goTab('trening')">Start programmet</button></div></div>` : ""}
+  `);
+}
+
+/* ---------- Profil ---------- */
+function renderProfil() {
+  const dates = lastNDates(14);
+  const labels = [new Date(dates[0]), new Date(dates[13])].map(d => d.getDate() + "." + (d.getMonth() + 1) + ".");
+  const completedCount = state.completedExercises.length;
+  const st = streak();
+
+  let html = `<h1>Profil</h1><div class="sub">Helt privat — ingenting her vises til andre.</div>`;
+
+  html += `<div class="statRow" style="margin-bottom:12px">
+    <div class="card"><div class="num">${st}</div><div class="lbl">dagers streak</div></div>
+    <div class="card"><div class="num">${completedCount}</div><div class="lbl">&oslash;velser fullf&oslash;rt</div></div>
+    <div class="card"><div class="num">${state.posts.length}</div><div class="lbl">innlegg delt</div></div>
+  </div>`;
+
+  html += `<div class="card"><b style="font-size:0.95rem">Hum&oslash;rtrend — siste 14 dager</b>
+    <div class="barChart">${dates.map(d => {
+      const l = moodOn(d);
+      return l === null
+        ? `<div class="bar empty" style="height:4px" title="${d}: ikke registrert"></div>`
+        : `<div class="bar" style="height:${l * 25}%" title="${d}: ${MOODS[l - 1].label}"></div>`;
+    }).join("")}</div>
+    <div class="chartLabels"><span>${labels[0]}</span><span>i dag</span></div>
+  </div>`;
+
+  html += `<h2>Mine innlegg</h2>`;
+  if (state.posts.length === 0) {
+    html += `<div class="card"><div class="empty">Du har ikke delt noe enn&aring;. Det er helt greit — les og kjenn deg igjen i ditt eget tempo.</div></div>`;
+  } else {
+    html += state.posts.map(p => `<div class="card"><span class="tag">${p.channel}</span>
+      <div style="font-size:0.9rem;margin-top:8px">${esc(p.text.length > 120 ? p.text.slice(0, 120) + "…" : p.text)}</div></div>`).join("");
+  }
+
+  html += `<h2>Innstillinger</h2><div class="card">
+    <div class="setRow"><span>Pseudonym</span>
+      <button class="btn small secondary" onclick="editPseudonym()">${esc(state.pseudonym)}</button></div>
+    <div class="setRow"><span>Varsler</span>
+      <label class="switch"><input type="checkbox" ${state.settings.notifications ? "checked" : ""} onchange="toggleNotif(this.checked)"><span class="sl"></span></label></div>
+    <div class="setRow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <span>Egen krisekontakt (valgfritt)</span>
+      <input type="tel" id="crisisContact" placeholder="Navn / telefonnummer til noen du stoler p&aring;" value="${esc(state.settings.crisisContact)}" onchange="saveCrisisContact(this.value)">
+    </div>
+  </div>`;
+
+  html += `<h2>Vei til mer</h2>
+  <div class="card" style="background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:#fff">
+    <b style="font-size:1rem">1-til-1 coaching</b>
+    <p style="font-size:0.88rem;margin:8px 0 12px;opacity:0.92">N&aring;r du vil g&aring; dypere enn appen: personlig oppf&oslash;lging med Clifford Coaching. Uforpliktende f&oslash;rste samtale.</p>
+    <a class="btn" style="background:#fff;color:var(--teal-dark);text-decoration:none" href="https://cliffordcoaching.no" target="_blank" rel="noopener">Les mer</a>
+  </div>`;
+
+  main.innerHTML = html;
+}
+
+function editPseudonym() {
+  openModal(`
+    <h3>Endre pseudonym</h3>
+    <div class="sub">Dette er navnet andre ser i Fellesskap. Velg noe som ikke kan identifisere deg.</div>
+    <input type="text" id="pseudoInput" value="${esc(state.pseudonym)}" maxlength="24">
+    <button class="btn" style="width:100%;margin-top:12px" onclick="savePseudonym()">Lagre</button>
+  `);
+}
+function savePseudonym() {
+  const v = document.getElementById("pseudoInput").value.trim();
+  if (v) { state.pseudonym = v; save(); }
+  closeModal(); render();
+}
+function toggleNotif(on) { state.settings.notifications = on; save(); }
+function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast("Lagret"); }
+
+/* ---------- Akutthjelp (PRD 4.6) ---------- */
+function openSOS() {
+  const cc = state.settings.crisisContact;
+  openModal(`
+    <h3>Akutthjelp</h3>
+    <div class="sub">Du trenger ikke v&aelig;re i krise for &aring; ringe. De er der for &aring; lytte.</div>
+    <a class="callBtn urgent" href="tel:113"><span>Akutt fare for liv<small>Medisinsk n&oslash;dtelefon</small></span><span>Ring 113</span></a>
+    <a class="callBtn" href="tel:116123"><span>Mental Helse Hjelpetelefonen<small>Gratis &middot; d&oslash;gn&aring;pent</small></span><span>116 123</span></a>
+    <a class="callBtn" href="tel:22400040"><span>Kirkens SOS<small>D&oslash;gn&aring;pen krisetjeneste</small></span><span>22 40 00 40</span></a>
+    <a class="callBtn" href="tel:22340960"><span>Mannstelefonen<small>For menn, av menn &middot; hverdager 17&ndash;20</small></span><span>22 34 09 60</span></a>
+    ${cc ? `<a class="callBtn" style="background:var(--coral)" href="tel:${esc(cc.replace(/[^+\d]/g, ""))}"><span>Din egen kontakt<small>${esc(cc)}</small></span><span>Ring</span></a>` : ""}
+    <p style="font-size:0.8rem;color:var(--text-soft);margin-top:8px">Denne appen er et st&oslash;tteverkt&oslash;y og erstatter ikke profesjonell behandling.</p>
+  `);
+}
+document.getElementById("sosBtn").onclick = openSOS;
+
+/* ---------- Modal helpers ---------- */
+function openModal(innerHtml) {
+  closeModal();
+  const w = document.createElement("div");
+  w.className = "modalWrap";
+  w.id = "modalWrap";
+  w.innerHTML = `<div class="modal">${innerHtml}</div>`;
+  w.onclick = (e) => { if (e.target === w) closeModal(); };
+  document.getElementById("app").appendChild(w);
+}
+function closeModal() {
+  const w = document.getElementById("modalWrap");
+  if (w) w.remove();
+}
+
+/* ---------- Init ---------- */
+render();
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>
