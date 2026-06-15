@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Together — mental training for men</title>
+<title>Together: mental training for men</title>
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="2" y="2" width="96" height="96" rx="22" fill="%231F4F4F"/><circle cx="40" cy="50" r="20" fill="%237FB8B8"/><circle cx="60" cy="50" r="20" fill="%23E8806A"/><path d="M50 32.7 A20 20 0 0 1 50 67.3 A20 20 0 0 1 50 32.7 Z" fill="%23F5F4F2"/></svg>'>
 <link rel="manifest" href="manifest-en.webmanifest">
 <meta name="theme-color" content="#1f4f4f">
@@ -158,7 +158,7 @@
       </svg>
       together
     </div>
-    <button id="sosBtn" title="Crisis support — always available">&#10084;&#65039; Crisis support</button>
+    <button id="sosBtn" title="Crisis support, always available">&#10084;&#65039; Crisis support</button>
   </header>
   <main id="main"></main>
   <nav id="nav"></nav>
@@ -203,11 +203,11 @@ const MOODS = [
 const EXERCISES = [
   { id: "breath", icon: "\u{1F300}", title: "Breathing exercise", desc: "Calm breath with visual rhythm", min: 5, type: "breath" },
   { id: "ground", icon: "\u{1F9ED}", title: "5-4-3-2-1 grounding", desc: "Ground yourself with your senses", min: 4, type: "guided",
-    steps: ["Find 5 things you can see around you.", "Notice 4 things you can touch.", "Listen for 3 sounds.", "Find 2 things you can smell.", "Notice 1 thing you can taste — or take a sip of water.", "Breathe out slowly. You are here, now."] },
+    steps: ["Find 5 things you can see around you.", "Notice 4 things you can touch.", "Listen for 3 sounds.", "Find 2 things you can smell.", "Notice 1 thing you can taste, or take a sip of water.", "Breathe out slowly. You are here, now."] },
   { id: "reframe", icon: "\u{1F501}", title: "Reframe the thought", desc: "A short cognitive exercise", min: 6, type: "guided",
     steps: ["What's the thought taking up space right now? Say it to yourself, briefly.", "How true is it, from 0 to 100%?", "What would you say to a good friend who thought the same?", "Formulate a more balanced version of the thought.", "Notice whether your body relaxes a little."] },
   { id: "move", icon: "⚡", title: "Physical reset", desc: "Release tension in 3 minutes", min: 3, type: "guided",
-    steps: ["Stand up. Shake out your arms and legs for 20 seconds.", "10 slow squats — feel your legs working.", "Stretch your arms above your head, hold for 10 seconds.", "Roll your shoulders backwards 10 times.", "Stand still. Three deep breaths. Done."] },
+    steps: ["Stand up. Shake out your arms and legs for 20 seconds.", "10 slow squats, feel your legs working.", "Stretch your arms above your head, hold for 10 seconds.", "Roll your shoulders backwards 10 times.", "Stand still. Three deep breaths. Done."] },
   { id: "visual", icon: "\u{1F3D4}️", title: "Safe place", desc: "Visualisation for calm", min: 7, type: "guided",
     steps: ["Close your eyes or lower your gaze.", "Picture a place where you feel completely calm. Real or imagined.", "What do you see there? Add details.", "What do you hear? What do you feel against your skin?", "Stay there for a few calm breaths.", "Bring the calm back with you."] },
 ];
@@ -215,23 +215,23 @@ const EXERCISES = [
 const PROGRAMS = [
   { id: "sleep", title: "Better sleep", days: 21, icon: "\u{1F634}", desc: "Wind down your evenings and build a sleep routine that sticks." },
   { id: "transition", title: "Handling transitions", days: 14, icon: "\u{1F9ED}", desc: "Steady through a job change, breakup, or other major shift." },
-  { id: "confidence", title: "Confidence and performance", days: 21, icon: "\u{1F3AF}", desc: "Train your confidence — at work, in sport, in life." },
+  { id: "confidence", title: "Confidence and performance", days: 21, icon: "\u{1F3AF}", desc: "Train your confidence at work, in sport, in life." },
   { id: "father", title: "Better father and partner", days: 30, icon: "\u{1F46A}", desc: "Tools for presence, patience and communication at home." },
 ];
 
 const REFLECTIONS = [
-  { id: "r1",  title: "What are you really afraid of?", prompt: "Not what you admit in company. The fear you sit with at night, alone — the one you rarely put into words. What is it?" },
-  { id: "r2",  title: "Who would you be without others' expectations of you?", prompt: "Imagine all roles and demands fell away tomorrow. No expectations from work, family, or society. Who are you then — and what do you want?" },
+  { id: "r1",  title: "What are you really afraid of?", prompt: "Not what you admit in company. The fear you sit with at night, alone, the one you rarely put into words. What is it?" },
+  { id: "r2",  title: "Who would you be without others' expectations of you?", prompt: "Imagine all roles and demands fell away tomorrow. No expectations from work, family, or society. Who are you then, and what do you want?" },
   { id: "r3",  title: "What have you never said out loud to anyone?", prompt: "Something you've carried for years without voicing it to another person. What is it? Write it here, just for yourself." },
-  { id: "r4",  title: "What are you trying to prove — and to whom?", prompt: "Behind much of what we do is a need to prove something. Maybe to a parent, an old version of yourself, or someone who doubted you. Who are you really doing it for?" },
-  { id: "r5",  title: "What would a younger you have needed to hear?", prompt: "Picture yourself at 10–12 years old. What did that boy need to hear from a trusted adult? What did he never hear — and what does it mean that he didn't?" },
+  { id: "r4",  title: "What are you trying to prove, and to whom?", prompt: "Behind much of what we do is a need to prove something. Maybe to a parent, an old version of yourself, or someone who doubted you. Who are you really doing it for?" },
+  { id: "r5",  title: "What would a younger you have needed to hear?", prompt: "Picture yourself at 10–12 years old. What did that boy need to hear from a trusted adult? What did he never hear, and what does it mean that he didn't?" },
   { id: "r6",  title: "What are you unwilling to look at in yourself?", prompt: "We all have parts of ourselves we'd rather avoid. A tendency, a fear, a side we justify or numb. What is that for you?" },
-  { id: "r7",  title: "What have you lost that you've never grieved?", prompt: "A dream you set aside. A relationship that faded. A version of yourself you never became. What have you lost quietly — without letting yourself feel it?" },
-  { id: "r8",  title: "What is actually enough for you?", prompt: "Not what you say is enough. What are you really chasing — and what would it take for you to genuinely say: this is enough?" },
-  { id: "r9",  title: "What are you afraid people will really see?", prompt: "Behind the best version of yourself you show the world — what are you afraid they'll discover? What are you working hardest to hide?" },
-  { id: "r10", title: "What actually matters to you?", prompt: "Strip away the job, the titles, the status, the things you're supposed to care about. What's left that genuinely matters — and are you living by it?" },
-  { id: "r11", title: "What have you never forgiven yourself for?", prompt: "We all carry something. A mistake, a decision, something you didn't do when you should have. What is it — and what would it mean to let it go?" },
-  { id: "r12", title: "Who do you allow yourself to need something from?", prompt: "Who in your life sees you when you're struggling — and do they know it? What does it do to you to need something from someone, and who is it safe to show that to?" },
+  { id: "r7",  title: "What have you lost that you've never grieved?", prompt: "A dream you set aside. A relationship that faded. A version of yourself you never became. What have you lost quietly, without letting yourself feel it?" },
+  { id: "r8",  title: "What is actually enough for you?", prompt: "Not what you say is enough. What are you really chasing, and what would it take for you to genuinely say: this is enough?" },
+  { id: "r9",  title: "What are you afraid people will really see?", prompt: "Behind the best version of yourself you show the world, what are you afraid they'll discover? What are you working hardest to hide?" },
+  { id: "r10", title: "What actually matters to you?", prompt: "Strip away the job, the titles, the status, the things you're supposed to care about. What's left that genuinely matters, and are you living by it?" },
+  { id: "r11", title: "What have you never forgiven yourself for?", prompt: "We all carry something. A mistake, a decision, something you didn't do when you should have. What is it, and what would it mean to let it go?" },
+  { id: "r12", title: "Who do you allow yourself to need something from?", prompt: "Who in your life sees you when you're struggling, and do they know it? What does it do to you to need something from someone, and who is it safe to show that to?" },
 ];
 const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
 
@@ -241,11 +241,11 @@ const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
 const SOCIAL_GOALS = [
   "Talk to someone you trust about something that actually matters to you.",
   "Send a message to someone you haven't heard from in a while.",
-  "Do something active with a friend this week — a walk, a coffee, anything.",
-  "Tell someone close to you what you appreciate about them — and say it directly.",
-  "Ask a colleague or friend: 'How are you really doing?' — and actually listen.",
-  "Share something you're struggling with with one person you trust. Don't solve it — just say it.",
-  "Invite someone to do something concrete — not just 'we should catch up'.",
+  "Do something active with a friend this week: a walk, a coffee, anything.",
+  "Tell someone close to you what you appreciate about them. Say it directly.",
+  "Ask a colleague or friend: 'How are you really doing?' And actually listen.",
+  "Share something you're struggling with with one person you trust. Don't solve it, just say it.",
+  "Invite someone to do something concrete, not just 'we should catch up'.",
   "Write to someone you think about but rarely contact. It doesn't have to be much.",
 ];
 
@@ -258,7 +258,7 @@ const DAILY_PROMPTS = [
   "What do you do when your mind won't quiet down?",
   "Who do you miss having a real conversation with?",
   "What's given you a little energy recently?",
-  "What's the hardest part of your role right now — work, father, partner?",
+  "What's the hardest part of your role right now: work, father, partner?",
 ];
 
 const SEED_POSTS = [
@@ -280,22 +280,22 @@ const SEED_POSTS = [
 ];
 
 const ARTICLES = [
-  { id: "a1", icon: "\u{1F3A4}", title: "Performance anxiety — when demands take over", min: 3, cat: "Performance", program: "confidence",
-    body: ["Performance anxiety rarely comes from the task itself. It comes from what you think it means about you if things go wrong.", "Your body's alarm response — racing heart, restlessness, racing thoughts — is the same whether the threat is a bear or a presentation. Your brain is trying to protect you. It's just a bit too eager.", "What helps: lower the mental stakes ('this is one meeting, not a verdict'), breathe longer on the exhale than the inhale, and practise the situation in small doses rather than avoiding it.", "Avoidance brings relief today and more anxiety tomorrow. Gradual exposure does the opposite."] },
+  { id: "a1", icon: "\u{1F3A4}", title: "Performance anxiety when demands take over", min: 3, cat: "Performance", program: "confidence",
+    body: ["Performance anxiety rarely comes from the task itself. It comes from what you think it means about you if things go wrong.", "Your body's alarm response, racing heart, restlessness, racing thoughts, is the same whether the threat is a bear or a presentation. Your brain is trying to protect you. It's just a bit too eager.", "What helps: lower the mental stakes ('this is one meeting, not a verdict'), breathe longer on the exhale than the inhale, and practise the situation in small doses rather than avoiding it.", "Avoidance brings relief today and more anxiety tomorrow. Gradual exposure does the opposite."] },
   { id: "a2", icon: "\u{1F525}", title: "Anger is often something else", min: 3, cat: "Anger", program: "father",
-    body: ["For many men, anger is the only feeling that seems 'allowed'. Underneath is often something else: worry, shame, helplessness, hurt.", "Next time you feel it rising: try to name what happened a second before. Did you feel overruled? Unheard? Afraid of failing?", "Anger isn't dangerous in itself. It's information. The question is what you do with it — and whether the people around you have to bear the cost.", "A practical rule: pause before responding when your pulse is high. You can always return to the conversation. What you say in full anger you can rarely take back."] },
-  { id: "a3", icon: "\u{1F9CD}", title: "Loneliness among men — what nobody says out loud", min: 4, cat: "Loneliness", program: null,
-    body: ["Many men have colleagues, training partners and family — and are still lonely. Because none of those relationships have room for what actually weighs on them.", "Male friendships are often built around activity, not conversation. That's not wrong, but it means the heavy stuff never gets space.", "The good news: it takes less than you think. One honest sentence — 'it's been a tough stretch, actually' — opens more than a hundred surface-level conversations.", "Start with the friend you think can handle it best. He's probably been waiting for a chance to say something real himself."] },
+    body: ["For many men, anger is the only feeling that seems 'allowed'. Underneath is often something else: worry, shame, helplessness, hurt.", "Next time you feel it rising: try to name what happened a second before. Did you feel overruled? Unheard? Afraid of failing?", "Anger isn't dangerous in itself. It's information. The question is what you do with it, and whether the people around you have to bear the cost.", "A practical rule: pause before responding when your pulse is high. You can always return to the conversation. What you say in full anger you can rarely take back."] },
+  { id: "a3", icon: "\u{1F9CD}", title: "Loneliness among men", min: 4, cat: "Loneliness", program: null,
+    body: ["Many men have colleagues, training partners and family, and are still lonely. Because none of those relationships have room for what actually weighs on them.", "Male friendships are often built around activity, not conversation. That's not wrong, but it means the heavy stuff never gets space.", "The good news: it takes less than you think. One honest sentence, 'it's been a tough stretch, actually', opens more than a hundred surface-level conversations.", "Start with the friend you think can handle it best. He's probably been waiting for a chance to say something real himself."] },
   { id: "a4", icon: "\u{1F504}", title: "Who am I without the job?", min: 3, cat: "Identity", program: "transition",
-    body: ["When your identity is largely built on what you achieve, a career change, redundancy or retirement becomes more than practical — it becomes existential.", "Ask yourself: what did people value in me before my title? Your temperament? Your calm? Your ability to fix things? That doesn't disappear with the job.", "Transition periods are uncomfortable because the old is gone and the new hasn't taken shape yet. It's a middle phase, not a final destination.", "Use the time to explore, not conclude. Identity is built through action, not rumination."] },
-  { id: "a5", icon: "\u{1F476}", title: "First-time father — the honest picture", min: 4, cat: "Fatherhood", program: "father",
-    body: ["Many fathers feel a mixture of love, detachment and inadequacy in the early months. It's common — and almost nobody talks about it.", "Bonding isn't always a lightning bolt. For many it builds gradually, through nappy changes, carrying, and sleepless nights. It counts just as much.", "You don't need to be perfect. The research is clear: 'good enough' and repair after mistakes is what builds secure children.", "And: look after the relationship. The early years with young children are one of the hardest periods for a couple. Short, honest check-ins with your partner are underrated."] },
+    body: ["When your identity is largely built on what you achieve, a career change, redundancy or retirement becomes more than practical. It becomes existential.", "Ask yourself: what did people value in me before my title? Your temperament? Your calm? Your ability to fix things? That doesn't disappear with the job.", "Transition periods are uncomfortable because the old is gone and the new hasn't taken shape yet. It's a middle phase, not a final destination.", "Use the time to explore, not conclude. Identity is built through action, not rumination."] },
+  { id: "a5", icon: "\u{1F476}", title: "First-time father", min: 4, cat: "Fatherhood", program: "father",
+    body: ["Many fathers feel a mixture of love, detachment and inadequacy in the early months. It's common, and almost nobody talks about it.", "Bonding isn't always a lightning bolt. For many it builds gradually, through nappy changes, carrying, and sleepless nights. It counts just as much.", "You don't need to be perfect. The research is clear: 'good enough' and repair after mistakes is what builds secure children.", "And: look after the relationship. The early years with young children are one of the hardest periods for a couple. Short, honest check-ins with your partner are underrated."] },
 ];
 
 const MYTHS = [
   { myth: "Real men handle things themselves.", fact: "Asking for help takes more confidence than pretending everything's fine. Most of those who've done it only regret waiting so long." },
   { myth: "Talking about problems makes them bigger.", fact: "Research shows the opposite: putting feelings into words reduces activity in the brain's alarm system." },
-  { myth: "Therapy is for people in crisis.", fact: "Mental training works like physical training — it's most effective before things become acute." },
+  { myth: "Therapy is for people in crisis.", fact: "Mental training works like physical training. It's most effective before things become acute." },
   { myth: "Medication is the only solution if it's serious.", fact: "Conversation, physical activity, sleep and community all have documented effects, alone or in combination." },
 ];
 
@@ -327,19 +327,19 @@ function computeNudges() {
   const last3 = [daysAgo(0), daysAgo(1), daysAgo(2)].map(moodOn);
   if (last3.every(l => l !== null && l <= 2) && !dismissed("low3")) {
     nudges.push({ key: "low3", warm: false,
-      text: "You've logged a few heavy days in a row. Want something concrete to work with? The programmes go one day at a time — you set the pace.",
+      text: "You've logged a few heavy days in a row. Want something concrete to work with? The programmes go one day at a time. You set the pace.",
       actions: [{ label: "Show me the programmes", fn: () => { currentTab = "training"; render(); } }] });
   }
   const t = moodOn(todayStr()), y = moodOn(daysAgo(1));
   if (t !== null && y !== null && Math.abs(t - y) >= 2 && !dismissed("jump")) {
     nudges.push({ key: "jump", warm: false,
-      text: "Today looks quite different from yesterday. Something happen? No need to answer — but sometimes getting it down in two lines clears the head.",
+      text: "Today looks quite different from yesterday. Something happen? No need to answer, but sometimes getting it down in two lines clears the head.",
       actions: [{ label: "Write two lines", fn: () => { focusNote = true; render(); } }] });
   }
   const last14 = lastNDates(14).map(moodOn).filter(l => l !== null);
   if (last14.length >= 10 && last14.every(l => l <= 2) && !dismissed("low14")) {
     nudges.push({ key: "low14", warm: true,
-      text: "Your log has been heavy for a couple of weeks now. Staying in that for so long takes its toll — and you don't have to stay in it alone. A conversation with someone who knows this stuff doesn't commit you to anything.",
+      text: "Your log has been heavy for a couple of weeks now. Staying in that for so long takes its toll, and you don't have to stay in it alone. A conversation with someone who knows this stuff doesn't commit you to anything.",
       actions: [{ label: "See who you can talk to", fn: openSOS }] });
   }
   const last7 = lastNDates(7).map(moodOn).filter(l => l !== null);
@@ -354,7 +354,7 @@ function computeNudges() {
 function inactivityNudge() {
   for (let i = 0; i < 4; i++) if (state.moods[daysAgo(i)]) return null;
   if (Object.keys(state.moods).length === 0) return null;
-  return "Good to see you again. Days go by — no explanation needed. How are things today?";
+  return "Good to see you again. Days go by. No explanation needed. How are things today?";
 }
 
 let currentTab = "home";
@@ -406,11 +406,11 @@ function lockedCard(title, desc, icon) {
 function showProModal() {
   openModal(`
     <h3>Together Pro</h3>
-    <div class="sub" style="margin-bottom:18px">Full access — subscription coming soon.</div>
+    <div class="sub" style="margin-bottom:18px">Full access. Subscription coming soon.</div>
     ${['All exercises and audio guides','All 30-day programmes','Mood chart over 30 days','Journal with unlimited space','Sleep and energy log','Weekly structured review','New content every month'].map(f =>
       `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.9rem"><span style="color:var(--teal);font-weight:700;margin-right:8px">✓</span>${f}</div>`
     ).join('')}
-    <button class="btn" style="width:100%;margin-top:18px" onclick="closeModal()">Got it — looking forward to it</button>
+    <button class="btn" style="width:100%;margin-top:18px" onclick="closeModal()">Got it. Looking forward to it</button>
   `);
 }
 function socialGoalCard() {
@@ -464,7 +464,7 @@ function renderHome() {
   const wk = weekKey();
   const ws = (state.weeklySummary || {})[wk];
 
-  let html = `<h1>${greeting}</h1><div class="sub">How are you doing today — really?</div>`;
+  let html = `<h1>${greeting}</h1><div class="sub">How are you doing today, really?</div>`;
   if (inact && !today) html += `<div class="card nudge"><p>${inact}</p></div>`;
 
   html += `<div class="card">
@@ -474,7 +474,7 @@ function renderHome() {
     </div>`;
   if (today) {
     html += `<div style="margin-top:10px">
-      <textarea id="moodNote" rows="2" placeholder="A few words about the day? Optional — and completely private.">${esc(today.note || "")}</textarea>
+      <textarea id="moodNote" rows="2" placeholder="A few words about the day? Optional, completely private.">${esc(today.note || "")}</textarea>
       <div style="text-align:right;margin-top:6px"><button class="btn small secondary" onclick="saveNote()">Save note</button></div>
     </div>`;
   }
@@ -494,7 +494,7 @@ function renderHome() {
         </div>
         ${todaySleep ? `<div style="font-size:0.88rem;color:var(--text-soft);margin-top:6px">${todaySleep.hours}h sleep · energy ${'😴😕😐🙂⚡'.split('')[todaySleep.energy - 1] || ''}</div>` : ''}
       </div>`
-    : lockedCard('Sleep and energy log', 'Log sleep and energy daily — spot the patterns over time.', '💤');
+    : lockedCard('Sleep and energy log', 'Log sleep and energy daily. Spot the patterns over time.', '💤');
 
   // Social goal (free)
   html += socialGoalCard();
@@ -524,14 +524,14 @@ function renderHome() {
         </div>
         <div class="sub" style="margin-top:6px">${(state.journal || []).length} notes saved privately</div>
       </div>`
-    : lockedCard('Journal', 'Unlimited private writing space. No questions — just room to think.', '📓');
+    : lockedCard('Journal', 'Unlimited private writing space. No questions, just room to think.', '📓');
 
   // Weekly review (Pro)
   html += `<h2>Weekly review</h2>`;
   html += IS_PRO
     ? `<div class="card" onclick="openWeeklyReview()" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
         <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:8px">THIS WEEK'S REFLECTION</div>
-        <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px">Three questions to close the week — what was hard, what went well, what do you carry forward.</div>
+        <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px">Three questions to close the week: what was hard, what went well, what do you carry forward.</div>
         ${ws ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Completed ${ws.date}</div>`
               : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Start →</div>`}
       </div>`
@@ -559,7 +559,7 @@ function setMood(level) {
 }
 function saveNote() {
   const ta = document.getElementById("moodNote");
-  if (ta && state.moods[todayStr()]) { state.moods[todayStr()].note = ta.value; save(); toast("Note saved — only visible to you"); }
+  if (ta && state.moods[todayStr()]) { state.moods[todayStr()].note = ta.value; save(); toast("Note saved. Only visible to you"); }
 }
 function nudgeAction(key, i) { const n = computeNudges().find(x => x.key === key); if (n) n.actions[i].fn(); }
 function dismissNudge(key) { state.dismissedNudges[key] = todayStr(); save(); render(); }
@@ -692,7 +692,7 @@ function renderTraining() {
     <div style="font-size:1.05rem;font-weight:600;line-height:1.45;margin-bottom:10px;color:var(--text)">${sr.title}</div>
     <div style="font-size:0.88rem;color:var(--text-soft);line-height:1.6;margin-bottom:16px">${sr.prompt}</div>
     ${srSaved && srSaved.text
-      ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Answered ${srSaved.date} — tap to read or update</div>`
+      ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Answered ${srSaved.date}. Tap to read or update</div>`
       : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Write →</div>`}
   </div>`;
 
@@ -729,7 +729,7 @@ function quitProgram() { state.activeProgram = null; save(); render(); }
 function openProgramDay(id, day) {
   const p = PROGRAMS.find(x => x.id === id);
   openModal(`
-    <h3>${p.icon} ${p.title} — day ${day}</h3>
+    <h3>${p.icon} ${p.title}, day ${day}</h3>
     <div class="sub">Short content + exercise + reflection</div>
     <div class="articleBody">
       <p><b>Today's focus:</b> ${programDayFocus(id, day)}</p>
@@ -741,10 +741,10 @@ function openProgramDay(id, day) {
 }
 function programDayFocus(id, day) {
   const focuses = {
-    sleep: ["Map your evening routine as it actually is.", "Screen-free for the last 30 minutes before bed.", "Fixed bedtime — weekends too.", "Bedroom: dark, cool, quiet."],
-    transition: ["Name what has actually been lost — and what remains.", "What do you have control over today? Do one of those things.", "Talk to one person about how you're really doing.", "Small routines bring stability when the big things are in flux."],
-    confidence: ["Write down three situations you've handled well before.", "Practise taking up space: say one opinion out loud today.", "Replace 'I have to perform' with 'I'm here to contribute'.", "Posture affects how you feel — test it today."],
-    father: ["Ten minutes of undivided attention — phone away.", "Apologise if you get it wrong. It builds trust.", "Notice what triggers your impatience.", "Tell your partner one thing you appreciate about them."],
+    sleep: ["Map your evening routine as it actually is.", "Screen-free for the last 30 minutes before bed.", "Fixed bedtime, weekends too.", "Bedroom: dark, cool, quiet."],
+    transition: ["Name what has actually been lost, and what remains.", "What do you have control over today? Do one of those things.", "Talk to one person about how you're really doing.", "Small routines bring stability when the big things are in flux."],
+    confidence: ["Write down three situations you've handled well before.", "Practise taking up space: say one opinion out loud today.", "Replace 'I have to perform' with 'I'm here to contribute'.", "Posture affects how you feel. Test it today."],
+    father: ["Ten minutes of undivided attention, phone away.", "Apologise if you get it wrong. It builds trust.", "Notice what triggers your impatience.", "Tell your partner one thing you appreciate about them."],
   };
   const f = focuses[id] || focuses.sleep;
   return f[(day - 1) % f.length];
@@ -757,7 +757,7 @@ function openReflection(id) {
   openModal(`
     <h3>${r.icon} ${r.title}</h3>
     <p style="font-size:0.95rem;color:var(--text-soft);margin-bottom:14px;line-height:1.55">${r.prompt}</p>
-    <textarea id="reflText" rows="7" placeholder="Write for yourself — no one else needs to see this...">${esc(saved.text)}</textarea>
+    <textarea id="reflText" rows="7" placeholder="Write for yourself. No one else needs to see this...">${esc(saved.text)}</textarea>
     <button class="btn" style="width:100%;margin-top:12px" onclick="saveReflection('${id}')">Save</button>
     ${saved.date ? `<div style="font-size:0.78rem;color:var(--text-soft);text-align:center;margin-top:10px">Last saved ${saved.date}</div>` : ''}
   `);
@@ -769,7 +769,7 @@ function saveReflection(id) {
   state.reflections[id] = { text: ta.value, date: todayStr() };
   save();
   closeModal();
-  toast("Saved — visible only to you.");
+  toast("Saved. Visible only to you.");
   render();
 }
 
@@ -818,7 +818,7 @@ function openBreath() {
 }
 function toggleBreath() {
   const btn = document.getElementById("breathStart");
-  if (breathTimer) { stopBreathCycle(); btn.textContent = "Start"; document.getElementById("breathPhase").textContent = "Paused — continue when you're ready"; return; }
+  if (breathTimer) { stopBreathCycle(); btn.textContent = "Start"; document.getElementById("breathPhase").textContent = "Paused. Continue when you're ready"; return; }
   btn.textContent = "Stop";
   runBreathCycle();
 }
@@ -902,7 +902,7 @@ function reportPost(postId) {
 function openComposer() {
   openModal(`
     <h3>New post</h3>
-    <div class="sub">You're posting as <b>${esc(state.pseudonym)}</b> — never your real name.</div>
+    <div class="sub">You're posting as <b>${esc(state.pseudonym)}</b>. Never your real name.</div>
     <div style="margin-bottom:10px">
       <select id="postChannel" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);font-family:inherit;font-size:0.92rem">
         ${CHANNELS.slice(1).map(c => `<option>${c}</option>`).join("")}
@@ -921,7 +921,7 @@ function submitPost() {
     openModal(`
       <h3>We see you &#129505;</h3>
       <div class="articleBody">
-        <p>What you're writing sounds heavy, and we're glad you're putting it into words. Your post will be published — but first, we want to remind you that there are people ready to talk with you right now, around the clock:</p>
+        <p>What you're writing sounds heavy, and we're glad you're putting it into words. Your post will be published. But first, we want to remind you that there are people ready to talk with you right now, around the clock:</p>
       </div>
       <a class="callBtn urgent" href="tel:911"><span>Emergency services<small>Call your local emergency number</small></span><span>911 / 999 / 112</span></a>
       <a class="callBtn" href="tel:116123"><span>Samaritans<small>Free &middot; available 24/7 &middot; UK &amp; Ireland</small></span><span>116 123</span></a>
@@ -976,7 +976,7 @@ function renderProfile() {
   const completedCount = state.completedExercises.length;
   const st = streak();
 
-  let html = `<h1>Profile</h1><div class="sub">Completely private — nothing here is visible to others.</div>`;
+  let html = `<h1>Profile</h1><div class="sub">Completely private. Nothing here is visible to others.</div>`;
   html += `<div class="statRow" style="margin-bottom:12px">
     <div class="card"><div class="num">${st}</div><div class="lbl">day streak</div></div>
     <div class="card"><div class="num">${completedCount}</div><div class="lbl">exercises done</div></div>
@@ -994,7 +994,7 @@ function renderProfile() {
 
   html += `<h2>My posts</h2>`;
   if (state.posts.length === 0) {
-    html += `<div class="card"><div class="empty">You haven't shared anything yet. That's completely fine — read and recognise yourself at your own pace.</div></div>`;
+    html += `<div class="card"><div class="empty">You haven't shared anything yet. That's completely fine. Read and recognise yourself at your own pace.</div></div>`;
   } else {
     html += state.posts.map(p => `<div class="card"><span class="tag">${p.channel}</span>
       <div style="font-size:0.9rem;margin-top:8px">${esc(p.text.length > 120 ? p.text.slice(0, 120) + "…" : p.text)}</div></div>`).join("");
