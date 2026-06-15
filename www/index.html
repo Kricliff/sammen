@@ -367,16 +367,26 @@ const SEED_POSTS = [
 ];
 
 const ARTICLES = [
-  { id: "a1", icon: "\u{1F3A4}", title: "Performance anxiety when demands take over", min: 3, cat: "Performance", program: "confidence",
-    body: ["Performance anxiety rarely comes from the task itself. It comes from what you think it means about you if things go wrong.", "Your body's alarm response, racing heart, restlessness, racing thoughts, is the same whether the threat is a bear or a presentation. Your brain is trying to protect you. It's just a bit too eager.", "What helps: lower the mental stakes ('this is one meeting, not a verdict'), breathe longer on the exhale than the inhale, and practise the situation in small doses rather than avoiding it.", "Avoidance brings relief today and more anxiety tomorrow. Gradual exposure does the opposite."] },
-  { id: "a2", icon: "\u{1F525}", title: "Anger is often something else", min: 3, cat: "Anger", program: "father",
+  { id: "a1", icon: "\u{1F3A4}", title: "Performance anxiety when demands take over", min: 2, cat: "Performance", program: "confidence",
+    body: ["Performance anxiety rarely comes from the task itself. It comes from what you think it means about you if things go wrong.", "Your body's alarm response — racing heart, restlessness, racing thoughts — is the same whether the threat is a bear or a presentation. Your brain is trying to protect you. It's just a bit too eager.", "What helps: lower the mental stakes ('this is one meeting, not a verdict'), breathe longer on the exhale than the inhale, and practise the situation in small doses rather than avoiding it.", "Avoidance brings relief today and more anxiety tomorrow. Gradual exposure does the opposite."] },
+  { id: "a2", icon: "\u{1F525}", title: "Anger is often something else", min: 2, cat: "Anger", program: "father",
     body: ["For many men, anger is the only feeling that seems 'allowed'. Underneath is often something else: worry, shame, helplessness, hurt.", "Next time you feel it rising: try to name what happened a second before. Did you feel overruled? Unheard? Afraid of failing?", "Anger isn't dangerous in itself. It's information. The question is what you do with it, and whether the people around you have to bear the cost.", "A practical rule: pause before responding when your pulse is high. You can always return to the conversation. What you say in full anger you can rarely take back."] },
-  { id: "a3", icon: "\u{1F9CD}", title: "Loneliness among men", min: 4, cat: "Loneliness", program: null,
-    body: ["Many men have colleagues, training partners and family, and are still lonely. Because none of those relationships have room for what actually weighs on them.", "Male friendships are often built around activity, not conversation. That's not wrong, but it means the heavy stuff never gets space.", "The good news: it takes less than you think. One honest sentence, 'it's been a tough stretch, actually', opens more than a hundred surface-level conversations.", "Start with the friend you think can handle it best. He's probably been waiting for a chance to say something real himself."] },
-  { id: "a4", icon: "\u{1F504}", title: "Who am I without the job?", min: 3, cat: "Identity", program: "transition",
+  { id: "a3", icon: "\u{1F9CD}", title: "Loneliness among men", min: 3, cat: "Loneliness", program: null,
+    body: ["Many men have colleagues, training partners and family, and are still lonely. Because none of those relationships have room for what actually weighs on them.", "Male friendships are often built around activity, not conversation. That's not wrong, but it means the heavy stuff never gets space.", "The good news: it takes less than you think. One honest sentence — 'it's been a tough stretch, actually' — opens more than a hundred surface-level conversations.", "Start with the friend you think can handle it best. He's probably been waiting for a chance to say something real himself."] },
+  { id: "a4", icon: "\u{1F504}", title: "Who am I without the job?", min: 2, cat: "Identity", program: "transition",
     body: ["When your identity is largely built on what you achieve, a career change, redundancy or retirement becomes more than practical. It becomes existential.", "Ask yourself: what did people value in me before my title? Your temperament? Your calm? Your ability to fix things? That doesn't disappear with the job.", "Transition periods are uncomfortable because the old is gone and the new hasn't taken shape yet. It's a middle phase, not a final destination.", "Use the time to explore, not conclude. Identity is built through action, not rumination."] },
-  { id: "a5", icon: "\u{1F476}", title: "First-time father", min: 4, cat: "Fatherhood", program: "father",
+  { id: "a5", icon: "\u{1F476}", title: "First-time father", min: 3, cat: "Fatherhood", program: "father",
     body: ["Many fathers feel a mixture of love, detachment and inadequacy in the early months. It's common, and almost nobody talks about it.", "Bonding isn't always a lightning bolt. For many it builds gradually, through nappy changes, carrying, and sleepless nights. It counts just as much.", "You don't need to be perfect. The research is clear: 'good enough' and repair after mistakes is what builds secure children.", "And: look after the relationship. The early years with young children are one of the hardest periods for a couple. Short, honest check-ins with your partner are underrated."] },
+  { id: "a6", icon: "\u{1F62E}", title: "Burnout: how to recognise it before it's too late", min: 2, cat: "Burnout", program: null,
+    body: ["Burnout doesn't announce itself. It creeps in as reduced motivation, shorter patience, and a growing numbness toward things that used to matter.", "The three core signs: emotional exhaustion (nothing left to give), depersonalisation (feeling detached, going through the motions), and a reduced sense of accomplishment.", "Men often mask burnout with more work, alcohol, or withdrawal. The instinct to push through is understandable — but it accelerates the process.", "Recovery takes time. The first step is usually the hardest: admitting to yourself that something is wrong."] },
+  { id: "a7", icon: "\u{1F5A4}", title: "How men grieve — and why it looks different", min: 2, cat: "Grief", program: null,
+    body: ["Men grieve. They just often don't do it the way we expect grief to look.", "Where women are more likely to process loss through talking, men more often grieve through action — staying busy, taking care of practical things, exercising, or withdrawing temporarily.", "Neither is better. Both are valid. The danger for men is when temporary withdrawal becomes permanent avoidance.", "If you've lost someone: you don't have to talk about it. But notice when the numbness stops being a phase and starts being a wall."] },
+  { id: "a8", icon: "\u{1F9BE}", title: "When stress shows up in the body", min: 2, cat: "Stress", program: null,
+    body: ["Many men notice stress physically before they notice it emotionally: tight shoulders, jaw clenching, trouble sleeping, chest tightness, headaches.", "This isn't weakness — it's how the nervous system works. Stress is a physical state, not just a thought.", "The body often knows something is wrong before the mind admits it. If you're grinding your teeth at night, it's worth asking: what am I carrying that I haven't named yet?", "Short-term interventions that work: cold water on the face, slow exhalation, physical movement, and changing your environment — even briefly."] },
+  { id: "a9", icon: "\u{1F4AC}", title: "How to start a difficult conversation", min: 2, cat: "Relationships", program: null,
+    body: ["Most difficult conversations never happen because neither person knows how to start. The silence grows. The distance increases.", "A simple opener that works: 'I want to talk about something, and I'm not sure how to say it.' It signals honesty, and it buys you a moment to find the words.", "Time it well: not after a conflict, not at bedtime, not in front of others. A walk side by side is often easier than face to face.", "You don't need to resolve everything in one conversation. Starting is enough."] },
+  { id: "a10", icon: "\u{1F634}", title: "Sleep and mental health: the link most men underestimate", min: 2, cat: "Sleep", program: null,
+    body: ["Poor sleep is both a symptom and a cause of poor mental health. The relationship runs in both directions.", "After one night of less than 6 hours, emotional reactivity increases by up to 60%. You're more likely to snap, withdraw, catastrophise, or make poor decisions.", "Men consistently underreport sleep problems. The cultural script says power through. The research says that's one of the most expensive things you can do.", "Practical: a consistent wake time (even on weekends) is more effective than early bedtimes. Reduce screens 30 minutes before bed — not for the light, but to let your mind decelerate."] },
 ];
 
 const MYTHS = [
@@ -384,6 +394,25 @@ const MYTHS = [
   { myth: "Talking about problems makes them bigger.", fact: "Research shows the opposite: putting feelings into words reduces activity in the brain's alarm system." },
   { myth: "Therapy is for people in crisis.", fact: "Mental training works like physical training. It's most effective before things become acute." },
   { myth: "Medication is the only solution if it's serious.", fact: "Conversation, physical activity, sleep and community all have documented effects, alone or in combination." },
+  { myth: "Feeling anxious means you're weak.", fact: "Anxiety is the nervous system doing its job — often too well. Elite athletes, surgeons, and leaders all experience it. The difference is in how they relate to it." },
+  { myth: "Men don't get depressed, they just get on with it.", fact: "Men experience depression at similar rates to women but are far less likely to be diagnosed. Irritability, withdrawal, and overworking are common male presentations that get missed." },
+  { myth: "Asking for help burdens the people around you.", fact: "Research consistently shows that people asked for support feel more connected and valued — not burdened. Vulnerability invites closeness." },
+  { myth: "If you can't fix it, there's no point talking about it.", fact: "Being heard reduces the physiological stress response regardless of whether the problem is solved. The conversation is the intervention, not just a step toward one." },
+  { myth: "Real fathers just instinctively know what to do.", fact: "Parenting is a skill, not an instinct. Research shows active involvement — even when uncertain — builds stronger bonds than waiting to feel confident." },
+  { myth: "Mental health problems are permanent once they start.", fact: "The majority of people who experience depression, anxiety, or burnout fully recover. Early support significantly improves outcomes." },
+];
+
+const RESEARCH = [
+  { title: "Men are 3× more likely to die by suicide", body: "In most Western countries, men account for around 75% of all suicides. Research points to emotional suppression, reluctance to seek help, and use of more lethal methods. Improved social connection and earlier help-seeking are the most effective protective factors.", source: "WHO, 2023" },
+  { title: "Exercise works as well as medication for mild depression", body: "A 2023 meta-analysis of 218 studies found that physical activity is as effective as antidepressants for mild to moderate depression. Even 20 minutes of moderate exercise three times a week produced measurable improvements in mood within four weeks.", source: "British Journal of Sports Medicine, 2023" },
+  { title: "Men with close friendships live longer", body: "Harvard's 85-year study on adult development found that the quality of close relationships is the single strongest predictor of health and happiness in later life — stronger than wealth, IQ, or social class. Men with at least one close confidant reported significantly better mental and physical health.", source: "Harvard Study of Adult Development" },
+  { title: "Loneliness is as harmful as smoking 15 cigarettes a day", body: "Research from Brigham Young University found that loneliness increases the risk of early death by 26%. For men — who are more likely to lose social connections after leaving work or education — the risk is particularly high.", source: "Brigham Young University, 2015" },
+  { title: "Putting feelings into words calms the brain", body: "Neuroscience research using fMRI scans shows that naming emotions (called 'affect labelling') significantly reduces activity in the amygdala — the brain's alarm system. You don't need therapy to get this effect. Writing, voice notes, or a real conversation all work.", source: "UCLA, Lieberman et al." },
+  { title: "One bad night's sleep increases emotional reactivity by 60%", body: "After less than 6 hours of sleep, the prefrontal cortex shows reduced activity — impairing emotional regulation and rational thinking. Men consistently underestimate how much sleep affects their stress tolerance, patience, and decision-making.", source: "UC Berkeley Sleep Lab" },
+  { title: "Fatherhood measurably changes the brain", body: "Studies show new fathers experience hormonal changes — including drops in testosterone and rises in oxytocin — that support bonding. Men who are actively involved in childcare in the first year show stronger neural responses to their child's emotional cues.", source: "PNAS, 2014" },
+  { title: "Shared activity is a valid form of emotional support for men", body: "Research on male bonding shows that 'doing together' — shared activity, problem-solving, side-by-side presence — is often as effective as direct emotional conversation. This isn't avoidance; it's a different but equally valid pathway to connection.", source: "Journal of Social and Personal Relationships" },
+  { title: "Strong work identity increases mental health risk after job loss", body: "Men who strongly identify with their job show significantly higher rates of depression and anxiety after redundancy or retirement. Studies recommend building multiple identity sources — partner, father, friend, hobbyist — as a buffer against work-related identity loss.", source: "Journal of Occupational Health Psychology" },
+  { title: "8 weeks of mindfulness reduces stress hormones", body: "An 8-week mindfulness programme produced measurable reductions in cortisol (the body's primary stress hormone) and self-reported stress in working men. The most effective approach: short daily practice rather than longer weekly sessions.", source: "Psychiatry Research, 2011" },
 ];
 
 const CRISIS_PATTERNS = /suicide|take my (own )?life|don't want to (be|live|exist)|can't go on|end it all|end my life|hurt myself|self.harm|not worth living|want to die/i;
@@ -446,6 +475,9 @@ function inactivityNudge() {
 
 let currentTab = "home";
 let currentSubView = null;
+let mythOffset = 0;
+let articleOffset = 0;
+let researchOffset = 0;
 let currentChannel = "All";
 let focusNote = false;
 const main = document.getElementById("main");
@@ -1075,19 +1107,48 @@ function doPublish(text, channel, prompt) {
   toast("Posted. You're not alone in this.");
 }
 
+function shuffleMyths() { mythOffset = (mythOffset + 2) % MYTHS.length; render(); }
+function shuffleArticles() { articleOffset = (articleOffset + 3) % ARTICLES.length; render(); }
+function shuffleResearch() { researchOffset = (researchOffset + 1) % RESEARCH.length; render(); }
+
 function renderLearn() {
-  let html = `<h1>Learn</h1><div class="sub">Short answers to real questions. 2&ndash;4 min reads.</div>`;
-  html += ARTICLES.map(a => `
+  let html = `<h1>Learn</h1><div class="sub">Short reads. No fluff.</div>`;
+
+  const arts = [0,1,2].map(i => ARTICLES[(articleOffset + i) % ARTICLES.length]);
+  html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <h2 style="margin:0">Articles</h2>
+    <button class="btn small secondary" onclick="shuffleArticles()">&#8635; More</button>
+  </div>`;
+  html += arts.map(a => `
     <div class="card exCard" onclick="openArticle('${a.id}')">
       <div class="exIcon">${a.icon}</div>
       <div class="meta"><b>${a.title}</b><span>${a.cat} &middot; ${a.min} min</span></div>
     </div>`).join("");
-  html += `<h2>Myths vs. facts</h2>`;
-  html += MYTHS.map(m => `
+
+  const r = RESEARCH[researchOffset % RESEARCH.length];
+  html += `<div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px">
+    <h2 style="margin:0">Research</h2>
+    <button class="btn small secondary" onclick="shuffleResearch()">&#8635; Next</button>
+  </div>
+  <div class="card">
+    <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">&#128202; Finding</div>
+    <div style="font-size:0.95rem;font-weight:600;line-height:1.3;margin-bottom:10px">${r.title}</div>
+    <div style="font-size:0.88rem;color:var(--text);line-height:1.6">${r.body}</div>
+    <div style="font-size:0.75rem;color:var(--text-soft);margin-top:10px;font-style:italic">${r.source}</div>
+  </div>`;
+
+  const m1 = MYTHS[mythOffset % MYTHS.length];
+  const m2 = MYTHS[(mythOffset + 1) % MYTHS.length];
+  html += `<div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px">
+    <h2 style="margin:0">Myths vs. facts</h2>
+    <button class="btn small secondary" onclick="shuffleMyths()">&#8635; New</button>
+  </div>`;
+  html += [m1, m2].map(m => `
     <div class="card">
       <span class="tag coral">MYTH</span> <span style="font-size:0.92rem;font-style:italic">&laquo;${m.myth}&raquo;</span>
       <div style="margin-top:10px"><span class="tag">FACT</span> <span style="font-size:0.92rem">${m.fact}</span></div>
     </div>`).join("");
+
   main.innerHTML = html;
 }
 
