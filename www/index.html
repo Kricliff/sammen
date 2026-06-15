@@ -1122,7 +1122,7 @@ function renderLearn() {
   html += arts.map(a => `
     <div class="card exCard" onclick="openArticle('${a.id}')">
       <div class="exIcon">${a.icon}</div>
-      <div class="meta"><b>${a.title}</b><span>${a.cat} &middot; ${a.min} min</span></div>
+      <div class="meta"><b>${a.title}</b><span>${a.cat}</span></div>
     </div>`).join("");
 
   const r = RESEARCH[researchOffset % RESEARCH.length];
