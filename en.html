@@ -357,6 +357,7 @@ function inactivityNudge() {
 }
 
 let currentTab = "home";
+let currentSubView = null;
 let currentChannel = "All";
 let focusNote = false;
 const main = document.getElementById("main");
@@ -374,7 +375,7 @@ function renderNav() {
     `<button class="${t.id === currentTab ? "active" : ""}" onclick="goTab('${t.id}')">
        <span class="ico">${t.ico}</span>${t.label}</button>`).join("");
 }
-function goTab(id) { currentTab = id; render(); main.scrollTop = 0; }
+function goTab(id) { currentTab = id; currentSubView = null; render(); main.scrollTop = 0; }
 
 function render() {
   renderNav();
@@ -910,7 +911,7 @@ function renderCommunity() {
       <div class="foot">
         <button class="${r.support ? "on" : ""}" onclick="react('${p.id}','support')">&#129309; Support &middot; ${sup}</button>
         <button class="${r.beenThere ? "on" : ""}" onclick="react('${p.id}','beenThere')">&#129730; I've been there &middot; ${bt}</button>
-        <button class="report" onclick="reportPost('${p.id}')">Report</button>
+        ${p.mine ? `<button class="report" style="color:#b9503c" onclick="deletePost('${p.id}')">Delete</button>` : `<button class="report" onclick="reportPost('${p.id}')">Report</button>`}
       </div>
     </div>`;
   }).join("");
@@ -1007,6 +1008,7 @@ function openArticle(id) {
 }
 
 function renderProfile() {
+  if (currentSubView === "my-posts") { renderMyPosts(); return; }
   const dates = lastNDates(14);
   const labels = [new Date(dates[0]), new Date(dates[13])].map(d => d.getDate() + "/" + (d.getMonth() + 1));
   const completedCount = state.completedExercises.length;
@@ -1048,12 +1050,22 @@ function renderProfile() {
     }).join("");
   }
 
-  html += `<h2>My posts</h2>`;
+  html += `<div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px">
+    <h2 style="margin:0">My posts</h2>
+    ${state.posts.length > 0 ? `<button class="btn small secondary" onclick="openMyPosts()">See all ${state.posts.length} →</button>` : ""}
+  </div>`;
   if (state.posts.length === 0) {
     html += `<div class="card"><div class="empty">You haven't shared anything yet. That's completely fine. Read and recognise yourself at your own pace.</div></div>`;
   } else {
-    html += state.posts.map(p => `<div class="card"><span class="tag">${p.channel}</span>
-      <div style="font-size:0.9rem;margin-top:8px">${esc(p.text.length > 120 ? p.text.slice(0, 120) + "…" : p.text)}</div></div>`).join("");
+    html += state.posts.slice(0, 2).map(p => `<div class="card" style="margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="tag">${esc(p.channel)}</span>
+        <span style="font-size:0.78rem;color:var(--text-soft)">${p.age || "now"}</span>
+      </div>
+      ${p.prompt ? `<div style="background:var(--teal-light);border-left:3px solid var(--teal);border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:0.78rem;color:var(--teal-dark)"><span style="font-weight:700;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:2px">Today's prompt</span>${esc(p.prompt)}</div>` : ""}
+      <div style="font-size:0.88rem;color:var(--text)">${esc(p.text.length > 120 ? p.text.slice(0, 120) + "…" : p.text)}</div>
+    </div>`).join("");
+    if (state.posts.length > 2) html += `<div style="text-align:center;margin-bottom:12px"><button class="btn small secondary" onclick="openMyPosts()">+ ${state.posts.length - 2} more posts</button></div>`;
   }
 
   html += `<h2>Settings</h2><div class="card">
@@ -1068,6 +1080,42 @@ function renderProfile() {
   </div>`;
 
   main.innerHTML = html;
+}
+
+function openMyPosts() { currentSubView = "my-posts"; render(); main.scrollTop = 0; }
+function closeSubView() { currentSubView = null; render(); main.scrollTop = 0; }
+function renderMyPosts() {
+  let html = `<button onclick="closeSubView()" style="background:none;border:none;font-family:inherit;font-size:0.92rem;color:var(--teal-dark);cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:6px">← Back to profile</button>
+    <h1>My posts</h1><div class="sub">${state.posts.length} post${state.posts.length !== 1 ? "s" : ""} shared</div>`;
+  if (state.posts.length === 0) {
+    html += `<div class="card"><div class="empty">You haven't shared anything yet. That's completely fine.</div></div>`;
+  } else {
+    html += state.posts.map(p => `<div class="card" style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span class="tag">${esc(p.channel)}</span>
+        <span style="font-size:0.78rem;color:var(--text-soft)">${p.age || "now"}</span>
+      </div>
+      ${p.prompt ? `<div style="background:var(--teal-light);border-left:3px solid var(--teal);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:0.82rem;color:var(--teal-dark)"><span style="font-weight:700;font-size:0.7rem;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:3px">Today's prompt</span>${esc(p.prompt)}</div>` : ""}
+      <div style="font-size:0.9rem;color:var(--text);line-height:1.5">${esc(p.text)}</div>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+        <button onclick="deletePost('${p.id}')" style="background:none;border:1px solid var(--border);border-radius:999px;padding:5px 13px;font-size:0.78rem;font-family:inherit;cursor:pointer;color:#b9503c">🗑 Delete post</button>
+      </div>
+    </div>`).join("");
+  }
+  main.innerHTML = html;
+}
+function deletePost(id) {
+  openModal(`
+    <h3>Delete this post?</h3>
+    <div class="sub">This can't be undone. The post will be removed from the community.</div>
+    <button class="btn" style="width:100%;background:#b9503c;margin-bottom:8px" onclick="confirmDeletePost('${id}')">Yes, delete it</button>
+    <button class="btn secondary" style="width:100%" onclick="closeModal()">Cancel</button>
+  `);
+}
+function confirmDeletePost(id) {
+  state.posts = state.posts.filter(p => p.id !== id);
+  save(); closeModal(); render();
+  toast("Post deleted.");
 }
 
 function editPseudonym() {
