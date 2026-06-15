@@ -887,7 +887,7 @@ function renderCommunity() {
   html += `<div class="card promptCard">
     <span class="tag">TODAY'S PROMPT</span>
     <p>${dailyPrompt()}</p>
-    <button class="btn small" style="background:#fff;color:var(--teal-dark)" onclick="openComposer()">Reply anonymously</button>
+    <button class="btn small" style="background:#fff;color:var(--teal-dark)" onclick="openPromptComposer()">Reply anonymously</button>
   </div>`;
   html += `<div style="text-align:right;margin-bottom:10px">
     <button class="btn small secondary" onclick="openComposer()">+ New post</button></div>`;
@@ -905,6 +905,7 @@ function renderCommunity() {
         <div class="who"><b>${esc(p.who)}${p.mine ? ' <span style="font-weight:400;color:var(--text-soft)">(you)</span>' : ""}</b>
         <span>${p.channel} &middot; ${p.age || "now"}</span></div>
       </div>
+      ${p.prompt ? `<div style="background:var(--teal-light);border-left:3px solid var(--teal);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:0.82rem;color:var(--teal-dark);"><span style="font-weight:700;font-size:0.7rem;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:3px">Today's prompt</span>${esc(p.prompt)}</div>` : ""}
       <div class="body">${esc(p.text)}</div>
       <div class="foot">
         <button class="${r.support ? "on" : ""}" onclick="react('${p.id}','support')">&#129309; Support &middot; ${sup}</button>
@@ -926,16 +927,23 @@ function reportPost(postId) {
       `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="closeModal(); toast('Report sent. We\'ll look into it.')">${reason}</button>`).join("")}
   `);
 }
-function openComposer() {
+let composerPrompt = null;
+function openPromptComposer() { openComposer(dailyPrompt()); }
+function openComposer(replyToPrompt) {
+  composerPrompt = replyToPrompt || null;
+  const promptBlock = replyToPrompt
+    ? `<div style="background:var(--teal-light);border-left:3px solid var(--teal);border-radius:8px;padding:8px 10px;margin-bottom:12px;font-size:0.85rem;color:var(--teal-dark);"><span style="font-weight:700;font-size:0.7rem;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:4px">Replying to today's prompt</span>${esc(replyToPrompt)}</div>`
+    : "";
   openModal(`
-    <h3>New post</h3>
+    <h3>${replyToPrompt ? "Reply to prompt" : "New post"}</h3>
     <div class="sub">You're posting as <b>${esc(state.pseudonym)}</b>. Never your real name.</div>
+    ${promptBlock}
     <div style="margin-bottom:10px">
       <select id="postChannel" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);font-family:inherit;font-size:0.92rem">
         ${CHANNELS.slice(1).map(c => `<option>${c}</option>`).join("")}
       </select>
     </div>
-    <textarea id="postText" rows="5" placeholder="Write it as it is. No one needs polished words here."></textarea>
+    <textarea id="postText" rows="5" placeholder="${replyToPrompt ? "Share your thoughts on this..." : "Write it as it is. No one needs polished words here."}"></textarea>
     <button class="btn" style="width:100%;margin-top:12px" onclick="submitPost()">Post anonymously</button>
   `);
 }
@@ -955,15 +963,16 @@ function submitPost() {
       <a class="callBtn" href="tel:988"><span>988 Suicide &amp; Crisis Lifeline<small>Call or text &middot; US</small></span><span>988</span></a>
       <button class="btn secondary" style="width:100%;margin-top:6px" onclick="finalizePost()">Publish my post</button>
     `);
-    pendingPost = { text, channel };
+    pendingPost = { text, channel, prompt: composerPrompt };
     return;
   }
-  doPublish(text, channel);
+  doPublish(text, channel, composerPrompt);
+  composerPrompt = null;
 }
 let pendingPost = null;
-function finalizePost() { if (pendingPost) { doPublish(pendingPost.text, pendingPost.channel); pendingPost = null; } }
-function doPublish(text, channel) {
-  state.posts.unshift({ id: "u" + Date.now(), who: state.pseudonym, channel, text, support: 0, beenThere: 0, comments: 0, age: "now" });
+function finalizePost() { if (pendingPost) { doPublish(pendingPost.text, pendingPost.channel, pendingPost.prompt); pendingPost = null; } }
+function doPublish(text, channel, prompt) {
+  state.posts.unshift({ id: "u" + Date.now(), who: state.pseudonym, channel, text, prompt: prompt || null, support: 0, beenThere: 0, comments: 0, age: "now" });
   save(); closeModal();
   currentTab = "community"; render();
   toast("Posted. You're not alone in this.");
