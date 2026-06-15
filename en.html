@@ -207,7 +207,7 @@ const defaultState = {
   pseudonym: "Stillwater" + Math.floor(100 + Math.random() * 900),
   moods: {},
   completedExercises: [],
-  activeProgram: null,
+  activePrograms: [],
   posts: [],
   reactions: {},
   settings: { notifications: true, notifTime: "09:00", crisisContact: "" },
@@ -227,6 +227,10 @@ function loadState() {
       const saved = JSON.parse(raw);
       const merged = Object.assign(structuredClone(defaultState), saved);
       merged.settings = Object.assign(structuredClone(defaultState.settings), saved.settings || {});
+      if (!Array.isArray(merged.activePrograms)) {
+        merged.activePrograms = merged.activeProgram ? [merged.activeProgram] : [];
+      }
+      delete merged.activeProgram;
       return merged;
     }
   } catch (e) {}
@@ -783,20 +787,26 @@ function saveWeeklyReview(wk) {
 
 function renderTraining() {
   let html = `<h1>Training</h1><div class="sub">Short tools. No pressure, just a little at a time.</div>`;
-  if (state.activeProgram) {
-    const p = PROGRAMS.find(x => x.id === state.activeProgram.id);
-    const start = new Date(state.activeProgram.startDate);
-    const day = Math.min(p.days, Math.floor((new Date() - start) / 86400000) + 1);
-    const pct = Math.round((day / p.days) * 100);
-    html += `<div class="card">
-      <span class="tag">ACTIVE PROGRAMME</span>
-      <h2 style="margin:8px 0 2px">${p.icon} ${p.title}</h2>
-      <div class="sub" style="margin-bottom:4px">Day ${day} of ${p.days}</div>
-      <div class="progBar"><div style="width:${pct}%"></div></div>
-      <div class="actions" style="margin-top:10px;display:flex;gap:8px">
-        <button class="btn small" onclick="openProgramDay('${p.id}', ${day})">Today's content</button>
-        <button class="btn small ghost" onclick="quitProgram()">End programme</button>
-      </div></div>`;
+  const activePrograms = state.activePrograms || [];
+  if (activePrograms.length > 0) {
+    html += `<h2>Active programmes</h2>`;
+    html += activePrograms.map(ap => {
+      const p = PROGRAMS.find(x => x.id === ap.id);
+      if (!p) return '';
+      const day = Math.min(p.days, Math.floor((new Date() - new Date(ap.startDate)) / 86400000) + 1);
+      const pct = Math.round((day / p.days) * 100);
+      return `<div class="card" style="margin-bottom:8px">
+        <div class="exCard" style="cursor:default;margin-bottom:10px">
+          <div class="exIcon">${p.icon}</div>
+          <div class="meta"><b>${p.title}</b><span>Day ${day} of ${p.days}</span></div>
+        </div>
+        <div class="progBar"><div style="width:${pct}%"></div></div>
+        <div class="actions" style="margin-top:10px;display:flex;gap:8px">
+          <button class="btn small" onclick="openProgramDay('${p.id}', ${day})">Today's content</button>
+          <button class="btn small ghost" onclick="quitProgram('${p.id}')">End</button>
+        </div>
+      </div>`;
+    }).join("");
   }
   html += `<h2>Micro-exercises <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">3&ndash;10 min</span></h2>`;
   html += EXERCISES.map(e => {
@@ -842,8 +852,8 @@ function renderTraining() {
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
         <span class="tag">${p.days} DAYS</span>
-        ${state.activeProgram && state.activeProgram.id === p.id
-          ? `<span style="font-size:0.8rem;color:var(--teal-dark);font-weight:600">Active</span>`
+        ${(state.activePrograms || []).some(ap => ap.id === p.id)
+          ? `<span style="font-size:0.8rem;color:var(--teal-dark);font-weight:600">✓ Active</span>`
           : `<button class="btn small secondary" onclick="startProgram('${p.id}')">Start</button>`}
       </div>
     </div>`;
@@ -851,8 +861,16 @@ function renderTraining() {
   main.innerHTML = html;
 }
 
-function startProgram(id) { state.activeProgram = { id, startDate: todayStr() }; save(); render(); toast("Programme started. One day at a time."); }
-function quitProgram() { state.activeProgram = null; save(); render(); }
+function startProgram(id) {
+  if (!state.activePrograms) state.activePrograms = [];
+  if (state.activePrograms.some(p => p.id === id)) return;
+  state.activePrograms.push({ id, startDate: todayStr() });
+  save(); render(); toast("Programme started. One day at a time.");
+}
+function quitProgram(id) {
+  state.activePrograms = (state.activePrograms || []).filter(p => p.id !== id);
+  save(); render();
+}
 function openProgramDay(id, day) {
   const p = PROGRAMS.find(x => x.id === id);
   openModal(`
@@ -1179,6 +1197,23 @@ function renderProfile() {
     <div class="card"><div class="num">${completedCount}</div><div class="lbl">exercises done</div></div>
     <div class="card"><div class="num">${state.posts.length}</div><div class="lbl">posts shared</div></div>
   </div>`;
+  const activePrograms = state.activePrograms || [];
+  if (activePrograms.length > 0) {
+    html += `<h2>Active programmes</h2>`;
+    html += activePrograms.map(ap => {
+      const p = PROGRAMS.find(x => x.id === ap.id);
+      if (!p) return '';
+      const day = Math.min(p.days, Math.floor((new Date() - new Date(ap.startDate)) / 86400000) + 1);
+      const pct = Math.round((day / p.days) * 100);
+      return `<div class="card" style="margin-bottom:8px;cursor:pointer" onclick="goTab('training')">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:0.92rem;font-weight:600">${p.icon} ${p.title}</span>
+          <span style="font-size:0.8rem;color:var(--teal-dark);font-weight:500">Day ${day} of ${p.days}</span>
+        </div>
+        <div class="progBar"><div style="width:${pct}%"></div></div>
+      </div>`;
+    }).join("");
+  }
   html += `<div class="card"><b style="font-size:0.95rem">Mood trend &mdash; last 14 days</b>
     <div class="barChart">${dates.map(d => {
       const l = moodOn(d);
