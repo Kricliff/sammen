@@ -60,7 +60,7 @@
   .btn.ghost { background: transparent; color: var(--teal-dark); padding: 8px 10px; }
   .btn.small { padding: 7px 12px; font-size: 0.85rem; }
   .btn:disabled { opacity: 0.5; cursor: default; }
-  header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px 0; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: calc(14px + env(safe-area-inset-top)) 18px 0; }
   .brand { display: flex; align-items: center; gap: 8px; font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight: 500; color: #1f4f4f; font-size: 1.15rem; letter-spacing: 0.4px; }
   .brand svg { display: block; }
   #sosBtn { background: var(--coral-light); color: #b9503c; border: 1px solid #f2c4b8; border-radius: 999px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit; }
@@ -235,7 +235,7 @@ const REFLECTIONS = [
 ];
 const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
 
-const IS_PRO = false;
+const IS_PRO = true;
 const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
 
 const SOCIAL_GOALS = [
