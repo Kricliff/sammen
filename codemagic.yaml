@@ -8,6 +8,7 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.kricliff.together
+        team_id: 7DDKQ97KTV
       node: v20.x
       xcode: latest
       cocoapods: default
