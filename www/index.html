@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Together: Men's Mental Health</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="2" y="2" width="96" height="96" rx="22" fill="%231F4F4F"/><circle cx="40" cy="50" r="20" fill="%237FB8B8"/><circle cx="60" cy="50" r="20" fill="%23E8806A"/><path d="M50 32.7 A20 20 0 0 1 50 67.3 A20 20 0 0 1 50 32.7 Z" fill="%23F5F4F2"/></svg>'>
+<link rel="manifest" href="manifest-en.webmanifest">
+<meta name="theme-color" content="#1f4f4f">
+<link rel="apple-touch-icon" href="assets/ikon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Together">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7f7f;
+    --teal-dark: #1f6363;
+    --teal-light: #e3f0f0;
+    --coral: #e8806a;
+    --coral-light: #fdeae5;
+    --bg: #f5f4f2;
+    --card: #ffffff;
+    --text: #2b2f33;
+    --text-soft: #6b7278;
+    --border: #e6e3df;
+    --radius: 16px;
+    --shadow: 0 1px 4px rgba(40, 45, 50, 0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #dcdad6;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+  }
+  #app {
+    width: 100%;
+    max-width: 460px;
+    min-height: 100vh;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 0 30px rgba(0,0,0,0.15);
+  }
+  main { flex: 1; overflow-y: auto; padding: 20px 18px 90px; }
+  h1 { font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 1.45rem; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.2px; }
+  h2 { font-size: 1.05rem; font-weight: 600; margin: 22px 0 10px; }
+  .sub { color: var(--text-soft); font-size: 0.9rem; margin-bottom: 18px; }
+  .card { background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
+  .btn { display: inline-block; border: none; border-radius: 12px; padding: 11px 18px; font-size: 0.95rem; font-weight: 600; cursor: pointer; background: var(--teal); color: #fff; font-family: inherit; }
+  .btn:active { background: var(--teal-dark); }
+  .btn.secondary { background: var(--teal-light); color: var(--teal-dark); }
+  .btn.ghost { background: transparent; color: var(--teal-dark); padding: 8px 10px; }
+  .btn.small { padding: 7px 12px; font-size: 0.85rem; }
+  .btn:disabled { opacity: 0.5; cursor: default; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: calc(14px + env(safe-area-inset-top)) 18px 0; }
+  .brand { display: flex; align-items: center; gap: 8px; font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight: 500; color: #1f4f4f; font-size: 1.15rem; letter-spacing: 0.4px; }
+  .brand svg { display: block; }
+  #sosBtn { background: var(--coral-light); color: #b9503c; border: 1px solid #f2c4b8; border-radius: 999px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+  nav { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; padding: 6px 4px calc(8px + env(safe-area-inset-bottom)); }
+  nav button { flex: 1; background: none; border: none; font-family: inherit; font-size: 0.68rem; color: var(--text-soft); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; }
+  nav button .ico { font-size: 1.25rem; line-height: 1; }
+  nav button.active { color: var(--teal-dark); font-weight: 700; }
+  .moodRow { display: flex; gap: 10px; justify-content: space-between; margin: 12px 0 4px; }
+  .moodRow button { flex: 1; font-size: 1.7rem; background: var(--bg); border: 2px solid transparent; border-radius: 14px; padding: 10px 0 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: inherit; }
+  .moodRow button span { font-size: 0.65rem; color: var(--text-soft); }
+  .moodRow button.selected { border-color: var(--teal); background: var(--teal-light); }
+  textarea, input[type=text], input[type=tel] { width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 10px; font-family: inherit; font-size: 0.92rem; resize: vertical; background: #fff; color: var(--text); }
+  textarea:focus, input:focus { outline: 2px solid var(--teal-light); border-color: var(--teal); }
+  .nudge { border-left: 4px solid var(--teal); }
+  .nudge.warm { border-left-color: var(--coral); background: #fffaf8; }
+  .nudge p { font-size: 0.92rem; }
+  .nudge .actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .exCard { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+  .exIcon { width: 46px; height: 46px; border-radius: 12px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  .exCard .meta { flex: 1; }
+  .exCard .meta b { font-size: 0.95rem; display: block; }
+  .exCard .meta span { font-size: 0.8rem; color: var(--text-soft); }
+  .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; background: var(--teal-light); color: var(--teal-dark); border-radius: 999px; padding: 3px 9px; margin-right: 5px; }
+  .tag.coral { background: var(--coral-light); color: #b9503c; }
+  #breathOverlay { position: absolute; inset: 0; background: linear-gradient(170deg, #194d4d, #2a7f7f); z-index: 40; display: flex; flex-direction: column; align-items: center; color: #eaf4f4; padding: 20px; }
+  #breathOverlay .closeRow { width: 100%; display: flex; justify-content: flex-end; }
+  #breathOverlay .closeRow button { background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
+  #breathStage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; width: 100%; }
+  #breathBox { width: 240px; height: 240px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  #breathCircle { width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,0.22); border: 3px solid rgba(255,255,255,0.65); transform: scale(1); }
+  #breathPhase { font-size: 1.2rem; font-weight: 600; min-height: 1.6em; }
+  #breathOverlay .tempo { width: 100%; max-width: 280px; text-align: center; font-size: 0.85rem; }
+  #breathOverlay input[type=range] { width: 100%; margin-top: 8px; accent-color: #fff; }
+  #breathOverlay .controls { padding-bottom: 26px; display: flex; gap: 12px; }
+  #breathOverlay .btn { background: #fff; color: var(--teal-dark); }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 6px; }
+  .chips button { border: 1px solid var(--border); background: var(--card); border-radius: 999px; padding: 7px 14px; font-size: 0.82rem; font-family: inherit; cursor: pointer; white-space: nowrap; color: var(--text-soft); }
+  .chips button.active { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
+  .post .head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--teal-light); color: var(--teal-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .post .head .who b { font-size: 0.9rem; display: block; }
+  .post .head .who span { font-size: 0.74rem; color: var(--text-soft); }
+  .post .body { font-size: 0.93rem; line-height: 1.45; white-space: pre-wrap; }
+  .post .foot { display: flex; gap: 6px; margin-top: 10px; align-items: center; }
+  .post .foot button { border: 1px solid var(--border); background: var(--bg); border-radius: 999px; padding: 5px 11px; font-size: 0.78rem; font-family: inherit; cursor: pointer; color: var(--text-soft); }
+  .post .foot button.on { background: var(--teal-light); border-color: var(--teal); color: var(--teal-dark); font-weight: 600; }
+  .post .foot .report { margin-left: auto; border: none; background: none; font-size: 0.72rem; cursor: pointer; color: var(--text-soft); }
+  .promptCard { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; }
+  .promptCard .tag { background: rgba(255,255,255,0.2); color: #fff; }
+  .promptCard p { font-size: 1.02rem; font-weight: 600; margin: 8px 0 12px; }
+  .modalWrap { position: absolute; inset: 0; background: rgba(30,35,40,0.5); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
+  .modal { background: var(--card); border-radius: 20px 20px 0 0; width: 100%; padding: 22px 20px 30px; max-height: 85%; overflow-y: auto; }
+  .modal h3 { font-size: 1.15rem; margin-bottom: 6px; }
+  .modal .sub { margin-bottom: 14px; }
+  .callBtn { display: flex; align-items: center; justify-content: space-between; width: 100%; background: var(--teal); color: #fff; border: none; border-radius: 14px; padding: 16px; font-size: 1rem; font-weight: 700; font-family: inherit; cursor: pointer; margin-bottom: 10px; text-decoration: none; }
+  .callBtn small { font-weight: 400; opacity: 0.85; display: block; font-size: 0.78rem; }
+  .callBtn.urgent { background: #c0392b; }
+  .barChart { display: flex; align-items: flex-end; gap: 4px; height: 90px; margin: 10px 0 4px; }
+  .barChart .bar { flex: 1; background: var(--teal); border-radius: 4px 4px 0 0; min-height: 4px; opacity: 0.85; }
+  .barChart .bar.empty { background: var(--border); }
+  .chartLabels { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-soft); }
+  .statRow { display: flex; gap: 10px; }
+  .statRow .card { flex: 1; text-align: center; margin-bottom: 0; }
+  .statRow .num { font-size: 1.5rem; font-weight: 700; color: var(--teal-dark); }
+  .statRow .lbl { font-size: 0.74rem; color: var(--text-soft); }
+  .setRow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .setRow:last-child { border-bottom: none; }
+  .setRow span { font-size: 0.92rem; }
+  .switch { position: relative; width: 44px; height: 25px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch .sl { position: absolute; inset: 0; background: var(--border); border-radius: 999px; cursor: pointer; transition: background 0.2s; }
+  .switch .sl::before { content: ""; position: absolute; width: 19px; height: 19px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+  .switch input:checked + .sl { background: var(--teal); }
+  .switch input:checked + .sl::before { transform: translateX(19px); }
+  .progBar { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; margin: 8px 0 4px; }
+  .progBar div { height: 100%; background: var(--teal); border-radius: 999px; }
+  .articleBody { font-size: 0.95rem; line-height: 1.6; }
+  .articleBody p { margin-bottom: 12px; }
+  .feedItem { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .feedItem:last-child { border-bottom: none; }
+  .empty { color: var(--text-soft); font-size: 0.88rem; text-align: center; padding: 14px 0; }
+  .proTag { display:inline-block;font-size:0.62rem;font-weight:700;letter-spacing:0.06em;background:var(--coral);color:#fff;border-radius:4px;padding:2px 7px;vertical-align:middle;margin-left:5px }
+  .toast { position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 0.85rem; z-index: 60; white-space: nowrap; animation: toastIn 0.25s ease; }
+  @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="38" cy="50" r="24" fill="#2a7f7f"/>
+        <circle cx="62" cy="50" r="24" fill="#e8806a"/>
+        <path d="M50 29.2 A24 24 0 0 1 50 70.8 A24 24 0 0 1 50 29.2 Z" fill="#1f4f4f"/>
+      </svg>
+      together
+    </div>
+    <button id="sosBtn" title="Crisis support, always available">&#10084;&#65039; Crisis support</button>
+  </header>
+  <main id="main"></main>
+  <nav id="nav"></nav>
+</div>
+
+<script>
+"use strict";
+
+const LS_KEY = "together_state_v1";
+const todayStr = () => new Date().toISOString().slice(0, 10);
+
+const defaultState = {
+  pseudonym: "Stillwater" + Math.floor(100 + Math.random() * 900),
+  moods: {},
+  completedExercises: [],
+  activeProgram: null,
+  posts: [],
+  reactions: {},
+  settings: { notifications: true, crisisContact: "" },
+  dismissedNudges: {},
+  reflections: {},
+  journal: [],
+  sleep: {},
+  socialGoal: null,
+  weeklySummary: {},
+};
+
+let state = loadState();
+function loadState() {
+  try { const raw = localStorage.getItem(LS_KEY); if (raw) return Object.assign(structuredClone(defaultState), JSON.parse(raw)); } catch (e) {}
+  return structuredClone(defaultState);
+}
+function save() { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+const MOODS = [
+  { level: 1, emoji: "\u{1F4A7}", label: "Heavy" },
+  { level: 2, emoji: "\u{1F32B}️", label: "Low" },
+  { level: 3, emoji: "\u{1F324}️", label: "Okay" },
+  { level: 4, emoji: "☀️", label: "Good" },
+];
+
+const EXERCISES = [
+  { id: "breath", icon: "\u{1F300}", title: "Breathing exercise", desc: "Calm breath with visual rhythm", min: 5, type: "breath" },
+  { id: "ground", icon: "\u{1F9ED}", title: "5-4-3-2-1 grounding", desc: "Ground yourself with your senses", min: 4, type: "guided",
+    steps: ["Find 5 things you can see around you.", "Notice 4 things you can touch.", "Listen for 3 sounds.", "Find 2 things you can smell.", "Notice 1 thing you can taste, or take a sip of water.", "Breathe out slowly. You are here, now."] },
+  { id: "reframe", icon: "\u{1F501}", title: "Reframe the thought", desc: "A short cognitive exercise", min: 6, type: "guided",
+    steps: ["What's the thought taking up space right now? Say it to yourself, briefly.", "How true is it, from 0 to 100%?", "What would you say to a good friend who thought the same?", "Formulate a more balanced version of the thought.", "Notice whether your body relaxes a little."] },
+  { id: "move", icon: "⚡", title: "Physical reset", desc: "Release tension in 3 minutes", min: 3, type: "guided",
+    steps: ["Stand up. Shake out your arms and legs for 20 seconds.", "10 slow squats, feel your legs working.", "Stretch your arms above your head, hold for 10 seconds.", "Roll your shoulders backwards 10 times.", "Stand still. Three deep breaths. Done."] },
+  { id: "visual", icon: "\u{1F3D4}️", title: "Safe place", desc: "Visualisation for calm", min: 7, type: "guided",
+    steps: ["Close your eyes or lower your gaze.", "Picture a place where you feel completely calm. Real or imagined.", "What do you see there? Add details.", "What do you hear? What do you feel against your skin?", "Stay there for a few calm breaths.", "Bring the calm back with you."] },
+];
+
+const PROGRAMS = [
+  { id: "sleep", title: "Better sleep", days: 21, icon: "\u{1F634}", desc: "Wind down your evenings and build a sleep routine that sticks." },
+  { id: "transition", title: "Handling transitions", days: 14, icon: "\u{1F9ED}", desc: "Steady through a job change, breakup, or other major shift." },
+  { id: "confidence", title: "Confidence and performance", days: 21, icon: "\u{1F3AF}", desc: "Train your confidence at work, in sport, in life." },
+  { id: "father", title: "Better father and partner", days: 30, icon: "\u{1F46A}", desc: "Tools for presence, patience and communication at home." },
+];
+
+const REFLECTIONS = [
+  { id: "r1",  title: "What are you really afraid of?", prompt: "Not what you admit in company. The fear you sit with at night, alone, the one you rarely put into words. What is it?" },
+  { id: "r2",  title: "Who would you be without others' expectations of you?", prompt: "Imagine all roles and demands fell away tomorrow. No expectations from work, family, or society. Who are you then, and what do you want?" },
+  { id: "r3",  title: "What have you never said out loud to anyone?", prompt: "Something you've carried for years without voicing it to another person. What is it? Write it here, just for yourself." },
+  { id: "r4",  title: "What are you trying to prove, and to whom?", prompt: "Behind much of what we do is a need to prove something. Maybe to a parent, an old version of yourself, or someone who doubted you. Who are you really doing it for?" },
+  { id: "r5",  title: "What would a younger you have needed to hear?", prompt: "Picture yourself at 10–12 years old. What did that boy need to hear from a trusted adult? What did he never hear, and what does it mean that he didn't?" },
+  { id: "r6",  title: "What are you unwilling to look at in yourself?", prompt: "We all have parts of ourselves we'd rather avoid. A tendency, a fear, a side we justify or numb. What is that for you?" },
+  { id: "r7",  title: "What have you lost that you've never grieved?", prompt: "A dream you set aside. A relationship that faded. A version of yourself you never became. What have you lost quietly, without letting yourself feel it?" },
+  { id: "r8",  title: "What is actually enough for you?", prompt: "Not what you say is enough. What are you really chasing, and what would it take for you to genuinely say: this is enough?" },
+  { id: "r9",  title: "What are you afraid people will really see?", prompt: "Behind the best version of yourself you show the world, what are you afraid they'll discover? What are you working hardest to hide?" },
+  { id: "r10", title: "What actually matters to you?", prompt: "Strip away the job, the titles, the status, the things you're supposed to care about. What's left that genuinely matters, and are you living by it?" },
+  { id: "r11", title: "What have you never forgiven yourself for?", prompt: "We all carry something. A mistake, a decision, something you didn't do when you should have. What is it, and what would it mean to let it go?" },
+  { id: "r12", title: "Who do you allow yourself to need something from?", prompt: "Who in your life sees you when you're struggling, and do they know it? What does it do to you to need something from someone, and who is it safe to show that to?" },
+];
+const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
+
+const IS_PRO = true;
+const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
+
+const SOCIAL_GOALS = [
+  "Talk to someone you trust about something that actually matters to you.",
+  "Send a message to someone you haven't heard from in a while.",
+  "Do something active with a friend this week: a walk, a coffee, anything.",
+  "Tell someone close to you what you appreciate about them. Say it directly.",
+  "Ask a colleague or friend: 'How are you really doing?' And actually listen.",
+  "Share something you're struggling with with one person you trust. Don't solve it, just say it.",
+  "Invite someone to do something concrete, not just 'we should catch up'.",
+  "Write to someone you think about but rarely contact. It doesn't have to be much.",
+];
+
+const CHANNELS = ["All", "Work", "Relationships", "Fatherhood", "Grief", "General"];
+
+const DAILY_PROMPTS = [
+  "What's been heaviest this week?",
+  "What are you quietly proud of lately?",
+  "What do you wish someone had said to you this week?",
+  "What do you do when your mind won't quiet down?",
+  "Who do you miss having a real conversation with?",
+  "What's given you a little energy recently?",
+  "What's the hardest part of your role right now: work, father, partner?",
+];
+
+const SEED_POSTS = [
+  { id: "s1", who: "NorthernOak74", channel: "Work", age: "2h",
+    text: "Reorganised out of the team I built. Left with a role I don't recognise myself in. Anyone been through something similar?",
+    support: 14, beenThere: 9, comments: 4 },
+  { id: "s2", who: "Stillwater88", channel: "Fatherhood", age: "5h",
+    text: "Snapped at my youngest today over something that was really about my own stress. He hugged me when I said sorry. Kids are generous.",
+    support: 31, beenThere: 18, comments: 7 },
+  { id: "s3", who: "WestCoastN", channel: "Relationships", age: "yesterday",
+    text: "The evenings are the hardest since the split. Started going for a walk around the block instead of scrolling. Helps a little. Not much, but a little.",
+    support: 22, beenThere: 15, comments: 5 },
+  { id: "s4", who: "CalmBreeze", channel: "Grief", age: "yesterday",
+    text: "Dad passed away last winter. People ask how Mum is doing. No one asks how I'm doing. Writing it here instead.",
+    support: 40, beenThere: 12, comments: 9 },
+  { id: "s5", who: "Compass42", channel: "General", age: "2d",
+    text: "Three weeks of the breathing exercise every morning now. Sounds silly, but I'm noticeably less short-tempered. Worth trying.",
+    support: 17, beenThere: 6, comments: 3 },
+];
+
+const ARTICLES = [
+  { id: "a1", icon: "\u{1F3A4}", title: "Performance anxiety when demands take over", min: 3, cat: "Performance", program: "confidence",
+    body: ["Performance anxiety rarely comes from the task itself. It comes from what you think it means about you if things go wrong.", "Your body's alarm response, racing heart, restlessness, racing thoughts, is the same whether the threat is a bear or a presentation. Your brain is trying to protect you. It's just a bit too eager.", "What helps: lower the mental stakes ('this is one meeting, not a verdict'), breathe longer on the exhale than the inhale, and practise the situation in small doses rather than avoiding it.", "Avoidance brings relief today and more anxiety tomorrow. Gradual exposure does the opposite."] },
+  { id: "a2", icon: "\u{1F525}", title: "Anger is often something else", min: 3, cat: "Anger", program: "father",
+    body: ["For many men, anger is the only feeling that seems 'allowed'. Underneath is often something else: worry, shame, helplessness, hurt.", "Next time you feel it rising: try to name what happened a second before. Did you feel overruled? Unheard? Afraid of failing?", "Anger isn't dangerous in itself. It's information. The question is what you do with it, and whether the people around you have to bear the cost.", "A practical rule: pause before responding when your pulse is high. You can always return to the conversation. What you say in full anger you can rarely take back."] },
+  { id: "a3", icon: "\u{1F9CD}", title: "Loneliness among men", min: 4, cat: "Loneliness", program: null,
+    body: ["Many men have colleagues, training partners and family, and are still lonely. Because none of those relationships have room for what actually weighs on them.", "Male friendships are often built around activity, not conversation. That's not wrong, but it means the heavy stuff never gets space.", "The good news: it takes less than you think. One honest sentence, 'it's been a tough stretch, actually', opens more than a hundred surface-level conversations.", "Start with the friend you think can handle it best. He's probably been waiting for a chance to say something real himself."] },
+  { id: "a4", icon: "\u{1F504}", title: "Who am I without the job?", min: 3, cat: "Identity", program: "transition",
+    body: ["When your identity is largely built on what you achieve, a career change, redundancy or retirement becomes more than practical. It becomes existential.", "Ask yourself: what did people value in me before my title? Your temperament? Your calm? Your ability to fix things? That doesn't disappear with the job.", "Transition periods are uncomfortable because the old is gone and the new hasn't taken shape yet. It's a middle phase, not a final destination.", "Use the time to explore, not conclude. Identity is built through action, not rumination."] },
+  { id: "a5", icon: "\u{1F476}", title: "First-time father", min: 4, cat: "Fatherhood", program: "father",
+    body: ["Many fathers feel a mixture of love, detachment and inadequacy in the early months. It's common, and almost nobody talks about it.", "Bonding isn't always a lightning bolt. For many it builds gradually, through nappy changes, carrying, and sleepless nights. It counts just as much.", "You don't need to be perfect. The research is clear: 'good enough' and repair after mistakes is what builds secure children.", "And: look after the relationship. The early years with young children are one of the hardest periods for a couple. Short, honest check-ins with your partner are underrated."] },
+];
+
+const MYTHS = [
+  { myth: "Real men handle things themselves.", fact: "Asking for help takes more confidence than pretending everything's fine. Most of those who've done it only regret waiting so long." },
+  { myth: "Talking about problems makes them bigger.", fact: "Research shows the opposite: putting feelings into words reduces activity in the brain's alarm system." },
+  { myth: "Therapy is for people in crisis.", fact: "Mental training works like physical training. It's most effective before things become acute." },
+  { myth: "Medication is the only solution if it's serious.", fact: "Conversation, physical activity, sleep and community all have documented effects, alone or in combination." },
+];
+
+const CRISIS_PATTERNS = /suicide|take my (own )?life|don't want to (be|live|exist)|can't go on|end it all|end my life|hurt myself|self.harm|not worth living|want to die/i;
+
+function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+function moodOn(dateStr) { return state.moods[dateStr] ? state.moods[dateStr].level : null; }
+function lastNDates(n) { const out = []; for (let i = n - 1; i >= 0; i--) out.push(daysAgo(i)); return out; }
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function toast(msg) {
+  const t = document.createElement("div");
+  t.className = "toast"; t.textContent = msg;
+  document.getElementById("app").appendChild(t);
+  setTimeout(() => t.remove(), 2600);
+}
+function streak() {
+  let n = 0;
+  for (let i = 0; ; i++) {
+    if (state.moods[daysAgo(i)]) n++;
+    else if (i === 0) continue;
+    else break;
+  }
+  return n;
+}
+
+function computeNudges() {
+  const nudges = [];
+  const dismissed = (key) => state.dismissedNudges[key] === todayStr();
+  const last3 = [daysAgo(0), daysAgo(1), daysAgo(2)].map(moodOn);
+  if (last3.every(l => l !== null && l <= 2) && !dismissed("low3")) {
+    nudges.push({ key: "low3", warm: false,
+      text: "You've logged a few heavy days in a row. Want something concrete to work with? The programmes go one day at a time. You set the pace.",
+      actions: [{ label: "Show me the programmes", fn: () => { currentTab = "training"; render(); } }] });
+  }
+  const t = moodOn(todayStr()), y = moodOn(daysAgo(1));
+  if (t !== null && y !== null && Math.abs(t - y) >= 2 && !dismissed("jump")) {
+    nudges.push({ key: "jump", warm: false,
+      text: "Today looks quite different from yesterday. Something happen? No need to answer, but sometimes getting it down in two lines clears the head.",
+      actions: [{ label: "Write two lines", fn: () => { focusNote = true; render(); } }] });
+  }
+  const last14 = lastNDates(14).map(moodOn).filter(l => l !== null);
+  if (last14.length >= 10 && last14.every(l => l <= 2) && !dismissed("low14")) {
+    nudges.push({ key: "low14", warm: true,
+      text: "Your log has been heavy for a couple of weeks now. Staying in that for so long takes its toll, and you don't have to stay in it alone. A conversation with someone who knows this stuff doesn't commit you to anything.",
+      actions: [{ label: "See who you can talk to", fn: openSOS }] });
+  }
+  const last7 = lastNDates(7).map(moodOn).filter(l => l !== null);
+  if (last7.length >= 5 && last7.every(l => l >= 3) && !dismissed("high")) {
+    nudges.push({ key: "high", warm: false,
+      text: "A good stretch in your log. What's been working for you lately? What you've figured out could be exactly what someone else needs to read.",
+      actions: [{ label: "Share it in Community", fn: () => { currentTab = "community"; render(); } }] });
+  }
+  return nudges;
+}
+
+function inactivityNudge() {
+  for (let i = 0; i < 4; i++) if (state.moods[daysAgo(i)]) return null;
+  if (Object.keys(state.moods).length === 0) return null;
+  return "Good to see you again. Days go by. No explanation needed. How are things today?";
+}
+
+let currentTab = "home";
+let currentChannel = "All";
+let focusNote = false;
+const main = document.getElementById("main");
+
+const TABS = [
+  { id: "home", label: "Home", ico: "\u{1F3E0}" },
+  { id: "training", label: "Training", ico: "\u{1F9D8}" },
+  { id: "community", label: "Community", ico: "\u{1F4AC}" },
+  { id: "learn", label: "Learn", ico: "\u{1F4D6}" },
+  { id: "profile", label: "Profile", ico: "\u{1F464}" },
+];
+
+function renderNav() {
+  document.getElementById("nav").innerHTML = TABS.map(t =>
+    `<button class="${t.id === currentTab ? "active" : ""}" onclick="goTab('${t.id}')">
+       <span class="ico">${t.ico}</span>${t.label}</button>`).join("");
+}
+function goTab(id) { currentTab = id; render(); main.scrollTop = 0; }
+
+function render() {
+  renderNav();
+  if (currentTab === "home") renderHome();
+  else if (currentTab === "training") renderTraining();
+  else if (currentTab === "community") renderCommunity();
+  else if (currentTab === "learn") renderLearn();
+  else if (currentTab === "profile") renderProfile();
+}
+
+/* ---------- Pro helpers ---------- */
+function weekKey() {
+  const d = new Date();
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  const wk = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  return `${d.getFullYear()}-W${String(wk).padStart(2, '0')}`;
+}
+function lockedCard(title, desc, icon) {
+  return `<div class="card" onclick="showProModal()" style="cursor:pointer;opacity:0.8">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <span style="font-size:1.2rem">${icon}</span>
+      <span class="proTag">🔒 PRO</span>
+    </div>
+    <div style="font-weight:600;margin-bottom:4px">${title}</div>
+    <div class="sub">${desc}</div>
+  </div>`;
+}
+function showProModal() {
+  openModal(`
+    <h3>Together Pro</h3>
+    <div class="sub" style="margin-bottom:18px">Full access. Subscription coming soon.</div>
+    ${['All exercises and audio guides','All 30-day programmes','Mood chart over 30 days','Journal with unlimited space','Sleep and energy log','Weekly structured review','New content every month'].map(f =>
+      `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.9rem"><span style="color:var(--teal);font-weight:700;margin-right:8px">✓</span>${f}</div>`
+    ).join('')}
+    <button class="btn" style="width:100%;margin-top:18px" onclick="closeModal()">Got it. Looking forward to it</button>
+  `);
+}
+function socialGoalCard() {
+  const wk = weekKey();
+  const sg = state.socialGoal && state.socialGoal.weekKey === wk ? state.socialGoal : { weekKey: wk, done: false };
+  const wkNum = parseInt(wk.split('W')[1]);
+  const goal = SOCIAL_GOALS[wkNum % SOCIAL_GOALS.length];
+  return `<div class="card" style="border-left:3px solid var(--coral);padding-left:18px">
+    <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--coral);margin-bottom:8px">THIS WEEK'S SOCIAL GOAL</div>
+    <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px${sg.done ? ';text-decoration:line-through;opacity:0.55' : ''}">${goal}</div>
+    <button class="btn small${sg.done ? ' secondary' : ''}" onclick="toggleSocialGoal('${wk}')">${sg.done ? '✓ Done this week' : 'Mark as done'}</button>
+  </div>`;
+}
+function toggleSocialGoal(wk) {
+  const cur = state.socialGoal && state.socialGoal.weekKey === wk ? state.socialGoal : { weekKey: wk, done: false };
+  state.socialGoal = { weekKey: wk, done: !cur.done };
+  save(); render();
+}
+function renderMoodChart() {
+  const days = 30, bw = 7, gap = 2, h = 68;
+  const colors = ['var(--border)', '#e8a090', '#c9d4b8', '#7dc4c4', 'var(--teal)'];
+  const today = new Date();
+  const bars = Array.from({ length: days }, (_, i) => {
+    const d = new Date(today); d.setDate(d.getDate() - (days - 1 - i));
+    const lvl = (state.moods[d.toISOString().slice(0, 10)] || {}).level || 0;
+    const bh = lvl ? Math.round((lvl / 4) * h) : 3;
+    return `<rect x="${i * (bw + gap)}" y="${h - bh}" width="${bw}" height="${bh}" rx="2" fill="${colors[lvl]}"/>`;
+  }).join('');
+  const tw = days * (bw + gap) - gap;
+  return `<svg viewBox="0 0 ${tw} ${h}" preserveAspectRatio="none" style="width:100%;height:${h}px;display:block;margin:10px 0 4px">${bars}</svg>
+    <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:var(--text-soft)"><span>30 days ago</span><span>Today</span></div>`;
+}
+
+function suggestedExercise() {
+  const t = moodOn(todayStr());
+  if (t === null) return EXERCISES[0];
+  if (t === 1) return EXERCISES.find(e => e.id === "ground");
+  if (t === 2) return EXERCISES.find(e => e.id === "breath");
+  if (t === 3) return EXERCISES.find(e => e.id === "reframe");
+  return EXERCISES.find(e => e.id === "move");
+}
+
+function renderHome() {
+  const today = state.moods[todayStr()];
+  const h = new Date().getHours();
+  const greeting = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+  const inact = inactivityNudge();
+  const nudges = computeNudges();
+  const ex = suggestedExercise();
+  const todaySleep = (state.sleep || {})[todayStr()];
+  const wk = weekKey();
+  const ws = (state.weeklySummary || {})[wk];
+
+  let html = `<h1>${greeting}</h1><div class="sub">How are you doing today, really?</div>`;
+  if (inact && !today) html += `<div class="card nudge"><p>${inact}</p></div>`;
+
+  html += `<div class="card">
+    <b style="font-size:0.95rem">Today's mood</b>
+    <div class="moodRow">${MOODS.map(m =>
+      `<button class="${today && today.level === m.level ? "selected" : ""}" onclick="setMood(${m.level})">${m.emoji}<span>${m.label}</span></button>`).join("")}
+    </div>`;
+  if (today) {
+    html += `<div style="margin-top:10px">
+      <textarea id="moodNote" rows="2" placeholder="A few words about the day? Optional, completely private.">${esc(today.note || "")}</textarea>
+      <div style="text-align:right;margin-top:6px"><button class="btn small secondary" onclick="saveNote()">Save note</button></div>
+    </div>`;
+  }
+  html += `</div>`;
+
+  // Mood chart (Pro)
+  html += IS_PRO
+    ? `<div class="card"><b style="font-size:0.95rem">Mood chart <span style="font-weight:400;color:var(--text-soft);font-size:0.78rem">last 30 days</span></b>${renderMoodChart()}</div>`
+    : lockedCard('Mood chart', 'See the pattern in your mood over 30 days.', '📈');
+
+  // Sleep log (Pro)
+  html += IS_PRO
+    ? `<div class="card" onclick="openSleepLog()" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:0.95rem">Sleep and energy</b>
+          ${todaySleep ? `<span style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Logged</span>` : `<span class="btn small secondary" style="pointer-events:none">Log</span>`}
+        </div>
+        ${todaySleep ? `<div style="font-size:0.88rem;color:var(--text-soft);margin-top:6px">${todaySleep.hours}h sleep · energy ${'😴😕😐🙂⚡'.split('')[todaySleep.energy - 1] || ''}</div>` : ''}
+      </div>`
+    : lockedCard('Sleep and energy log', 'Log sleep and energy daily. Spot the patterns over time.', '💤');
+
+  // Social goal (free)
+  html += socialGoalCard();
+
+  for (const n of nudges) {
+    html += `<div class="card nudge${n.warm ? " warm" : ""}"><p>${n.text}</p>
+      <div class="actions">${n.actions.map((a, i) =>
+        `<button class="btn small" onclick="nudgeAction('${n.key}',${i})">${a.label}</button>`).join("")}
+        <button class="btn small ghost" onclick="dismissNudge('${n.key}')">Not now</button>
+      </div></div>`;
+  }
+
+  html += `<h2>Today's exercise</h2>
+    <div class="card exCard" onclick="openExercise('${ex.id}')">
+      <div class="exIcon">${ex.icon}</div>
+      <div class="meta"><b>${ex.title}</b><span>${ex.desc} &middot; ${ex.min} min</span></div>
+      <button class="btn small">Start</button>
+    </div>`;
+
+  // Journal (Pro)
+  html += `<h2>Journal</h2>`;
+  html += IS_PRO
+    ? `<div class="card" onclick="openJournal()" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:0.95rem">📓 My notes</b>
+          <span class="btn small secondary" style="pointer-events:none">Open →</span>
+        </div>
+        <div class="sub" style="margin-top:6px">${(state.journal || []).length} notes saved privately</div>
+      </div>`
+    : lockedCard('Journal', 'Unlimited private writing space. No questions, just room to think.', '📓');
+
+  // Weekly review (Pro)
+  html += `<h2>Weekly review</h2>`;
+  html += IS_PRO
+    ? `<div class="card" onclick="openWeeklyReview()" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:8px">THIS WEEK'S REFLECTION</div>
+        <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px">Three questions to close the week: what was hard, what went well, what do you carry forward.</div>
+        ${ws ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Completed ${ws.date}</div>`
+              : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Start →</div>`}
+      </div>`
+    : lockedCard('Weekly review', 'Three questions to close the week and go into the next one more grounded.', '📅');
+
+  html += `<h2>Latest from Community</h2><div class="card">`;
+  const feedItems = [];
+  if (state.posts.length > 0) {
+    feedItems.push({ dot: "💬", text: `Your post has received ${3 + state.posts.length * 2} support reactions` });
+    feedItems.push({ dot: "🫂", text: `2 men tapped "I've been there" on your post` });
+  }
+  feedItems.push({ dot: "📝", text: `New prompt in the feed: "${dailyPrompt()}"` });
+  feedItems.push({ dot: "🔥", text: "5 new posts in the Fatherhood channel today" });
+  html += feedItems.map(f => `<div class="feedItem"><span class="dot">${f.dot}</span><span>${f.text}</span></div>`).join("");
+  html += `</div>`;
+
+  main.innerHTML = html;
+  if (focusNote) { focusNote = false; const ta = document.getElementById("moodNote"); if (ta) ta.focus(); }
+}
+
+function setMood(level) {
+  const existing = state.moods[todayStr()] || { note: "" };
+  state.moods[todayStr()] = { level, note: existing.note };
+  save(); render();
+}
+function saveNote() {
+  const ta = document.getElementById("moodNote");
+  if (ta && state.moods[todayStr()]) { state.moods[todayStr()].note = ta.value; save(); toast("Note saved. Only visible to you"); }
+}
+function nudgeAction(key, i) { const n = computeNudges().find(x => x.key === key); if (n) n.actions[i].fn(); }
+function dismissNudge(key) { state.dismissedNudges[key] = todayStr(); save(); render(); }
+
+/* ---------- Journal ---------- */
+function openJournal() {
+  const entries = [...(state.journal || [])].reverse().slice(0, 12);
+  openModal(`
+    <h3>📓 Journal</h3>
+    <textarea id="journalText" rows="6" placeholder="What's on your mind today?"></textarea>
+    <button class="btn" style="width:100%;margin-top:10px" onclick="saveJournal()">Save</button>
+    ${entries.length ? `<div style="margin-top:20px">
+      <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.07em;color:var(--text-soft);margin-bottom:10px">PREVIOUS ENTRIES</div>
+      ${entries.map(e => `<div style="padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="font-size:0.72rem;color:var(--text-soft);margin-bottom:4px">${e.date}</div>
+        <div style="font-size:0.88rem;line-height:1.5;white-space:pre-wrap">${esc(e.text.slice(0, 140))}${e.text.length > 140 ? '…' : ''}</div>
+      </div>`).join('')}
+    </div>` : ''}
+  `);
+}
+function saveJournal() {
+  const ta = document.getElementById('journalText');
+  if (!ta || !ta.value.trim()) return;
+  if (!state.journal) state.journal = [];
+  state.journal.push({ id: Date.now().toString(), date: todayStr(), text: ta.value });
+  save(); closeModal();
+  toast('Saved to your journal.');
+  render();
+}
+
+/* ---------- Sleep and energy ---------- */
+let _selEnergy = null;
+function openSleepLog() {
+  const saved = (state.sleep || {})[todayStr()] || { hours: 7, energy: 3 };
+  _selEnergy = saved.energy;
+  openModal(`
+    <h3>💤 Sleep and energy</h3>
+    <div style="margin:16px 0">
+      <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:8px">Hours of sleep last night</label>
+      <div style="display:flex;align-items:center;gap:12px">
+        <input type="range" id="sleepHrs" min="3" max="12" step="0.5" value="${saved.hours}" oninput="document.getElementById('sleepVal').textContent=this.value+'h'" style="flex:1">
+        <span id="sleepVal" style="font-weight:700;min-width:36px;text-align:right">${saved.hours}h</span>
+      </div>
+    </div>
+    <div style="margin:16px 0">
+      <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:10px">Energy level today</label>
+      <div style="display:flex;gap:8px">
+        ${[1,2,3,4,5].map(n => `<button id="eng${n}" class="btn small${saved.energy === n ? '' : ' secondary'}" onclick="selEnergy(${n})" style="flex:1;font-size:1.1rem">${['😴','😕','😐','🙂','⚡'][n-1]}</button>`).join('')}
+      </div>
+    </div>
+    <button class="btn" style="width:100%;margin-top:8px" onclick="saveSleepLog()">Save</button>
+  `);
+}
+function selEnergy(n) {
+  _selEnergy = n;
+  [1,2,3,4,5].forEach(i => { const b = document.getElementById('eng'+i); if (b) b.className = `btn small${i===n?'':' secondary'}`; });
+}
+function saveSleepLog() {
+  const sl = document.getElementById('sleepHrs');
+  if (!sl) return;
+  if (!state.sleep) state.sleep = {};
+  state.sleep[todayStr()] = { hours: parseFloat(sl.value), energy: _selEnergy || 3 };
+  _selEnergy = null;
+  save(); closeModal();
+  toast('Sleep and energy saved.');
+  render();
+}
+
+/* ---------- Weekly review ---------- */
+function openWeeklyReview() {
+  const wk = weekKey();
+  const saved = (state.weeklySummary || {})[wk] || {};
+  openModal(`
+    <h3>📅 Weekly review</h3>
+    <div class="sub" style="margin-bottom:18px">Take 5 minutes to look back on the week.</div>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:6px">What was hardest this week?</label>
+    <textarea id="ws1" rows="3" placeholder="Write freely...">${esc(saved.hard || '')}</textarea>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">What are you proud of?</label>
+    <textarea id="ws2" rows="3" placeholder="Big or small...">${esc(saved.proud || '')}</textarea>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">What do you carry into next week?</label>
+    <textarea id="ws3" rows="3" placeholder="An intention, a change, a person...">${esc(saved.next || '')}</textarea>
+    <button class="btn" style="width:100%;margin-top:14px" onclick="saveWeeklyReview('${wk}')">Save</button>
+  `);
+}
+function saveWeeklyReview(wk) {
+  const w1 = document.getElementById('ws1'), w2 = document.getElementById('ws2'), w3 = document.getElementById('ws3');
+  if (!w1) return;
+  if (!state.weeklySummary) state.weeklySummary = {};
+  state.weeklySummary[wk] = { hard: w1.value, proud: w2.value, next: w3.value, date: todayStr() };
+  save(); closeModal();
+  toast('Review saved.');
+  render();
+}
+
+function renderTraining() {
+  let html = `<h1>Training</h1><div class="sub">Short tools. No pressure, just a little at a time.</div>`;
+  if (state.activeProgram) {
+    const p = PROGRAMS.find(x => x.id === state.activeProgram.id);
+    const start = new Date(state.activeProgram.startDate);
+    const day = Math.min(p.days, Math.floor((new Date() - start) / 86400000) + 1);
+    const pct = Math.round((day / p.days) * 100);
+    html += `<div class="card">
+      <span class="tag">ACTIVE PROGRAMME</span>
+      <h2 style="margin:8px 0 2px">${p.icon} ${p.title}</h2>
+      <div class="sub" style="margin-bottom:4px">Day ${day} of ${p.days}</div>
+      <div class="progBar"><div style="width:${pct}%"></div></div>
+      <div class="actions" style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn small" onclick="openProgramDay('${p.id}', ${day})">Today's content</button>
+        <button class="btn small ghost" onclick="quitProgram()">End programme</button>
+      </div></div>`;
+  }
+  html += `<h2>Micro-exercises <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">3&ndash;10 min</span></h2>`;
+  html += EXERCISES.map(e => {
+    const locked = !IS_PRO && !FREE_EXERCISE_IDS.has(e.id);
+    return locked
+      ? `<div class="card exCard" onclick="showProModal()" style="opacity:0.72;cursor:pointer">
+          <div class="exIcon" style="background:var(--coral-light)">${e.icon}</div>
+          <div class="meta"><b>${e.title}<span class="proTag">PRO</span></b><span>${e.desc} &middot; ${e.min} min</span></div>
+        </div>`
+      : `<div class="card exCard" onclick="openExercise('${e.id}')">
+          <div class="exIcon">${e.icon}</div>
+          <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
+        </div>`;
+  }).join("");
+  const sr = REFLECTIONS[SESSION_REFLECTION_IDX];
+  const srSaved = state.reflections[sr.id];
+  html += `<h2>Reflection</h2>`;
+  html += `<div class="card" onclick="openReflection('${sr.id}')" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
+    <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:10px">TODAY'S QUESTION</div>
+    <div style="font-size:1.05rem;font-weight:600;line-height:1.45;margin-bottom:10px;color:var(--text)">${sr.title}</div>
+    <div style="font-size:0.88rem;color:var(--text-soft);line-height:1.6;margin-bottom:16px">${sr.prompt}</div>
+    ${srSaved && srSaved.text
+      ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Answered ${srSaved.date}. Tap to read or update</div>`
+      : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Write →</div>`}
+  </div>`;
+
+  html += `<h2>Programmes <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 days</span></h2>`;
+  html += PROGRAMS.map(p => {
+    if (!IS_PRO) return `<div class="card" onclick="showProModal()" style="cursor:pointer;opacity:0.72">
+      <div class="exCard" style="cursor:default">
+        <div class="exIcon" style="background:var(--coral-light)">${p.icon}</div>
+        <div class="meta"><b>${p.title}<span class="proTag">PRO</span></b><span>${p.desc}</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <span class="tag">${p.days} DAYS</span>
+        <span style="font-size:0.82rem;color:var(--coral);font-weight:500">🔒 Unlock with Pro</span>
+      </div>
+    </div>`;
+    return `<div class="card">
+      <div class="exCard" style="cursor:default">
+        <div class="exIcon">${p.icon}</div>
+        <div class="meta"><b>${p.title}</b><span>${p.desc}</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <span class="tag">${p.days} DAYS</span>
+        ${state.activeProgram && state.activeProgram.id === p.id
+          ? `<span style="font-size:0.8rem;color:var(--teal-dark);font-weight:600">Active</span>`
+          : `<button class="btn small secondary" onclick="startProgram('${p.id}')">Start</button>`}
+      </div>
+    </div>`;
+  }).join("");
+  main.innerHTML = html;
+}
+
+function startProgram(id) { state.activeProgram = { id, startDate: todayStr() }; save(); render(); toast("Programme started. One day at a time."); }
+function quitProgram() { state.activeProgram = null; save(); render(); }
+function openProgramDay(id, day) {
+  const p = PROGRAMS.find(x => x.id === id);
+  openModal(`
+    <h3>${p.icon} ${p.title}, day ${day}</h3>
+    <div class="sub">Short content + exercise + reflection</div>
+    <div class="articleBody">
+      <p><b>Today's focus:</b> ${programDayFocus(id, day)}</p>
+      <p><b>Exercise:</b> Do today's breathing exercise (5 min) before bed, or whenever you need a pause.</p>
+      <p><b>Reflection:</b> What's one small thing that worked today? Write it in your mood note on Home if you like.</p>
+    </div>
+    <button class="btn" style="width:100%;margin-top:14px" onclick="completeExercise('program-${id}-${day}'); closeModal()">Mark day as complete</button>
+  `);
+}
+function programDayFocus(id, day) {
+  const focuses = {
+    sleep: ["Map your evening routine as it actually is.", "Screen-free for the last 30 minutes before bed.", "Fixed bedtime, weekends too.", "Bedroom: dark, cool, quiet."],
+    transition: ["Name what has actually been lost, and what remains.", "What do you have control over today? Do one of those things.", "Talk to one person about how you're really doing.", "Small routines bring stability when the big things are in flux."],
+    confidence: ["Write down three situations you've handled well before.", "Practise taking up space: say one opinion out loud today.", "Replace 'I have to perform' with 'I'm here to contribute'.", "Posture affects how you feel. Test it today."],
+    father: ["Ten minutes of undivided attention, phone away.", "Apologise if you get it wrong. It builds trust.", "Notice what triggers your impatience.", "Tell your partner one thing you appreciate about them."],
+  };
+  const f = focuses[id] || focuses.sleep;
+  return f[(day - 1) % f.length];
+}
+function completeExercise(id) { state.completedExercises.push({ id, date: todayStr() }); save(); toast("Well done. That counts."); render(); }
+
+function openReflection(id) {
+  const r = REFLECTIONS.find(x => x.id === id);
+  const saved = state.reflections[id] || { text: "", date: null };
+  openModal(`
+    <h3>${r.icon} ${r.title}</h3>
+    <p style="font-size:0.95rem;color:var(--text-soft);margin-bottom:14px;line-height:1.55">${r.prompt}</p>
+    <textarea id="reflText" rows="7" placeholder="Write for yourself. No one else needs to see this...">${esc(saved.text)}</textarea>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="saveReflection('${id}')">Save</button>
+    ${saved.date ? `<div style="font-size:0.78rem;color:var(--text-soft);text-align:center;margin-top:10px">Last saved ${saved.date}</div>` : ''}
+  `);
+}
+function saveReflection(id) {
+  const ta = document.getElementById("reflText");
+  if (!ta) return;
+  if (!ta.value.trim()) { closeModal(); return; }
+  state.reflections[id] = { text: ta.value, date: todayStr() };
+  save();
+  closeModal();
+  toast("Saved. Visible only to you.");
+  render();
+}
+
+function openExercise(id) {
+  const e = EXERCISES.find(x => x.id === id);
+  if (e.type === "breath") return openBreath();
+  let step = 0;
+  const show = () => {
+    openModal(`
+      <h3>${e.icon} ${e.title}</h3>
+      <div class="sub">Step ${step + 1} of ${e.steps.length}</div>
+      <div class="articleBody"><p style="font-size:1.05rem">${e.steps[step]}</p></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        ${step > 0 ? `<button class="btn secondary" style="flex:1" id="exPrev">Back</button>` : ""}
+        <button class="btn" style="flex:2" id="exNext">${step < e.steps.length - 1 ? "Next" : "Complete"}</button>
+      </div>`);
+    const prev = document.getElementById("exPrev");
+    if (prev) prev.onclick = () => { step--; show(); };
+    document.getElementById("exNext").onclick = () => {
+      if (step < e.steps.length - 1) { step++; show(); }
+      else { closeModal(); completeExercise(e.id); }
+    };
+  };
+  show();
+}
+
+let breathTimer = null;
+function openBreath() {
+  const ov = document.createElement("div");
+  ov.id = "breathOverlay";
+  ov.innerHTML = `
+    <div class="closeRow"><button onclick="closeBreath()">&#10005;</button></div>
+    <div id="breathStage">
+      <div id="breathBox"><div id="breathCircle"></div></div>
+      <div id="breathPhase">Ready when you are</div>
+      <div class="tempo">Pace: <b id="tempoVal">4</b> sec per phase
+        <input type="range" id="tempoRange" min="3" max="6" step="0.5" value="4">
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="breathStart">Start</button>
+    </div>`;
+  document.getElementById("app").appendChild(ov);
+  document.getElementById("tempoRange").oninput = (ev) => { document.getElementById("tempoVal").textContent = ev.target.value; };
+  document.getElementById("breathStart").onclick = toggleBreath;
+}
+function toggleBreath() {
+  const btn = document.getElementById("breathStart");
+  if (breathTimer) { stopBreathCycle(); btn.textContent = "Start"; document.getElementById("breathPhase").textContent = "Paused. Continue when you're ready"; return; }
+  btn.textContent = "Stop";
+  runBreathCycle();
+}
+function runBreathCycle() {
+  const circle = document.getElementById("breathCircle");
+  const phaseEl = document.getElementById("breathPhase");
+  const phases = [
+    { name: "Breathe in", scale: 1.8 },
+    { name: "Hold", scale: 1.8 },
+    { name: "Breathe out", scale: 1.0 },
+    { name: "Hold", scale: 1.0 },
+  ];
+  let i = 0;
+  const step = () => {
+    if (!document.getElementById("breathCircle")) return stopBreathCycle();
+    const tempo = parseFloat(document.getElementById("tempoRange").value) * 1000;
+    const ph = phases[i % 4];
+    phaseEl.textContent = ph.name;
+    circle.style.transition = `transform ${tempo}ms ease-in-out`;
+    circle.style.transform = `scale(${ph.scale})`;
+    i++;
+    if (i === 8) completeExercise("breath");
+    breathTimer = setTimeout(step, tempo);
+  };
+  step();
+}
+function stopBreathCycle() { if (breathTimer) { clearTimeout(breathTimer); breathTimer = null; } }
+function closeBreath() { stopBreathCycle(); const ov = document.getElementById("breathOverlay"); if (ov) ov.remove(); }
+
+function dailyPrompt() {
+  const dayIdx = Math.floor(new Date() / 86400000) % DAILY_PROMPTS.length;
+  return DAILY_PROMPTS[dayIdx];
+}
+
+function renderCommunity() {
+  let html = `<h1>Community</h1><div class="sub">Anonymous. Open. Men who get it.</div>`;
+  html += `<div class="chips">${CHANNELS.map(c =>
+    `<button class="${c === currentChannel ? "active" : ""}" onclick="setChannel('${c}')">${c}</button>`).join("")}</div>`;
+  html += `<div class="card promptCard">
+    <span class="tag">TODAY'S PROMPT</span>
+    <p>${dailyPrompt()}</p>
+    <button class="btn small" style="background:#fff;color:var(--teal-dark)" onclick="openComposer()">Reply anonymously</button>
+  </div>`;
+  html += `<div style="text-align:right;margin-bottom:10px">
+    <button class="btn small secondary" onclick="openComposer()">+ New post</button></div>`;
+
+  const all = [...state.posts.map(p => ({ ...p, mine: true })), ...SEED_POSTS];
+  const filtered = currentChannel === "All" ? all : all.filter(p => p.channel === currentChannel);
+  if (filtered.length === 0) html += `<div class="empty">No posts in this channel yet. Be the first.</div>`;
+  html += filtered.map(p => {
+    const r = state.reactions[p.id] || {};
+    const sup = (p.support || 0) + (r.support ? 1 : 0);
+    const bt = (p.beenThere || 0) + (r.beenThere ? 1 : 0);
+    return `<div class="card post">
+      <div class="head">
+        <div class="avatar">${esc(p.who.slice(0, 2).toUpperCase())}</div>
+        <div class="who"><b>${esc(p.who)}${p.mine ? ' <span style="font-weight:400;color:var(--text-soft)">(you)</span>' : ""}</b>
+        <span>${p.channel} &middot; ${p.age || "now"}</span></div>
+      </div>
+      <div class="body">${esc(p.text)}</div>
+      <div class="foot">
+        <button class="${r.support ? "on" : ""}" onclick="react('${p.id}','support')">&#129309; Support &middot; ${sup}</button>
+        <button class="${r.beenThere ? "on" : ""}" onclick="react('${p.id}','beenThere')">&#129730; I've been there &middot; ${bt}</button>
+        <button class="report" onclick="reportPost('${p.id}')">Report</button>
+      </div>
+    </div>`;
+  }).join("");
+  main.innerHTML = html;
+}
+
+function setChannel(c) { currentChannel = c; render(); }
+function react(postId, kind) { const r = state.reactions[postId] || (state.reactions[postId] = {}); r[kind] = !r[kind]; save(); render(); }
+function reportPost(postId) {
+  openModal(`
+    <h3>Report post</h3>
+    <div class="sub">Thank you for flagging this. What does it concern?</div>
+    ${["Hateful or toxic content", "Concern for the author", "Spam or advertising", "Other"].map(reason =>
+      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="closeModal(); toast('Report sent. We\'ll look into it.')">${reason}</button>`).join("")}
+  `);
+}
+function openComposer() {
+  openModal(`
+    <h3>New post</h3>
+    <div class="sub">You're posting as <b>${esc(state.pseudonym)}</b>. Never your real name.</div>
+    <div style="margin-bottom:10px">
+      <select id="postChannel" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);font-family:inherit;font-size:0.92rem">
+        ${CHANNELS.slice(1).map(c => `<option>${c}</option>`).join("")}
+      </select>
+    </div>
+    <textarea id="postText" rows="5" placeholder="Write it as it is. No one needs polished words here."></textarea>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="submitPost()">Post anonymously</button>
+  `);
+}
+function submitPost() {
+  const text = document.getElementById("postText").value.trim();
+  const channel = document.getElementById("postChannel").value;
+  if (!text) return;
+  if (CRISIS_PATTERNS.test(text)) {
+    closeModal();
+    openModal(`
+      <h3>We see you &#129505;</h3>
+      <div class="articleBody">
+        <p>What you're writing sounds heavy, and we're glad you're putting it into words. Your post will be published. But first, we want to remind you that there are people ready to talk with you right now, around the clock:</p>
+      </div>
+      <a class="callBtn urgent" href="tel:911"><span>Emergency services<small>Call your local emergency number</small></span><span>911 / 999 / 112</span></a>
+      <a class="callBtn" href="tel:116123"><span>Samaritans<small>Free &middot; available 24/7 &middot; UK &amp; Ireland</small></span><span>116 123</span></a>
+      <a class="callBtn" href="tel:988"><span>988 Suicide &amp; Crisis Lifeline<small>Call or text &middot; US</small></span><span>988</span></a>
+      <button class="btn secondary" style="width:100%;margin-top:6px" onclick="finalizePost()">Publish my post</button>
+    `);
+    pendingPost = { text, channel };
+    return;
+  }
+  doPublish(text, channel);
+}
+let pendingPost = null;
+function finalizePost() { if (pendingPost) { doPublish(pendingPost.text, pendingPost.channel); pendingPost = null; } }
+function doPublish(text, channel) {
+  state.posts.unshift({ id: "u" + Date.now(), who: state.pseudonym, channel, text, support: 0, beenThere: 0, comments: 0, age: "now" });
+  save(); closeModal();
+  currentTab = "community"; render();
+  toast("Posted. You're not alone in this.");
+}
+
+function renderLearn() {
+  let html = `<h1>Learn</h1><div class="sub">Short answers to real questions. 2&ndash;4 min reads.</div>`;
+  html += ARTICLES.map(a => `
+    <div class="card exCard" onclick="openArticle('${a.id}')">
+      <div class="exIcon">${a.icon}</div>
+      <div class="meta"><b>${a.title}</b><span>${a.cat} &middot; ${a.min} min</span></div>
+    </div>`).join("");
+  html += `<h2>Myths vs. facts</h2>`;
+  html += MYTHS.map(m => `
+    <div class="card">
+      <span class="tag coral">MYTH</span> <span style="font-size:0.92rem;font-style:italic">&laquo;${m.myth}&raquo;</span>
+      <div style="margin-top:10px"><span class="tag">FACT</span> <span style="font-size:0.92rem">${m.fact}</span></div>
+    </div>`).join("");
+  main.innerHTML = html;
+}
+
+function openArticle(id) {
+  const a = ARTICLES.find(x => x.id === id);
+  const prog = a.program ? PROGRAMS.find(p => p.id === a.program) : null;
+  openModal(`
+    <h3>${a.icon} ${a.title}</h3>
+    <div class="sub">${a.cat} &middot; ${a.min} min read</div>
+    <div class="articleBody">${a.body.map(p => `<p>${p}</p>`).join("")}</div>
+    ${prog ? `<div class="card nudge" style="margin-top:14px"><p>Want to go deeper? The <b>${prog.title}</b> programme (${prog.days} days) takes you through it step by step.</p>
+      <div class="actions"><button class="btn small" onclick="closeModal(); startProgram('${prog.id}'); goTab('training')">Start the programme</button></div></div>` : ""}
+  `);
+}
+
+function renderProfile() {
+  const dates = lastNDates(14);
+  const labels = [new Date(dates[0]), new Date(dates[13])].map(d => d.getDate() + "/" + (d.getMonth() + 1));
+  const completedCount = state.completedExercises.length;
+  const st = streak();
+
+  let html = `<h1>Profile</h1><div class="sub">Completely private. Nothing here is visible to others.</div>`;
+  html += `<div class="statRow" style="margin-bottom:12px">
+    <div class="card"><div class="num">${st}</div><div class="lbl">day streak</div></div>
+    <div class="card"><div class="num">${completedCount}</div><div class="lbl">exercises done</div></div>
+    <div class="card"><div class="num">${state.posts.length}</div><div class="lbl">posts shared</div></div>
+  </div>`;
+  html += `<div class="card"><b style="font-size:0.95rem">Mood trend &mdash; last 14 days</b>
+    <div class="barChart">${dates.map(d => {
+      const l = moodOn(d);
+      return l === null
+        ? `<div class="bar empty" style="height:4px" title="${d}: not logged"></div>`
+        : `<div class="bar" style="height:${l * 25}%" title="${d}: ${MOODS[l - 1].label}"></div>`;
+    }).join("")}</div>
+    <div class="chartLabels"><span>${labels[0]}</span><span>today</span></div>
+  </div>`;
+
+  html += `<h2>My posts</h2>`;
+  if (state.posts.length === 0) {
+    html += `<div class="card"><div class="empty">You haven't shared anything yet. That's completely fine. Read and recognise yourself at your own pace.</div></div>`;
+  } else {
+    html += state.posts.map(p => `<div class="card"><span class="tag">${p.channel}</span>
+      <div style="font-size:0.9rem;margin-top:8px">${esc(p.text.length > 120 ? p.text.slice(0, 120) + "…" : p.text)}</div></div>`).join("");
+  }
+
+  html += `<h2>Settings</h2><div class="card">
+    <div class="setRow"><span>Username</span>
+      <button class="btn small secondary" onclick="editPseudonym()">${esc(state.pseudonym)}</button></div>
+    <div class="setRow"><span>Notifications</span>
+      <label class="switch"><input type="checkbox" ${state.settings.notifications ? "checked" : ""} onchange="toggleNotif(this.checked)"><span class="sl"></span></label></div>
+    <div class="setRow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <span>Personal crisis contact (optional)</span>
+      <input type="tel" id="crisisContact" placeholder="Name / phone number of someone you trust" value="${esc(state.settings.crisisContact)}" onchange="saveCrisisContact(this.value)">
+    </div>
+  </div>`;
+
+  main.innerHTML = html;
+}
+
+function editPseudonym() {
+  openModal(`
+    <h3>Change username</h3>
+    <div class="sub">This is the name others see in Community. Choose something that can't identify you.</div>
+    <input type="text" id="pseudoInput" value="${esc(state.pseudonym)}" maxlength="24">
+    <button class="btn" style="width:100%;margin-top:12px" onclick="savePseudonym()">Save</button>
+  `);
+}
+function savePseudonym() { const v = document.getElementById("pseudoInput").value.trim(); if (v) { state.pseudonym = v; save(); } closeModal(); render(); }
+function toggleNotif(on) { state.settings.notifications = on; save(); }
+function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast("Saved"); }
+
+function detectCrisisInfo() {
+  const lang = (navigator.language || "en").toLowerCase();
+  const regions = {
+    "nb": { emergency: "113", lines: [{ name: "Mental Helse", sub: "Free · 24/7 · Norway", tel: "116123", display: "116 123" }, { name: "Kirkens SOS", sub: "Free · 24/7 · Norway", tel: "22400040", display: "22 40 00 40" }] },
+    "nn": { emergency: "113", lines: [{ name: "Mental Helse", sub: "Free · 24/7 · Norway", tel: "116123", display: "116 123" }, { name: "Kirkens SOS", sub: "Free · 24/7 · Norway", tel: "22400040", display: "22 40 00 40" }] },
+    "no": { emergency: "113", lines: [{ name: "Mental Helse", sub: "Free · 24/7 · Norway", tel: "116123", display: "116 123" }, { name: "Kirkens SOS", sub: "Free · 24/7 · Norway", tel: "22400040", display: "22 40 00 40" }] },
+    "sv": { emergency: "112", lines: [{ name: "Mind Självmordslinjen", sub: "Free · 24/7 · Sweden", tel: "90101", display: "90101" }] },
+    "da": { emergency: "112", lines: [{ name: "Livslinjen", sub: "Free · 24/7 · Denmark", tel: "70201201", display: "70 20 12 01" }] },
+    "fi": { emergency: "112", lines: [{ name: "Mieli Crisis Hotline", sub: "Free · 24/7 · Finland", tel: "09252501111", display: "09 2525 0111" }] },
+    "de": { emergency: "112", lines: [{ name: "Telefonseelsorge", sub: "Free · 24/7 · Germany", tel: "08001110111", display: "0800 111 0 111" }] },
+    "fr": { emergency: "15", lines: [{ name: "Numéro national prévention suicide", sub: "Free · 24/7 · France", tel: "3114", display: "3114" }] },
+    "nl": { emergency: "112", lines: [{ name: "0800-0113", sub: "Free · 24/7 · Netherlands", tel: "08000113", display: "0800-0113" }] },
+    "es": { emergency: "112", lines: [{ name: "Línea de atención a conducta suicida", sub: "Free · 24/7 · Spain", tel: "024", display: "024" }] },
+    "it": { emergency: "112", lines: [{ name: "Telefono Amico", sub: "Italy", tel: "0223272327", display: "02 2327 2327" }] },
+    "pt-br": { emergency: "192", lines: [{ name: "CVV", sub: "Free · 24/7 · Brazil", tel: "188", display: "188" }] },
+    "en-us": { emergency: "911", lines: [{ name: "988 Suicide & Crisis Lifeline", sub: "Call or text · 24/7 · US", tel: "988", display: "988" }], text: "Text HOME to 741741" },
+    "en-au": { emergency: "000", lines: [{ name: "Lifeline", sub: "Free · 24/7 · Australia", tel: "131114", display: "13 11 14" }] },
+    "en-nz": { emergency: "111", lines: [{ name: "Lifeline", sub: "Free · 24/7 · New Zealand", tel: "08005435354", display: "0800 543 354" }] },
+    "en-ca": { emergency: "911", lines: [{ name: "Crisis Services Canada", sub: "Free · 24/7 · Canada", tel: "18334564566", display: "1-833-456-4566" }] },
+  };
+  const full = regions[lang];
+  if (full) return full;
+  const short = regions[lang.split("-")[0]];
+  if (short) return short;
+  return { emergency: "112", lines: [{ name: "Samaritans", sub: "Free · 24/7 · UK & Ireland", tel: "116123", display: "116 123" }] };
+}
+
+function openSOS() {
+  const cc = state.settings.crisisContact;
+  const info = detectCrisisInfo();
+  const lineHtml = info.lines.map(l =>
+    `<a class="callBtn" href="tel:${l.tel}"><span>${l.name}<small>${l.sub}</small></span><span>${l.display}</span></a>`
+  ).join("");
+  openModal(`
+    <h3>Crisis support</h3>
+    <div class="sub">You don't need to be in crisis to call. They're there to listen.</div>
+    <a class="callBtn urgent" href="tel:${info.emergency}"><span>Emergency services<small>Call your local emergency number</small></span><span>${info.emergency}</span></a>
+    ${lineHtml}
+    ${info.text ? `<div style="background:var(--teal-light);border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:0.85rem;color:var(--teal-dark)">${info.text}</div>` : ""}
+    <div style="background:var(--teal-light);border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:0.85rem;color:var(--teal-dark)">
+      Not your country? <a href="https://www.iasp.info/resources/Crisis_Centres/" style="color:var(--teal-dark)">Find a crisis centre near you &rarr;</a>
+    </div>
+    ${cc ? `<a class="callBtn" style="background:var(--coral)" href="tel:${esc(cc.replace(/[^+\d]/g, ""))}"><span>Your personal contact<small>${esc(cc)}</small></span><span>Call</span></a>` : ""}
+    <p style="font-size:0.8rem;color:var(--text-soft);margin-top:8px">This app is a support tool and is not a replacement for professional care.</p>
+  `);
+}
+document.getElementById("sosBtn").onclick = openSOS;
+
+function openModal(innerHtml) {
+  closeModal();
+  const w = document.createElement("div");
+  w.className = "modalWrap"; w.id = "modalWrap";
+  w.innerHTML = `<div class="modal">${innerHtml}</div>`;
+  w.onclick = (e) => { if (e.target === w) closeModal(); };
+  document.getElementById("app").appendChild(w);
+}
+function closeModal() { const w = document.getElementById("modalWrap"); if (w) w.remove(); }
+
+render();
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>

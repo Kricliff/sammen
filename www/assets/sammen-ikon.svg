@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Sammen app-ikon">
+  <title>Sammen — app-ikon</title>
+  <rect x="2" y="2" width="96" height="96" rx="22" fill="#1f4f4f"/>
+  <circle cx="40" cy="50" r="20" fill="#7fb8b8"/>
+  <circle cx="60" cy="50" r="20" fill="#e8806a"/>
+  <path d="M50 32.7 A20 20 0 0 1 50 67.3 A20 20 0 0 1 50 32.7 Z" fill="#f5f4f2"/>
+</svg>

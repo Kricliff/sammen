@@ -1,0 +1,26 @@
+{
+  "name": "sammen",
+  "version": "1.0.0",
+  "description": "Prototype (PWA) av appen «Sammen»: fellesskap og mental trening for menn.\r Et støtteverktøy — ikke en erstatning for behandling.",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kricliff/sammen.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Kricliff/sammen/issues"
+  },
+  "homepage": "https://github.com/Kricliff/sammen#readme",
+  "dependencies": {
+    "@capacitor/cli": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
+    "@capacitor/ios": "^8.4.0"
+  }
+}
