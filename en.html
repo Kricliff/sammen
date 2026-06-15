@@ -1176,7 +1176,15 @@ function renderProfile() {
     </div>
   </div>`;
 
-  html += `<button class="btn secondary" style="width:100%;margin-top:12px" onclick="openBugReport()">🐛 Report a bug</button>`;
+  html += `<div style="margin:28px 0 48px">
+    <button onclick="openBugReport()" style="width:100%;background:none;border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left">
+      <span style="font-size:1.4rem;line-height:1">🐛</span>
+      <div>
+        <div style="font-size:0.9rem;font-weight:600;color:var(--text)">Found something broken?</div>
+        <div style="font-size:0.78rem;color:var(--text-soft);margin-top:2px">Report it and we'll fix it.</div>
+      </div>
+    </button>
+  </div>`;
 
   main.innerHTML = html;
 }
