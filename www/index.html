@@ -1277,14 +1277,24 @@ function openBugReport() {
     <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>
   `);
 }
-function submitBugReport() {
+async function submitBugReport() {
   const ta = document.getElementById('bugText');
   if (!ta || !ta.value.trim()) { toast("Please describe the bug first."); return; }
-  const addr = ['bug', 'cliffordcoaching.no'].join('@');
-  const subject = encodeURIComponent('Together – Bug report');
-  const body = encodeURIComponent(ta.value.trim());
-  window.location.href = `mailto:${addr}?subject=${subject}&body=${body}`;
-  closeModal();
+  const btn = document.querySelector('.modal .btn');
+  if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+  try {
+    const res = await fetch('https://formspree.io/f/mbdewpeo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ message: ta.value.trim(), _subject: 'Together – Bug report' })
+    });
+    const data = await res.json();
+    if (data.ok) { closeModal(); toast("Thanks — bug report sent."); }
+    else { toast("Could not send. Please try again."); if (btn) { btn.disabled = false; btn.textContent = "Send report"; } }
+  } catch(e) {
+    toast("Could not send. Please try again.");
+    if (btn) { btn.disabled = false; btn.textContent = "Send report"; }
+  }
 }
 
 function detectCrisisInfo() {
