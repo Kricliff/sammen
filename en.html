@@ -1176,6 +1176,8 @@ function renderProfile() {
     </div>
   </div>`;
 
+  html += `<button class="btn secondary" style="width:100%;margin-top:12px" onclick="openBugReport()">🐛 Report a bug</button>`;
+
   main.innerHTML = html;
 }
 
@@ -1256,6 +1258,24 @@ async function setupDailyNotifications(force) {
   if ("Notification" in window && Notification.permission === "default") { Notification.requestPermission(); }
 }
 function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast("Saved"); }
+function openBugReport() {
+  openModal(`
+    <h3>Report a bug</h3>
+    <div class="sub" style="margin-bottom:16px">Describe what happened and we'll look into it.</div>
+    <textarea id="bugText" rows="5" placeholder="What happened? What did you expect?"></textarea>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="submitBugReport()">Send report</button>
+    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>
+  `);
+}
+function submitBugReport() {
+  const ta = document.getElementById('bugText');
+  if (!ta || !ta.value.trim()) { toast("Please describe the bug first."); return; }
+  const addr = ['bug', 'cliffordcoaching.no'].join('@');
+  const subject = encodeURIComponent('Together – Bug report');
+  const body = encodeURIComponent(ta.value.trim());
+  window.location.href = `mailto:${addr}?subject=${subject}&body=${body}`;
+  closeModal();
+}
 
 function detectCrisisInfo() {
   const lang = (navigator.language || "en").toLowerCase();
