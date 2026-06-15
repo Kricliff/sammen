@@ -210,7 +210,7 @@ const defaultState = {
   activeProgram: null,
   posts: [],
   reactions: {},
-  settings: { notifications: true, crisisContact: "" },
+  settings: { notifications: true, notifTime: "09:00", crisisContact: "" },
   dismissedNudges: {},
   reflections: {},
   journal: [],
@@ -221,7 +221,15 @@ const defaultState = {
 
 let state = loadState();
 function loadState() {
-  try { const raw = localStorage.getItem(LS_KEY); if (raw) return Object.assign(structuredClone(defaultState), JSON.parse(raw)); } catch (e) {}
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      const merged = Object.assign(structuredClone(defaultState), saved);
+      merged.settings = Object.assign(structuredClone(defaultState.settings), saved.settings || {});
+      return merged;
+    }
+  } catch (e) {}
   return structuredClone(defaultState);
 }
 function save() { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
@@ -293,6 +301,52 @@ const DAILY_PROMPTS = [
   "What's given you a little energy recently?",
   "What's the hardest part of your role right now: work, father, partner?",
 ];
+
+const DAILY_MESSAGES = [
+  { text: "How are you doing today, actually? One tap — five seconds.", tag: "check" },
+  { text: "Quick check-in. Log your mood — even a rough one counts.", tag: "check" },
+  { text: "You showed up yesterday. That matters more than you think.", tag: "boost" },
+  { text: "Tip: Three slow breaths before a difficult conversation. It works.", tag: "tip" },
+  { text: "Check in with yourself. Not the phone — yourself.", tag: "check" },
+  { text: "One thing that went okay today. Just one. What was it?", tag: "check" },
+  { text: "Tip: A short walk outside resets the nervous system. Even 10 minutes.", tag: "tip" },
+  { text: "You're not the only one finding it hard right now.", tag: "boost" },
+  { text: "Today's mood — log it. Future you will appreciate the pattern.", tag: "check" },
+  { text: "Tip: When you're overwhelmed, name three things you can see. It grounds you.", tag: "tip" },
+  { text: "Small steps still count as movement. Keep going.", tag: "boost" },
+  { text: "How did you sleep? Log it and track what helps.", tag: "check" },
+  { text: "Tip: Telling someone 'I'm not doing great' is braver than it sounds.", tag: "tip" },
+  { text: "Mid-week check: what's weighing most right now?", tag: "check" },
+  { text: "You don't have to have it together to show up.", tag: "boost" },
+  { text: "Tip: Physical movement is one of the most effective mood regulators. Even a stretch.", tag: "tip" },
+  { text: "How are things at home? At work? Log your mood and notice.", tag: "check" },
+  { text: "Progress isn't always visible. Keep going anyway.", tag: "boost" },
+  { text: "Tip: Write down one thing you're grateful for before bed tonight.", tag: "tip" },
+  { text: "End of the week. How are you actually doing?", tag: "check" },
+  { text: "Rest is not weakness. Rest is preparation.", tag: "boost" },
+  { text: "Tip: A conversation with one person you trust can shift an entire week.", tag: "tip" },
+  { text: "Morning check-in. What's your energy today?", tag: "check" },
+  { text: "The fact that you're here means something.", tag: "boost" },
+  { text: "Tip: Avoid making big decisions when you're hungry, tired, or stressed.", tag: "tip" },
+  { text: "Quick log: mood, sleep, energy. Takes 30 seconds.", tag: "check" },
+  { text: "Hard days don't last. And you've had hard days before.", tag: "boost" },
+  { text: "Tip: Say no to one thing this week that drains you.", tag: "tip" },
+  { text: "What would you tell a friend who was feeling how you're feeling?", tag: "check" },
+  { text: "You're doing better than your worst moment suggests.", tag: "boost" },
+  { text: "Tip: Exercise doesn't have to be intense to help. A walk counts.", tag: "tip" },
+  { text: "Log today's mood. You're building a picture of yourself over time.", tag: "check" },
+  { text: "Taking care of your mental health isn't selfish. It's necessary.", tag: "boost" },
+  { text: "Tip: Check in with someone you haven't spoken to in a while.", tag: "tip" },
+  { text: "One honest sentence about how you're doing. Say it — even just to yourself.", tag: "check" },
+  { text: "Difficult feelings pass. You don't have to solve them today.", tag: "boost" },
+  { text: "Tip: Put your phone down for 30 minutes tonight. See what comes up.", tag: "tip" },
+  { text: "Weekend check-in. What do you actually need right now?", tag: "check" },
+  { text: "Being honest about struggle is its own kind of strength.", tag: "boost" },
+  { text: "New week ahead. How do you actually feel about it?", tag: "check" },
+];
+function todayMessage() {
+  return DAILY_MESSAGES[Math.floor(Date.now() / 86400000) % DAILY_MESSAGES.length];
+}
 
 const SEED_POSTS = [
   { id: "s1", who: "NorthernOak74", channel: "Work", age: "2h",
@@ -498,7 +552,14 @@ function renderHome() {
   const wk = weekKey();
   const ws = (state.weeklySummary || {})[wk];
 
+  const dm = todayMessage();
+  const dmIcon = dm.tag === "tip" ? "💡" : dm.tag === "boost" ? "💪" : "🌤️";
+
   let html = `<h1>${greeting}</h1><div class="sub">How are you doing today, really?</div>`;
+  html += `<div class="card" style="background:linear-gradient(135deg,var(--teal-dark) 0%,var(--teal) 100%);color:#fff;border:none">
+    <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;opacity:0.7;margin-bottom:8px">${dmIcon} Today's message</div>
+    <div style="font-size:1rem;line-height:1.55;font-weight:400">${esc(dm.text)}</div>
+  </div>`;
   if (inact && !today) html += `<div class="card nudge"><p>${inact}</p></div>`;
 
   html += `<div class="card">
@@ -1105,8 +1166,10 @@ function renderProfile() {
   html += `<h2>Settings</h2><div class="card">
     <div class="setRow"><span>Username</span>
       <button class="btn small secondary" onclick="editPseudonym()">${esc(state.pseudonym)}</button></div>
-    <div class="setRow"><span>Notifications</span>
+    <div class="setRow"><span>Daily reminder</span>
       <label class="switch"><input type="checkbox" ${state.settings.notifications ? "checked" : ""} onchange="toggleNotif(this.checked)"><span class="sl"></span></label></div>
+    ${state.settings.notifications ? `<div class="setRow"><span style="color:var(--text-soft);font-size:0.88rem">Reminder time</span>
+      <input type="time" value="${state.settings.notifTime || "09:00"}" onchange="saveNotifTime(this.value)" style="border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-family:inherit;font-size:0.88rem;color:var(--text);background:var(--bg)"></div>` : ""}
     <div class="setRow" style="flex-direction:column;align-items:stretch;gap:8px">
       <span>Personal crisis contact (optional)</span>
       <input type="tel" id="crisisContact" placeholder="Name / phone number of someone you trust" value="${esc(state.settings.crisisContact)}" onchange="saveCrisisContact(this.value)">
@@ -1161,7 +1224,37 @@ function editPseudonym() {
   `);
 }
 function savePseudonym() { const v = document.getElementById("pseudoInput").value.trim(); if (v) { state.pseudonym = v; save(); } closeModal(); render(); }
-function toggleNotif(on) { state.settings.notifications = on; save(); }
+function toggleNotif(on) { state.settings.notifications = on; save(); if (on) setupDailyNotifications(); render(); }
+function saveNotifTime(t) { state.settings.notifTime = t; save(); if (state.settings.notifications) setupDailyNotifications(true); }
+async function setupDailyNotifications(force) {
+  if (!state.settings.notifications) return;
+  const [hour, min] = (state.settings.notifTime || "09:00").split(":").map(Number);
+  if (window.Capacitor?.isNativePlatform?.()) {
+    const LN = window.Capacitor?.Plugins?.LocalNotifications;
+    if (!LN) return;
+    try {
+      const { display } = await LN.requestPermissions();
+      if (display !== "granted") return;
+      const { notifications: pending } = await LN.getPendingNotifications();
+      if (!force && pending.length > 10) return;
+      if (pending.length) await LN.cancel({ notifications: pending });
+      const dayBase = Math.floor(Date.now() / 86400000);
+      const toSchedule = [];
+      for (let i = 1; i <= 45; i++) {
+        const at = new Date();
+        at.setDate(at.getDate() + i);
+        at.setHours(hour, min, 0, 0);
+        if (at > new Date()) {
+          const msg = DAILY_MESSAGES[(dayBase + i) % DAILY_MESSAGES.length];
+          toSchedule.push({ id: 3000 + i, title: "Together", body: msg.text, schedule: { at }, channelId: "daily-reminder" });
+        }
+      }
+      await LN.schedule({ notifications: toSchedule });
+    } catch (e) { console.log("Notif setup failed:", e); }
+    return;
+  }
+  if ("Notification" in window && Notification.permission === "default") { Notification.requestPermission(); }
+}
 function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast("Saved"); }
 
 function detectCrisisInfo() {
@@ -1226,6 +1319,7 @@ render();
 (function() {
   const sp = document.getElementById("splash");
   if (sp) setTimeout(() => sp.remove(), 2850);
+  if (state.settings.notifications) setTimeout(setupDailyNotifications, 3000);
 })();
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
