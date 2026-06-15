@@ -144,9 +144,43 @@
   .proTag { display:inline-block;font-size:0.62rem;font-weight:700;letter-spacing:0.06em;background:var(--coral);color:#fff;border-radius:4px;padding:2px 7px;vertical-align:middle;margin-left:5px }
   .toast { position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 0.85rem; z-index: 60; white-space: nowrap; animation: toastIn 0.25s ease; }
   @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+  /* ── Splash animation ── */
+  #splash {
+    position: absolute; inset: 0; z-index: 200;
+    background: #1f4f4f;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    animation: splashExit 0.5s ease 2.3s both;
+    pointer-events: none;
+  }
+  #splashSvg { overflow: visible; }
+  #splashGL { animation: splashFromLeft  0.7s cubic-bezier(0.34, 1.35, 0.64, 1) 0.2s both; }
+  #splashGR { animation: splashFromRight 0.7s cubic-bezier(0.34, 1.35, 0.64, 1) 0.2s both; }
+  #splashLens { opacity: 0; animation: splashFadeIn 0.35s ease 0.75s both; }
+  #splashWord {
+    font-family: 'Outfit', -apple-system, sans-serif;
+    font-size: 1.6rem; font-weight: 500;
+    color: rgba(255,255,255,0.88); letter-spacing: 0.12em;
+    margin-top: 20px; opacity: 0;
+    animation: splashWordIn 0.55s ease 1.05s both;
+  }
+  @keyframes splashFromLeft  { from { transform: translateX(-60px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes splashFromRight { from { transform: translateX( 60px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes splashFadeIn    { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes splashWordIn    { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes splashExit      { to { opacity: 0; } }
 </style>
 </head>
 <body>
+<div id="splash">
+  <svg id="splashSvg" viewBox="0 0 100 100" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+    <g id="splashGL"><circle cx="38" cy="50" r="24" fill="#2a7f7f"/></g>
+    <g id="splashGR"><circle cx="62" cy="50" r="24" fill="#e8806a"/></g>
+    <path id="splashLens" d="M50 29.2 A24 24 0 0 1 50 70.8 A24 24 0 0 1 50 29.2 Z" fill="#1f4f4f"/>
+  </svg>
+  <div id="splashWord">together</div>
+</div>
 <div id="app">
   <header>
     <div class="brand">
@@ -1189,6 +1223,10 @@ function openModal(innerHtml) {
 function closeModal() { const w = document.getElementById("modalWrap"); if (w) w.remove(); }
 
 render();
+(function() {
+  const sp = document.getElementById("splash");
+  if (sp) setTimeout(() => sp.remove(), 2850);
+})();
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
