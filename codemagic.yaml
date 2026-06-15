@@ -9,7 +9,7 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.kricliff.together
-      node: v22.x
+      node: latest
       xcode: latest
     scripts:
       - name: Install npm dependencies
