@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Sammen — mental trening for menn</title>
+<title>Sammen, mental trening for menn</title>
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="2" y="2" width="96" height="96" rx="22" fill="%231F4F4F"/><circle cx="40" cy="50" r="20" fill="%237FB8B8"/><circle cx="60" cy="50" r="20" fill="%23E8806A"/><path d="M50 32.7 A20 20 0 0 1 50 67.3 A20 20 0 0 1 50 32.7 Z" fill="%23F5F4F2"/></svg>'>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#1f4f4f">
@@ -358,7 +358,7 @@
       </svg>
       sammen
     </div>
-    <button id="sosBtn" title="Akutthjelp — alltid tilgjengelig">&#10084;&#65039; Akutthjelp</button>
+    <button id="sosBtn" title="Akutthjelp, alltid tilgjengelig">&#10084;&#65039; Akutthjelp</button>
   </header>
   <main id="main"></main>
   <nav id="nav"></nav>
@@ -410,13 +410,13 @@ const EXERCISES = [
     audio: "assets/audio/pust.m4a" },
   { id: "ground", icon: "\u{1F9ED}", title: "5-4-3-2-1 jording", desc: "Hent deg inn med sansene", min: 4, type: "guided",
     audio: "assets/audio/jording.m4a",
-    steps: ["Finn 5 ting du kan se rundt deg.", "Legg merke til 4 ting du kan ta på.", "Lytt etter 3 lyder.", "Finn 2 ting du kan lukte.", "Kjenn 1 ting du kan smake — eller ta en slurk vann.", "Pust rolig ut. Du er her, nå."] },
+    steps: ["Finn 5 ting du kan se rundt deg.", "Legg merke til 4 ting du kan ta på.", "Lytt etter 3 lyder.", "Finn 2 ting du kan lukte.", "Kjenn 1 ting du kan smake, eller ta en slurk vann.", "Pust rolig ut. Du er her, nå."] },
   { id: "reframe", icon: "\u{1F501}", title: "Snu tanken", desc: "Kort kognitiv øvelse", min: 6, type: "guided",
     audio: "assets/audio/snu-tanken.m4a",
     steps: ["Hva er tanken som plager deg akkurat nå? Si den til deg selv, kort.", "Hvor sann er den, fra 0 til 100 %?", "Hva ville du sagt til en god kamerat som tenkte det samme?", "Formuler en mer balansert versjon av tanken.", "Legg merke til om kroppen slapper litt mer av."] },
   { id: "move", icon: "⚡", title: "Fysisk aktivering", desc: "Få ut spenning på 3 minutter", min: 3, type: "guided",
     audio: "assets/audio/aktivering.m4a",
-    steps: ["Reis deg opp. Rist løs i armer og bein i 20 sekunder.", "10 rolige knebøy — kjenn at beina jobber.", "Strekk armene over hodet, hold i 10 sekunder.", "Rull skuldrene bakover 10 ganger.", "Stå stille. Tre dype pust. Ferdig."] },
+    steps: ["Reis deg opp. Rist løs i armer og bein i 20 sekunder.", "10 rolige knebøy, kjenn at beina jobber.", "Strekk armene over hodet, hold i 10 sekunder.", "Rull skuldrene bakover 10 ganger.", "Stå stille. Tre dype pust. Ferdig."] },
   { id: "visual", icon: "\u{1F3D4}️", title: "Trygt sted", desc: "Visualisering for ro", min: 7, type: "guided",
     audio: "assets/audio/trygt-sted.m4a",
     steps: ["Lukk øynene eller senk blikket.", "Se for deg et sted du kjenner deg helt rolig. Ekte eller forestilt.", "Hva ser du der? Legg til detaljer.", "Hva hører du? Hva kjenner du mot huden?", "Bli værende der i noen rolige åndedrag.", "Ta med deg roen tilbake hit."] },
@@ -425,23 +425,23 @@ const EXERCISES = [
 const PROGRAMS = [
   { id: "sleep", title: "Bedre søvn", days: 21, icon: "\u{1F634}", desc: "Ro ned kvelden og bygg en søvnrutine som holder." },
   { id: "transition", title: "Håndtere overgang", days: 14, icon: "\u{1F9ED}", desc: "Stødig gjennom jobbskifte, brudd eller andre store endringer." },
-  { id: "confidence", title: "Selvtillit og prestasjon", days: 21, icon: "\u{1F3AF}", desc: "Tren tryggheten din — på jobb, i idrett, i livet." },
+  { id: "confidence", title: "Selvtillit og prestasjon", days: 21, icon: "\u{1F3AF}", desc: "Tren tryggheten din. Jobb, idrett og hverdagsliv." },
   { id: "father", title: "Tryggere far og partner", days: 30, icon: "\u{1F46A}", desc: "Verktøy for nærvær, tålmodighet og kommunikasjon hjemme." },
 ];
 
 const REFLECTIONS = [
-  { id: "r1",  title: "Hva er du egentlig redd for?", prompt: "Ikke det du innrømmer i selskap. Det du tenker på om natten, alene — frykten du sjelden setter ord på. Hva er det?" },
-  { id: "r2",  title: "Hvem ville du vært uten forventningene andre har til deg?", prompt: "Se for deg at alle roller og krav falt bort i morgen. Ingen forventninger fra jobb, familie eller samfunn. Hvem er du da — og hva vil du?" },
-  { id: "r3",  title: "Hva har du aldri sagt høyt til noen?", prompt: "Det er noe der — noe du har båret i årevis uten å sette ord på det overfor andre. Hva er det? Skriv det her, bare for deg selv." },
-  { id: "r4",  title: "Hva prøver du å bevise — og for hvem?", prompt: "Bak mye av det vi gjør ligger et ønske om å bevise noe. Kanskje til en forelder, en gammel versjon av deg selv, eller noen som tvilt på deg. Hvem driver du egentlig for?" },
-  { id: "r5",  title: "Hva ville den yngre deg trengt å høre?", prompt: "Se for deg deg selv som 10–12 år. Hva trengte den gutten å høre fra en voksen han stolte på? Hva fikk han aldri høre — og hva betyr det at du ikke fikk det?" },
+  { id: "r1",  title: "Hva er du egentlig redd for?", prompt: "Ikke det du innrømmer i selskap. Det du tenker på om natten, alene. Frykten du sjelden setter ord på. Hva er det?" },
+  { id: "r2",  title: "Hvem ville du vært uten forventningene andre har til deg?", prompt: "Se for deg at alle roller og krav falt bort i morgen. Ingen forventninger fra jobb, familie eller samfunn. Hvem er du da, og hva vil du?" },
+  { id: "r3",  title: "Hva har du aldri sagt høyt til noen?", prompt: "Det er noe der, noe du har båret i årevis uten å sette ord på det overfor andre. Hva er det? Skriv det her, bare for deg selv." },
+  { id: "r4",  title: "Hva prøver du å bevise, og for hvem?", prompt: "Bak mye av det vi gjør ligger et ønske om å bevise noe. Kanskje til en forelder, en gammel versjon av deg selv, eller noen som tvilt på deg. Hvem driver du egentlig for?" },
+  { id: "r5",  title: "Hva ville den yngre deg trengt å høre?", prompt: "Se for deg deg selv som 10–12 år. Hva trengte den gutten å høre fra en voksen han stolte på? Hva fikk han aldri høre. Hva betyr det at du ikke fikk det?" },
   { id: "r6",  title: "Hva er du ikke villig til å se på i deg selv?", prompt: "Vi har alle deler av oss selv vi helst ser bort fra. En tendens, en frykt, en side vi rettferdiggjør eller dulmer. Hva er det for deg?" },
-  { id: "r7",  title: "Hva har du mistet som du aldri har sørget over?", prompt: "En drøm du la fra deg. Et forhold som stilnet. En versjon av deg selv du aldri ble. Hva har du mistet stille — uten å gi deg selv lov til å kjenne tapet?" },
-  { id: "r8",  title: "Hva er egentlig nok for deg?", prompt: "Ikke hva du sier er nok. Hva er det du faktisk jager — og hva ville det kreve for at du virkelig kunne si: dette holder?" },
-  { id: "r9",  title: "Hva er du redd folk egentlig vil se?", prompt: "Bak den beste versjonen du viser verden — hva er du redd de skal oppdage? Hva jobber du hardest for å skjule?" },
-  { id: "r10", title: "Hva betyr egentlig noe for deg?", prompt: "Fjern jobben, titlene, statusen og det du burde bry deg om. Hva sitter igjen som genuint viktig — og lever du etter det?" },
-  { id: "r11", title: "Hva har du aldri tilgitt deg selv for?", prompt: "Vi bærer alle noe. En feil, en beslutning, noe du ikke gjorde da du skulle. Hva er det for deg — og hva ville det betydd å slippe det?" },
-  { id: "r12", title: "Hvem tillater du deg å trenge noe av?", prompt: "Hvem i livet ditt ser deg når du sliter — og vet du om det? Hva gjør det med deg å trenge noe av noen, og hvem er det trygt å vise det til?" },
+  { id: "r7",  title: "Hva har du mistet som du aldri har sørget over?", prompt: "En drøm du la fra deg. Et forhold som stilnet. En versjon av deg selv du aldri ble. Hva har du mistet stille, uten å gi deg selv lov til å kjenne tapet?" },
+  { id: "r8",  title: "Hva er egentlig nok for deg?", prompt: "Ikke hva du sier er nok. Hva er det du faktisk jager. Hva ville det kreve for at du virkelig kunne si: dette holder?" },
+  { id: "r9",  title: "Hva er du redd folk egentlig vil se?", prompt: "Bak den beste versjonen du viser verden: hva er du redd de skal oppdage? Hva jobber du hardest for å skjule?" },
+  { id: "r10", title: "Hva betyr egentlig noe for deg?", prompt: "Fjern jobben, titlene, statusen og det du burde bry deg om. Hva sitter igjen som genuint viktig. Lever du etter det?" },
+  { id: "r11", title: "Hva har du aldri tilgitt deg selv for?", prompt: "Vi bærer alle noe. En feil, en beslutning, noe du ikke gjorde da du skulle. Hva er det for deg. Hva ville det betydd å slippe det?" },
+  { id: "r12", title: "Hvem tillater du deg å trenge noe av?", prompt: "Hvem i livet ditt ser deg når du sliter. Vet du om det? Hva gjør det med deg å trenge noe av noen, og hvem er det trygt å vise det til?" },
 ];
 const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
 
@@ -451,11 +451,11 @@ const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
 const SOCIAL_GOALS = [
   "Snakk med én person du stoler på om noe som faktisk betyr noe for deg.",
   "Send en melding til noen du ikke har hørt fra på lenge.",
-  "Gjør noe aktivt med en venn denne uken — en tur, en kopp kaffe, hva som helst.",
-  "Fortell noen nær deg hva du setter pris på ved dem — og si det rett ut.",
-  "Spør en kollega eller venn: «Hvordan har du det egentlig?» — og lytt skikkelig.",
+  "Gjør noe aktivt med en venn denne uken. En tur, en kopp kaffe, hva som helst.",
+  "Fortell noen nær deg hva du setter pris på ved dem, og si det rett ut.",
+  "Spør en kollega eller venn: «Hvordan har du det egentlig?» Lytt ordentlig etterpå.",
   "Del noe du sliter med, med én person du stoler på. Ikke løs det, bare si det.",
-  "Inviter noen til å gjøre noe konkret — ikke bare si «vi må møtes».",
+  "Inviter noen til å gjøre noe konkret. Ikke bare si «vi må møtes».",
   "Skriv til noen du tenker på men sjelden kontakter. Det trenger ikke være stort.",
 ];
 
@@ -468,7 +468,7 @@ const DAILY_PROMPTS = [
   "Hva gjør du når hodet ikke vil roe seg?",
   "Hvem savner du å snakke ordentlig med?",
   "Hva har gitt deg litt energi de siste dagene?",
-  "Hva er det vanskeligste med rollen din akkurat nå — jobb, far, partner?",
+  "Hva er det vanskeligste med rollen din akkurat nå? Jobb, far, partner?",
 ];
 
 const SEED_POSTS = [
@@ -490,22 +490,22 @@ const SEED_POSTS = [
 ];
 
 const ARTICLES = [
-  { id: "a1", icon: "\u{1F3A4}", title: "Prestasjonsangst — når kravene tar over", min: 3, cat: "Prestasjon", program: "confidence",
-    body: ["Prestasjonsangst handler sjelden om selve oppgaven. Den handler om hva du tror det betyr om deg hvis det går dårlig.", "Kroppens alarmrespons — hjertebank, uro, tankekjør — er den samme enten trusselen er en bjørn eller en presentasjon. Hjernen din prøver å beskytte deg. Den er bare litt overivrig.", "Det som hjelper: senk innsatsen i hodet ('dette er ett møte, ikke en dom'), pust lengre ut enn inn, og tren på situasjonen i små doser i stedet for å unngå den.", "Unngåelse gir ro i dag og mer angst i morgen. Eksponering i små steg gjør det motsatte."] },
+  { id: "a1", icon: "\u{1F3A4}", title: "Prestasjonsangst når kravene tar over", min: 3, cat: "Prestasjon", program: "confidence",
+    body: ["Prestasjonsangst handler sjelden om selve oppgaven. Den handler om hva du tror det betyr om deg hvis det går dårlig.", "Kroppens alarmrespons, hjertebank, uro og tankekjør, er den samme enten trusselen er en bjørn eller en presentasjon. Hjernen din prøver å beskytte deg. Den er bare litt overivrig.", "Det som hjelper: senk innsatsen i hodet ('dette er ett møte, ikke en dom'), pust lengre ut enn inn, og tren på situasjonen i små doser i stedet for å unngå den.", "Unngåelse gir ro i dag og mer angst i morgen. Eksponering i små steg gjør det motsatte."] },
   { id: "a2", icon: "\u{1F525}", title: "Sinne er ofte noe annet", min: 3, cat: "Sinnemestring", program: "father",
-    body: ["For mange menn er sinne den eneste følelsen som føles 'lovlig' å vise. Under ligger ofte noe annet: bekymring, skam, avmakt, sårhet.", "Neste gang du kjenner det koke: prøv å sette ord på hva som skjedde sekundet før. Følte du deg overkjørt? Ikke hørt? Redd for å mislykkes?", "Sinne i seg selv er ikke farlig. Det er informasjon. Spørsmålet er hva du gjør med det — og om de rundt deg må bære kostnaden.", "En praktisk regel: ta pause før du svarer når pulsen er høy. Du kan alltid komme tilbake til samtalen. Det du sier i fullt sinne, kan du sjelden ta tilbake."] },
-  { id: "a3", icon: "\u{1F9CD}", title: "Ensomhet blant menn — det ingen sier høyt", min: 4, cat: "Ensomhet", program: null,
-    body: ["Mange menn har kollegaer, treningskamerater og familie — og er likevel ensomme. Fordi ingen av relasjonene har rom for det som egentlig tynger.", "Mannlig vennskap bygges ofte rundt aktivitet, ikke samtale. Det er ikke feil, men det betyr at de tunge tingene aldri får plass.", "Det fine: det skal mindre til enn du tror. Én ærlig setning — 'det har vært en tung periode, egentlig' — åpner mer enn hundre overfladiske samtaler.", "Start med den kameraten du tror tåler det best. Sannsynligvis har han ventet på en anledning til å si noe ekte selv."] },
+    body: ["For mange menn er sinne den eneste følelsen som føles 'lovlig' å vise. Under ligger ofte noe annet: bekymring, skam, avmakt, sårhet.", "Neste gang du kjenner det koke: prøv å sette ord på hva som skjedde sekundet før. Følte du deg overkjørt? Ikke hørt? Redd for å mislykkes?", "Sinne i seg selv er ikke farlig. Det er informasjon. Spørsmålet er hva du gjør med det, og om de rundt deg må bære kostnaden.", "En praktisk regel: ta pause før du svarer når pulsen er høy. Du kan alltid komme tilbake til samtalen. Det du sier i fullt sinne, kan du sjelden ta tilbake."] },
+  { id: "a3", icon: "\u{1F9CD}", title: "Ensomhet blant menn", min: 4, cat: "Ensomhet", program: null,
+    body: ["Mange menn har kollegaer, treningskamerater og familie, og er likevel ensomme. Fordi ingen av relasjonene har rom for det som egentlig tynger.", "Mannlig vennskap bygges ofte rundt aktivitet, ikke samtale. Det er ikke feil, men det betyr at de tunge tingene aldri får plass.", "Det fine: det skal mindre til enn du tror. Én ærlig setning, som «det har vært en tung periode, egentlig», åpner mer enn hundre overfladiske samtaler.", "Start med den kameraten du tror tåler det best. Sannsynligvis har han ventet på en anledning til å si noe ekte selv."] },
   { id: "a4", icon: "\u{1F504}", title: "Hvem er jeg uten jobben?", min: 3, cat: "Identitet", program: "transition",
-    body: ["Når identiteten din i stor grad er bygget på hva du presterer, blir et karriereskifte, en permittering eller pensjon mer enn praktisk — det blir eksistensielt.", "Spør deg selv: hva ved meg satte folk pris på før tittelen min? Humøret? Roen? Evnen til å fikse ting? Det forsvinner ikke med jobben.", "Overgangsfaser er ubehagelige fordi det gamle er borte og det nye ikke har tatt form ennå. Det er en mellomfase, ikke en endestasjon.", "Bruk perioden til å teste, ikke konkludere. Identitet bygges gjennom handling, ikke grubling."] },
-  { id: "a5", icon: "\u{1F476}", title: "Far for første gang — det ærlige bildet", min: 4, cat: "Farskap", program: "father",
-    body: ["Mange fedre kjenner på en blanding av kjærlighet, fremmedfølelse og utilstrekkelighet de første månedene. Det er vanlig — og nesten ingen snakker om det.", "Tilknytning er ikke alltid lyn fra klar himmel. For mange bygges den gradvis, gjennom stell, bæring og våkenetter. Det teller like mye.", "Du trenger ikke være perfekt. Forskningen er tydelig: 'god nok' og reparasjon etter feil er det som bygger trygge barn.", "Og: ta vare på parforholdet. Småbarnsfasen er en av de tøffeste periodene for samliv. Korte, ærlige statusoppdateringer med partneren din er undervurdert."] },
+    body: ["Når identiteten din i stor grad er bygget på hva du presterer, blir et karriereskifte, en permittering eller pensjon mer enn praktisk. Det blir eksistensielt.", "Spør deg selv: hva ved meg satte folk pris på før tittelen min? Humøret? Roen? Evnen til å fikse ting? Det forsvinner ikke med jobben.", "Overgangsfaser er ubehagelige fordi det gamle er borte og det nye ikke har tatt form ennå. Det er en mellomfase, ikke en endestasjon.", "Bruk perioden til å teste, ikke konkludere. Identitet bygges gjennom handling, ikke grubling."] },
+  { id: "a5", icon: "\u{1F476}", title: "Far for første gang", min: 4, cat: "Farskap", program: "father",
+    body: ["Mange fedre kjenner på en blanding av kjærlighet, fremmedfølelse og utilstrekkelighet de første månedene. Det er vanlig, og nesten ingen snakker om det.", "Tilknytning er ikke alltid lyn fra klar himmel. For mange bygges den gradvis, gjennom stell, bæring og våkenetter. Det teller like mye.", "Du trenger ikke være perfekt. Forskningen er tydelig: 'god nok' og reparasjon etter feil er det som bygger trygge barn.", "Og: ta vare på parforholdet. Småbarnsfasen er en av de tøffeste periodene for samliv. Korte, ærlige statusoppdateringer med partneren din er undervurdert."] },
 ];
 
 const MYTHS = [
   { myth: "Ekte menn klarer seg selv.", fact: "Å be om hjelp krever mer trygghet enn å late som alt er greit. De fleste som har gjort det, angrer bare på at de ventet så lenge." },
   { myth: "Å snakke om problemer gjør dem større.", fact: "Forskning viser det motsatte: å sette ord på følelser senker aktiviteten i hjernens alarmsystem." },
-  { myth: "Terapi er for folk i krise.", fact: "Mental trening fungerer som fysisk trening — det er mest effektivt før det blir akutt." },
+  { myth: "Terapi er for folk i krise.", fact: "Mental trening fungerer som fysisk trening. Det er mest effektivt før det blir akutt." },
   { myth: "Medisin er eneste løsning hvis det er alvorlig.", fact: "Samtale, fysisk aktivitet, søvn og fellesskap har dokumentert effekt, alene eller i kombinasjon." },
 ];
 
@@ -541,7 +541,7 @@ function computeNudges() {
   const last3 = [daysAgo(0), daysAgo(1), daysAgo(2)].map(moodOn);
   if (last3.every(l => l !== null && l <= 2) && !dismissed("low3")) {
     nudges.push({ key: "low3", warm: false,
-      text: "Du har logget noen tunge dager på rad. Vil du ha noe konkret å ta tak i? Programmene tar én dag om gangen — du styrer tempoet.",
+      text: "Du har logget noen tunge dager på rad. Vil du ha noe konkret å ta tak i? Programmene tar én dag om gangen. Du styrer tempoet.",
       actions: [{ label: "Vis meg programmene", fn: () => { currentTab = "trening"; render(); } }] });
   }
 
@@ -549,7 +549,7 @@ function computeNudges() {
   const t = moodOn(todayStr()), y = moodOn(daysAgo(1));
   if (t !== null && y !== null && Math.abs(t - y) >= 2 && !dismissed("jump")) {
     nudges.push({ key: "jump", warm: false,
-      text: "I dag ser ganske annerledes ut enn i går. Noe spesielt som skjedde? Du trenger ikke svare — men noen ganger rydder det i hodet å få det ned i to linjer.",
+      text: "I dag ser ganske annerledes ut enn i går. Noe spesielt som skjedde? Du trenger ikke svare, men noen ganger rydder det i hodet å få det ned i to linjer.",
       actions: [{ label: "Skriv to linjer", fn: () => { focusNote = true; render(); } }] });
   }
 
@@ -557,7 +557,7 @@ function computeNudges() {
   const last14 = lastNDates(14).map(moodOn).filter(l => l !== null);
   if (last14.length >= 10 && last14.every(l => l <= 2) && !dismissed("low14")) {
     nudges.push({ key: "low14", warm: true,
-      text: "Loggen din har vært tung i et par uker nå. Å stå i det så lenge tærer på — og du må ikke stå i det alene. En prat med noen som kan dette, forplikter ikke til noe.",
+      text: "Loggen din har vært tung i et par uker nå. Å stå i det så lenge tærer på. Du trenger ikke stå i det alene. En prat med noen som kan dette, forplikter ikke til noe.",
       actions: [{ label: "Se hvem du kan snakke med", fn: openSOS }] });
   }
 
@@ -576,7 +576,7 @@ function computeNudges() {
 function inactivityNudge() {
   for (let i = 0; i < 4; i++) if (state.moods[daysAgo(i)]) return null;
   if (Object.keys(state.moods).length === 0) return null; // brand new user, no nagging
-  return "Godt å se deg igjen. Dagene går — ingen forklaring nødvendig. Hvordan er det i dag?";
+  return "Godt å se deg igjen. Dagene går. Ingen forklaring nødvendig. Hvordan er det i dag?";
 }
 
 /* ---------- Rendering ---------- */
@@ -629,11 +629,11 @@ function lockedCard(title, desc, icon) {
 function showProModal() {
   openModal(`
     <h3>Sammen Pro</h3>
-    <div class="sub" style="margin-bottom:18px">Full tilgang — abonnement kommer snart.</div>
+    <div class="sub" style="margin-bottom:18px">Full tilgang. Abonnement kommer snart.</div>
     ${['Alle øvelser og lydguider','Alle 30-dagers programmer','Stemningsgrafikk over 30 dager','Dagbok med ubegrenset plass','Søvn- og energilogg','Ukentlig strukturert oppsummering','Nytt innhold hver måned'].map(f =>
       `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.9rem"><span style="color:var(--teal);font-weight:700;margin-right:8px">✓</span>${f}</div>`
     ).join('')}
-    <button class="btn" style="width:100%;margin-top:18px" onclick="closeModal()">Forstått — gleder meg</button>
+    <button class="btn" style="width:100%;margin-top:18px" onclick="closeModal()">Forstått. Gleder meg.</button>
   `);
 }
 function socialGoalCard() {
@@ -687,7 +687,7 @@ function renderHjem() {
   const wk = weekKey();
   const ws = (state.weeklySummary || {})[wk];
 
-  let html = `<h1>${greeting}</h1><div class="sub">Hvordan er det i dag — egentlig?</div>`;
+  let html = `<h1>${greeting}</h1><div class="sub">Hvordan er det i dag, egentlig?</div>`;
 
   if (inact && !today) html += `<div class="card nudge"><p>${inact}</p></div>`;
 
@@ -699,7 +699,7 @@ function renderHjem() {
     </div>`;
   if (today) {
     html += `<div style="margin-top:10px">
-      <textarea id="moodNote" rows="2" placeholder="Noen ord om dagen? Valgfritt — og helt privat.">${esc(today.note || "")}</textarea>
+      <textarea id="moodNote" rows="2" placeholder="Noen ord om dagen? Valgfritt, helt privat.">${esc(today.note || "")}</textarea>
       <div style="text-align:right;margin-top:6px"><button class="btn small secondary" onclick="saveNote()">Lagre notat</button></div>
     </div>`;
   }
@@ -719,7 +719,7 @@ function renderHjem() {
         </div>
         ${todaySleep ? `<div style="font-size:0.88rem;color:var(--text-soft);margin-top:6px">${todaySleep.hours}t søvn · energi ${'😴😕😐🙂⚡'.split('')[todaySleep.energy - 1] || ''}</div>` : ''}
       </div>`
-    : lockedCard('Søvn- og energilogg', 'Logg søvn og energi — se mønstrene over tid.', '💤');
+    : lockedCard('Søvn- og energilogg', 'Logg søvn og energi. Se mønstrene over tid.', '💤');
 
   // Sosialt mål (gratis)
   html += socialGoalCard();
@@ -751,14 +751,14 @@ function renderHjem() {
         </div>
         <div class="sub" style="margin-top:6px">${(state.journal || []).length} notater lagret privat</div>
       </div>`
-    : lockedCard('Dagbok', 'Ubegrenset privat skriveflate. Ingen spørsmål — bare rom til å tenke.', '📓');
+    : lockedCard('Dagbok', 'Ubegrenset privat skriveflate. Ingen spørsmål, bare rom til å tenke.', '📓');
 
   // Ukentlig oppsummering (Pro)
   html += `<h2>Ukentlig oppsummering</h2>`;
   html += IS_PRO
     ? `<div class="card" onclick="openWeeklySummary()" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
         <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:8px">UKENS REFLEKSJON</div>
-        <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px">Tre spørsmål for å lukke uken — hva var tøfft, hva gikk bra, hva tar du med videre.</div>
+        <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px">Tre spørsmål for å lukke uken. Hva var tøfft, hva gikk bra, hva tar du med videre.</div>
         ${ws ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Fullført ${ws.date}</div>`
               : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Start →</div>`}
       </div>`
@@ -790,7 +790,7 @@ function saveNote() {
   const ta = document.getElementById("moodNote");
   if (ta && state.moods[todayStr()]) {
     state.moods[todayStr()].note = ta.value;
-    save(); toast("Notat lagret — kun synlig for deg");
+    save(); toast("Notat lagret, kun synlig for deg");
   }
 }
 /* ---------- Dagbok ---------- */
@@ -936,7 +936,7 @@ function renderTrening() {
     <div style="font-size:1.05rem;font-weight:600;line-height:1.45;margin-bottom:10px;color:var(--text)">${sr.title}</div>
     <div style="font-size:0.88rem;color:var(--text-soft);line-height:1.6;margin-bottom:16px">${sr.prompt}</div>
     ${srSaved && srSaved.text
-      ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Besvart ${srSaved.date} — trykk for å lese eller endre</div>`
+      ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Besvart ${srSaved.date}. Trykk for å lese eller endre.</div>`
       : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Skriv →</div>`}
   </div>`;
 
@@ -980,7 +980,7 @@ function quitProgram() {
 function openProgramDay(id, day) {
   const p = PROGRAMS.find(x => x.id === id);
   openModal(`
-    <h3>${p.icon} ${p.title} — dag ${day}</h3>
+    <h3>${p.icon} ${p.title}, dag ${day}</h3>
     <div class="sub">Kort innhold + øvelse + refleksjon</div>
     <div class="articleBody">
       <p><b>Dagens fokus:</b> ${programDayFocus(id, day)}</p>
@@ -992,10 +992,10 @@ function openProgramDay(id, day) {
 }
 function programDayFocus(id, day) {
   const focuses = {
-    sleep: ["Kartlegg kveldsrutinen din slik den faktisk er.", "Skjerm bort skjermen siste 30 min før du legger deg.", "Fast leggetid — også i helgen.", "Soverommet: mørkt, kjølig, stille."],
-    transition: ["Sett ord på hva som faktisk er tapt — og hva som består.", "Hva har du kontroll over i dag? Gjør én av de tingene.", "Snakk med én person om hvordan du egentlig har det.", "Små rutiner gir stabilitet når det store er i endring."],
-    confidence: ["Skriv ned tre situasjoner du har mestret før.", "Tren på å ta plass: si én mening høyt i dag.", "Erstatt «jeg må prestere» med «jeg skal bidra».", "Kroppsholdning påvirker følelsen — test det i dag."],
-    father: ["Ti minutter udelt oppmerksomhet — uten mobil.", "Si unnskyld hvis du tråkker feil. Det bygger trygghet.", "Legg merke til hva som trigger utålmodigheten din.", "Fortell partneren din én ting du setter pris på."],
+    sleep: ["Kartlegg kveldsrutinen din slik den faktisk er.", "Skjerm bort skjermen siste 30 min før du legger deg.", "Fast leggetid, også i helgen.", "Soverommet: mørkt, kjølig, stille."],
+    transition: ["Sett ord på hva som faktisk er tapt, og hva som består.", "Hva har du kontroll over i dag? Gjør én av de tingene.", "Snakk med én person om hvordan du egentlig har det.", "Små rutiner gir stabilitet når det store er i endring."],
+    confidence: ["Skriv ned tre situasjoner du har mestret før.", "Tren på å ta plass: si én mening høyt i dag.", "Erstatt «jeg må prestere» med «jeg skal bidra».", "Kroppsholdning påvirker følelsen. Test det i dag."],
+    father: ["Ti minutter udelt oppmerksomhet, uten mobil.", "Si unnskyld hvis du tråkker feil. Det bygger trygghet.", "Legg merke til hva som trigger utålmodigheten din.", "Fortell partneren din én ting du setter pris på."],
   };
   const f = focuses[id] || focuses.sleep;
   return f[(day - 1) % f.length];
@@ -1015,7 +1015,7 @@ function openReflection(id) {
   openModal(`
     <h3>${r.icon} ${r.title}</h3>
     <p style="font-size:0.95rem;color:var(--text-soft);margin-bottom:14px;line-height:1.55">${r.prompt}</p>
-    <textarea id="reflText" rows="7" placeholder="Skriv for deg selv — ingen trenger å se dette...">${esc(saved.text)}</textarea>
+    <textarea id="reflText" rows="7" placeholder="Skriv for deg selv. Ingen trenger å se dette.">${esc(saved.text)}</textarea>
     <button class="btn" style="width:100%;margin-top:12px" onclick="saveReflection('${id}')">Lagre</button>
     ${saved.date ? `<div style="font-size:0.78rem;color:var(--text-soft);text-align:center;margin-top:10px">Sist lagret ${saved.date}</div>` : ''}
   `);
@@ -1027,7 +1027,7 @@ function saveReflection(id) {
   state.reflections[id] = { text: ta.value, date: todayStr() };
   save();
   closeModal();
-  toast("Lagret — bare synlig for deg.");
+  toast("Lagret, bare synlig for deg.");
   render();
 }
 
@@ -1117,7 +1117,7 @@ function toggleBreath() {
   if (breathTimer) {
     stopBreathCycle();
     btn.textContent = "Start";
-    document.getElementById("breathPhase").textContent = "Pause — fortsett når du vil";
+    document.getElementById("breathPhase").textContent = "Pause. Fortsett når du vil.";
     if (voiceAudio) voiceAudio.pause();
     return;
   }
@@ -1228,7 +1228,7 @@ function reportPost(postId) {
 function openComposer() {
   openModal(`
     <h3>Nytt innlegg</h3>
-    <div class="sub">Du poster som <b>${esc(state.pseudonym)}</b> — aldri med ekte navn.</div>
+    <div class="sub">Du poster som <b>${esc(state.pseudonym)}</b>, aldri med ekte navn.</div>
     <div style="margin-bottom:10px">
       <select id="postChannel" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);font-family:inherit;font-size:0.92rem">
         ${CHANNELS.slice(1).map(c => `<option>${c}</option>`).join("")}
@@ -1250,7 +1250,7 @@ function submitPost() {
     openModal(`
       <h3>Vi ser deg &#129505;</h3>
       <div class="articleBody">
-        <p>Det du skriver h&oslash;res tungt ut, og vi er glade for at du setter ord p&aring; det. Innlegget ditt blir publisert — men f&oslash;rst vil vi minne deg p&aring; at det finnes folk som er klare til &aring; snakke med deg n&aring;, hele d&oslash;gnet:</p>
+        <p>Det du skriver h&oslash;res tungt ut, og vi er glade for at du setter ord p&aring; det. Innlegget ditt blir publisert, men f&oslash;rst vil vi minne deg p&aring; at det finnes folk som er klare til &aring; snakke med deg n&aring;, hele d&oslash;gnet:</p>
       </div>
       <a class="callBtn" href="tel:116123"><span>Mental Helse Hjelpetelefonen<small>Gratis, d&oslash;gn&aring;pent</small></span><span>116 123</span></a>
       <a class="callBtn urgent" href="tel:113"><span>Akutt fare for liv<small>Medisinsk n&oslash;dtelefon</small></span><span>113</span></a>
@@ -1309,7 +1309,7 @@ function renderProfil() {
   const completedCount = state.completedExercises.length;
   const st = streak();
 
-  let html = `<h1>Profil</h1><div class="sub">Helt privat — ingenting her vises til andre.</div>`;
+  let html = `<h1>Profil</h1><div class="sub">Helt privat, ingenting her vises til andre.</div>`;
 
   html += `<div class="statRow" style="margin-bottom:12px">
     <div class="card"><div class="num">${st}</div><div class="lbl">dagers streak</div></div>
@@ -1317,7 +1317,7 @@ function renderProfil() {
     <div class="card"><div class="num">${state.posts.length}</div><div class="lbl">innlegg delt</div></div>
   </div>`;
 
-  html += `<div class="card"><b style="font-size:0.95rem">Hum&oslash;rtrend — siste 14 dager</b>
+  html += `<div class="card"><b style="font-size:0.95rem">Hum&oslash;rtrend siste 14 dager</b>
     <div class="barChart">${dates.map(d => {
       const l = moodOn(d);
       return l === null
@@ -1329,7 +1329,7 @@ function renderProfil() {
 
   html += `<h2>Mine innlegg</h2>`;
   if (state.posts.length === 0) {
-    html += `<div class="card"><div class="empty">Du har ikke delt noe enn&aring;. Det er helt greit — les og kjenn deg igjen i ditt eget tempo.</div></div>`;
+    html += `<div class="card"><div class="empty">Du har ikke delt noe enn&aring;. Det er helt greit. Les og kjenn deg igjen i ditt eget tempo.</div></div>`;
   } else {
     html += state.posts.map(p => `<div class="card"><span class="tag">${p.channel}</span>
       <div style="font-size:0.9rem;margin-top:8px">${esc(p.text.length > 120 ? p.text.slice(0, 120) + "…" : p.text)}</div></div>`).join("");
