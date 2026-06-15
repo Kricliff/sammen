@@ -27,7 +27,6 @@ workflows:
         script: |
           app-store-connect publish \
             --path $(find . -name "*.ipa") \
-            --submit-to-testflight \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --private-key "$APP_STORE_CONNECT_PRIVATE_KEY"
