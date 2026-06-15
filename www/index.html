@@ -85,7 +85,7 @@
   .exCard .meta span { font-size: 0.8rem; color: var(--text-soft); }
   .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; background: var(--teal-light); color: var(--teal-dark); border-radius: 999px; padding: 3px 9px; margin-right: 5px; }
   .tag.coral { background: var(--coral-light); color: #b9503c; }
-  #breathOverlay { position: absolute; inset: 0; background: linear-gradient(170deg, #194d4d, #2a7f7f); z-index: 40; display: flex; flex-direction: column; align-items: center; color: #eaf4f4; padding: 20px; }
+  #breathOverlay { position: absolute; inset: 0; background: linear-gradient(170deg, #194d4d, #2a7f7f); z-index: 40; display: flex; flex-direction: column; align-items: center; color: #eaf4f4; padding: calc(20px + env(safe-area-inset-top)) 20px 20px; }
   #breathOverlay .closeRow { width: 100%; display: flex; justify-content: flex-end; }
   #breathOverlay .closeRow button { background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
   #breathStage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; width: 100%; }
@@ -812,30 +812,32 @@ function openBreath() {
   ov.innerHTML = `
     <div class="closeRow"><button onclick="closeBreath()">&#10005;</button></div>
     <div id="breathStage">
-      <div id="breathBox">
+      <div id="breathBox" style="position:relative;">
         <svg viewBox="0 0 200 200" width="220" height="220">
           <circle cx="100" cy="100" r="80" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="10"/>
           <circle id="breathRing" cx="100" cy="100" r="80" fill="none" stroke="white" stroke-width="10"
             stroke-dasharray="${BREATH_C.toFixed(2)}" stroke-dashoffset="${BREATH_C.toFixed(2)}"
             stroke-linecap="round" transform="rotate(-90 100 100)"/>
-          <text id="breathPhaseText" x="100" y="90" text-anchor="middle"
-            font-family="inherit" font-size="15" font-weight="600" fill="rgba(255,255,255,0.9)">Ready</text>
-          <text id="breathCountText" x="100" y="128" text-anchor="middle"
-            font-family="inherit" font-size="44" font-weight="700" fill="white"></text>
         </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
+          <div id="breathPhaseText" style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.9);text-align:center;">Press Start</div>
+          <div id="breathCountText" style="font-size:44px;font-weight:700;color:white;line-height:1;margin-top:4px;min-height:1em;text-align:center;"></div>
+        </div>
       </div>
-      <div id="breathPhase" style="display:none"></div>
+      <div id="breathCycleText" style="font-size:0.8rem;opacity:0.65;margin-top:-4px;min-height:1.2em"></div>
       <div class="tempo">Pace: <b id="tempoVal">4</b> sec per phase
         <input type="range" id="tempoRange" min="3" max="6" step="0.5" value="4">
       </div>
     </div>
     <div class="controls">
       <button class="btn" id="breathStart">Start</button>
+      <button class="btn" style="background:rgba(255,255,255,0.18);color:#fff;border:1.5px solid rgba(255,255,255,0.45)" onclick="endBreath()">End session</button>
     </div>`;
   document.getElementById("app").appendChild(ov);
   document.getElementById("tempoRange").oninput = ev => document.getElementById("tempoVal").textContent = ev.target.value;
   document.getElementById("breathStart").onclick = toggleBreath;
 }
+function endBreath() { completeExercise("breath"); closeBreath(); }
 function toggleBreath() {
   const btn = document.getElementById("breathStart");
   if (breathRaf) {
@@ -847,7 +849,7 @@ function toggleBreath() {
     if (ct) ct.textContent = "";
     return;
   }
-  btn.textContent = "Stop";
+  btn.textContent = "Pause";
   runBreathCycle();
 }
 function runBreathCycle() {
@@ -863,11 +865,9 @@ function runBreathCycle() {
     document.getElementById("breathPhaseText").textContent = ph.name;
     const secs = Math.ceil((tempo - (ts - phaseStart)) / 1000);
     document.getElementById("breathCountText").textContent = secs > 0 ? secs : "";
-    if (t >= 1) {
-      breathPhaseIdx++;
-      phaseStart = null;
-      if (breathPhaseIdx >= 8) { completeExercise("breath"); stopBreathCycle(); return; }
-    }
+    const cycleEl = document.getElementById("breathCycleText");
+    if (cycleEl) cycleEl.textContent = `Round ${Math.floor(breathPhaseIdx / 4) + 1}`;
+    if (t >= 1) { breathPhaseIdx++; phaseStart = null; }
     breathRaf = requestAnimationFrame(tick);
   };
   breathRaf = requestAnimationFrame(tick);
