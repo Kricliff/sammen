@@ -23,10 +23,14 @@ workflows:
           xcode-project build-ipa \
             --project "ios/App/App.xcodeproj" \
             --scheme "App"
+      - name: Upload to TestFlight
+        script: |
+          app-store-connect publish \
+            --path $(find . -name "*.ipa") \
+            --submit-to-testflight \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY"
     artifacts:
       - ios/App/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
