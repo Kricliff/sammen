@@ -379,6 +379,7 @@ const defaultState = {
   reactions: {},           // { postId: { support: bool, beenThere: bool } }
   settings: { notifications: true, crisisContact: "" },
   dismissedNudges: {},     // { nudgeKey: dateDismissed }
+  reflections: {},         // { reflectionId: { text, date } }
 };
 
 let state = loadState();
@@ -421,6 +422,17 @@ const PROGRAMS = [
   { id: "transition", title: "Håndtere overgang", days: 14, icon: "\u{1F9ED}", desc: "Stødig gjennom jobbskifte, brudd eller andre store endringer." },
   { id: "confidence", title: "Selvtillit og prestasjon", days: 21, icon: "\u{1F3AF}", desc: "Tren tryggheten din — på jobb, i idrett, i livet." },
   { id: "father", title: "Tryggere far og partner", days: 30, icon: "\u{1F46A}", desc: "Verktøy for nærvær, tålmodighet og kommunikasjon hjemme." },
+];
+
+const REFLECTIONS = [
+  { id: "r1", icon: "⚡", title: "Hva tapper deg?", prompt: "Skriv ned tre ting som stjeler energien din om dagen. Se om du finner en fellesnevner — hva er det egentlig som koster?" },
+  { id: "r2", icon: "🌿", title: "Hva er du faktisk stolt av?", prompt: "Ikke hva du burde være stolt av. Hva er du egentlig stolt av — fra siste uke, siste måned? Skriv det ned uten filter." },
+  { id: "r3", icon: "🪟", title: "Hvem er du når ingen ser på?", prompt: "Beskriv deg selv slik du er hjemme alene, uten prestasjonskrav. Hva gjør du? Hva tenker du på? Hva slapper du faktisk av med?" },
+  { id: "r4", icon: "🚪", title: "Hva unngår du å tenke på?", prompt: "Skriv det ned — bare for deg selv. Ingen andre leser dette. Noen ganger er det nok å navngi det." },
+  { id: "r5", icon: "🌊", title: "Hva trenger du mer av?", prompt: "Ikke hva du burde ha. Hva lengter du faktisk etter akkurat nå — i hverdagen, i relasjonene, i jobben?" },
+  { id: "r6", icon: "🌅", title: "Hva ville fremtidig deg gjort?", prompt: "Se for deg deg selv om fem år — roligere, mer i balanse. Hva ville han se tilbake på i dag og ønske du hadde gjort annerledes?" },
+  { id: "r7", icon: "🔥", title: "Hva har du stått i?", prompt: "Beskriv en periode som var tøff. Hva skjedde, og hva lærte du om deg selv av å komme deg gjennom den?" },
+  { id: "r8", icon: "❤️", title: "Hvem betyr mest?", prompt: "Hvem har betydd mest for deg dette året? Hva er det de gjør som treffer — og hva sier det om hva du selv trenger?" },
 ];
 
 const CHANNELS = ["Alle", "Jobb", "Samliv", "Far-rolle", "Sorg", "Generelt"];
@@ -692,6 +704,17 @@ function renderTrening() {
       <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
     </div>`).join("");
 
+  html += `<h2>Refleksjon</h2>`;
+  html += `<div class="sub" style="margin-top:-14px;margin-bottom:10px">Spørsmål for deg selv — svarene lagres privat på telefonen din.</div>`;
+  html += REFLECTIONS.map(r => {
+    const saved = state.reflections[r.id];
+    const done = saved && saved.text;
+    return `<div class="card exCard" onclick="openReflection('${r.id}')">
+      <div class="exIcon" style="background:${done ? 'var(--teal-light)' : 'var(--coral-light)'}">${done ? '✓' : r.icon}</div>
+      <div class="meta"><b>${r.title}</b><span>${done ? 'Besvart ' + saved.date + ' — trykk for å lese eller endre' : 'Skriv for deg selv, helt privat'}</span></div>
+    </div>`;
+  }).join("");
+
   html += `<h2>Programmer <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 dager</span></h2>`;
   html += PROGRAMS.map(p => `
     <div class="card">
@@ -746,6 +769,29 @@ function completeExercise(id) {
   state.completedExercises.push({ id, date: todayStr() });
   save();
   toast("Bra jobba. Det teller.");
+  render();
+}
+
+/* ---------- Reflection ---------- */
+function openReflection(id) {
+  const r = REFLECTIONS.find(x => x.id === id);
+  const saved = state.reflections[id] || { text: "", date: null };
+  openModal(`
+    <h3>${r.icon} ${r.title}</h3>
+    <p style="font-size:0.95rem;color:var(--text-soft);margin-bottom:14px;line-height:1.55">${r.prompt}</p>
+    <textarea id="reflText" rows="7" placeholder="Skriv for deg selv — ingen trenger å se dette...">${esc(saved.text)}</textarea>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="saveReflection('${id}')">Lagre</button>
+    ${saved.date ? `<div style="font-size:0.78rem;color:var(--text-soft);text-align:center;margin-top:10px">Sist lagret ${saved.date}</div>` : ''}
+  `);
+}
+function saveReflection(id) {
+  const ta = document.getElementById("reflText");
+  if (!ta) return;
+  if (!ta.value.trim()) { closeModal(); return; }
+  state.reflections[id] = { text: ta.value, date: todayStr() };
+  save();
+  closeModal();
+  toast("Lagret — bare synlig for deg.");
   render();
 }
 

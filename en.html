@@ -178,6 +178,7 @@ const defaultState = {
   reactions: {},
   settings: { notifications: true, crisisContact: "" },
   dismissedNudges: {},
+  reflections: {},
 };
 
 let state = loadState();
@@ -211,6 +212,17 @@ const PROGRAMS = [
   { id: "transition", title: "Handling transitions", days: 14, icon: "\u{1F9ED}", desc: "Steady through a job change, breakup, or other major shift." },
   { id: "confidence", title: "Confidence and performance", days: 21, icon: "\u{1F3AF}", desc: "Train your confidence — at work, in sport, in life." },
   { id: "father", title: "Better father and partner", days: 30, icon: "\u{1F46A}", desc: "Tools for presence, patience and communication at home." },
+];
+
+const REFLECTIONS = [
+  { id: "r1", icon: "⚡", title: "What drains you?", prompt: "Write down three things that steal your energy these days. See if you can find a common thread — what is it that actually costs you?" },
+  { id: "r2", icon: "🌿", title: "What are you actually proud of?", prompt: "Not what you should be proud of. What are you genuinely proud of — from the last week, the last month? Write it down without a filter." },
+  { id: "r3", icon: "🪟", title: "Who are you when no one's watching?", prompt: "Describe yourself as you are at home alone, without performance pressure. What do you do? What do you think about? What do you actually unwind with?" },
+  { id: "r4", icon: "🚪", title: "What are you avoiding thinking about?", prompt: "Write it down — just for yourself. No one else reads this. Sometimes naming it is enough." },
+  { id: "r5", icon: "🌊", title: "What do you need more of?", prompt: "Not what you should have. What do you actually long for right now — in daily life, in relationships, at work?" },
+  { id: "r6", icon: "🌅", title: "What would future you do?", prompt: "Picture yourself five years from now — calmer, more balanced. What would he look back on today and wish you had done differently?" },
+  { id: "r7", icon: "🔥", title: "What have you come through?", prompt: "Describe a period that was hard. What happened, and what did you learn about yourself by getting through it?" },
+  { id: "r8", icon: "❤️", title: "Who matters most?", prompt: "Who has meant the most to you this year? What is it they do that lands — and what does it say about what you need?" },
 ];
 
 const CHANNELS = ["All", "Work", "Relationships", "Fatherhood", "Grief", "General"];
@@ -448,6 +460,17 @@ function renderTraining() {
       <div class="exIcon">${e.icon}</div>
       <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
     </div>`).join("");
+  html += `<h2>Reflection</h2>`;
+  html += `<div class="sub" style="margin-top:-14px;margin-bottom:10px">Questions for yourself — answers are saved privately on your device.</div>`;
+  html += REFLECTIONS.map(r => {
+    const saved = state.reflections[r.id];
+    const done = saved && saved.text;
+    return `<div class="card exCard" onclick="openReflection('${r.id}')">
+      <div class="exIcon" style="background:${done ? 'var(--teal-light)' : 'var(--coral-light)'}">${done ? '✓' : r.icon}</div>
+      <div class="meta"><b>${r.title}</b><span>${done ? 'Answered ' + saved.date + ' — tap to read or update' : 'Write for yourself, completely private'}</span></div>
+    </div>`;
+  }).join("");
+
   html += `<h2>Programmes <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 days</span></h2>`;
   html += PROGRAMS.map(p => `
     <div class="card">
@@ -491,6 +514,28 @@ function programDayFocus(id, day) {
   return f[(day - 1) % f.length];
 }
 function completeExercise(id) { state.completedExercises.push({ id, date: todayStr() }); save(); toast("Well done. That counts."); render(); }
+
+function openReflection(id) {
+  const r = REFLECTIONS.find(x => x.id === id);
+  const saved = state.reflections[id] || { text: "", date: null };
+  openModal(`
+    <h3>${r.icon} ${r.title}</h3>
+    <p style="font-size:0.95rem;color:var(--text-soft);margin-bottom:14px;line-height:1.55">${r.prompt}</p>
+    <textarea id="reflText" rows="7" placeholder="Write for yourself — no one else needs to see this...">${esc(saved.text)}</textarea>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="saveReflection('${id}')">Save</button>
+    ${saved.date ? `<div style="font-size:0.78rem;color:var(--text-soft);text-align:center;margin-top:10px">Last saved ${saved.date}</div>` : ''}
+  `);
+}
+function saveReflection(id) {
+  const ta = document.getElementById("reflText");
+  if (!ta) return;
+  if (!ta.value.trim()) { closeModal(); return; }
+  state.reflections[id] = { text: ta.value, date: todayStr() };
+  save();
+  closeModal();
+  toast("Saved — visible only to you.");
+  render();
+}
 
 function openExercise(id) {
   const e = EXERCISES.find(x => x.id === id);
