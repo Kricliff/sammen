@@ -215,15 +215,20 @@ const PROGRAMS = [
 ];
 
 const REFLECTIONS = [
-  { id: "r1", icon: "⚡", title: "What drains you?", prompt: "Write down three things that steal your energy these days. See if you can find a common thread — what is it that actually costs you?" },
-  { id: "r2", icon: "🌿", title: "What are you actually proud of?", prompt: "Not what you should be proud of. What are you genuinely proud of — from the last week, the last month? Write it down without a filter." },
-  { id: "r3", icon: "🪟", title: "Who are you when no one's watching?", prompt: "Describe yourself as you are at home alone, without performance pressure. What do you do? What do you think about? What do you actually unwind with?" },
-  { id: "r4", icon: "🚪", title: "What are you avoiding thinking about?", prompt: "Write it down — just for yourself. No one else reads this. Sometimes naming it is enough." },
-  { id: "r5", icon: "🌊", title: "What do you need more of?", prompt: "Not what you should have. What do you actually long for right now — in daily life, in relationships, at work?" },
-  { id: "r6", icon: "🌅", title: "What would future you do?", prompt: "Picture yourself five years from now — calmer, more balanced. What would he look back on today and wish you had done differently?" },
-  { id: "r7", icon: "🔥", title: "What have you come through?", prompt: "Describe a period that was hard. What happened, and what did you learn about yourself by getting through it?" },
-  { id: "r8", icon: "❤️", title: "Who matters most?", prompt: "Who has meant the most to you this year? What is it they do that lands — and what does it say about what you need?" },
+  { id: "r1",  title: "What are you really afraid of?", prompt: "Not what you admit in company. The fear you sit with at night, alone — the one you rarely put into words. What is it?" },
+  { id: "r2",  title: "Who would you be without others' expectations of you?", prompt: "Imagine all roles and demands fell away tomorrow. No expectations from work, family, or society. Who are you then — and what do you want?" },
+  { id: "r3",  title: "What have you never said out loud to anyone?", prompt: "Something you've carried for years without voicing it to another person. What is it? Write it here, just for yourself." },
+  { id: "r4",  title: "What are you trying to prove — and to whom?", prompt: "Behind much of what we do is a need to prove something. Maybe to a parent, an old version of yourself, or someone who doubted you. Who are you really doing it for?" },
+  { id: "r5",  title: "What would a younger you have needed to hear?", prompt: "Picture yourself at 10–12 years old. What did that boy need to hear from a trusted adult? What did he never hear — and what does it mean that he didn't?" },
+  { id: "r6",  title: "What are you unwilling to look at in yourself?", prompt: "We all have parts of ourselves we'd rather avoid. A tendency, a fear, a side we justify or numb. What is that for you?" },
+  { id: "r7",  title: "What have you lost that you've never grieved?", prompt: "A dream you set aside. A relationship that faded. A version of yourself you never became. What have you lost quietly — without letting yourself feel it?" },
+  { id: "r8",  title: "What is actually enough for you?", prompt: "Not what you say is enough. What are you really chasing — and what would it take for you to genuinely say: this is enough?" },
+  { id: "r9",  title: "What are you afraid people will really see?", prompt: "Behind the best version of yourself you show the world — what are you afraid they'll discover? What are you working hardest to hide?" },
+  { id: "r10", title: "What actually matters to you?", prompt: "Strip away the job, the titles, the status, the things you're supposed to care about. What's left that genuinely matters — and are you living by it?" },
+  { id: "r11", title: "What have you never forgiven yourself for?", prompt: "We all carry something. A mistake, a decision, something you didn't do when you should have. What is it — and what would it mean to let it go?" },
+  { id: "r12", title: "Who do you allow yourself to need something from?", prompt: "Who in your life sees you when you're struggling — and do they know it? What does it do to you to need something from someone, and who is it safe to show that to?" },
 ];
+const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
 
 const CHANNELS = ["All", "Work", "Relationships", "Fatherhood", "Grief", "General"];
 
@@ -460,16 +465,17 @@ function renderTraining() {
       <div class="exIcon">${e.icon}</div>
       <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
     </div>`).join("");
+  const sr = REFLECTIONS[SESSION_REFLECTION_IDX];
+  const srSaved = state.reflections[sr.id];
   html += `<h2>Reflection</h2>`;
-  html += `<div class="sub" style="margin-top:-14px;margin-bottom:10px">Questions for yourself — answers are saved privately on your device.</div>`;
-  html += REFLECTIONS.map(r => {
-    const saved = state.reflections[r.id];
-    const done = saved && saved.text;
-    return `<div class="card exCard" onclick="openReflection('${r.id}')">
-      <div class="exIcon" style="background:${done ? 'var(--teal-light)' : 'var(--coral-light)'}">${done ? '✓' : r.icon}</div>
-      <div class="meta"><b>${r.title}</b><span>${done ? 'Answered ' + saved.date + ' — tap to read or update' : 'Write for yourself, completely private'}</span></div>
-    </div>`;
-  }).join("");
+  html += `<div class="card" onclick="openReflection('${sr.id}')" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
+    <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:10px">TODAY'S QUESTION</div>
+    <div style="font-size:1.05rem;font-weight:600;line-height:1.45;margin-bottom:10px;color:var(--text)">${sr.title}</div>
+    <div style="font-size:0.88rem;color:var(--text-soft);line-height:1.6;margin-bottom:16px">${sr.prompt}</div>
+    ${srSaved && srSaved.text
+      ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Answered ${srSaved.date} — tap to read or update</div>`
+      : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Write →</div>`}
+  </div>`;
 
   html += `<h2>Programmes <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 days</span></h2>`;
   html += PROGRAMS.map(p => `

@@ -425,15 +425,20 @@ const PROGRAMS = [
 ];
 
 const REFLECTIONS = [
-  { id: "r1", icon: "⚡", title: "Hva tapper deg?", prompt: "Skriv ned tre ting som stjeler energien din om dagen. Se om du finner en fellesnevner — hva er det egentlig som koster?" },
-  { id: "r2", icon: "🌿", title: "Hva er du faktisk stolt av?", prompt: "Ikke hva du burde være stolt av. Hva er du egentlig stolt av — fra siste uke, siste måned? Skriv det ned uten filter." },
-  { id: "r3", icon: "🪟", title: "Hvem er du når ingen ser på?", prompt: "Beskriv deg selv slik du er hjemme alene, uten prestasjonskrav. Hva gjør du? Hva tenker du på? Hva slapper du faktisk av med?" },
-  { id: "r4", icon: "🚪", title: "Hva unngår du å tenke på?", prompt: "Skriv det ned — bare for deg selv. Ingen andre leser dette. Noen ganger er det nok å navngi det." },
-  { id: "r5", icon: "🌊", title: "Hva trenger du mer av?", prompt: "Ikke hva du burde ha. Hva lengter du faktisk etter akkurat nå — i hverdagen, i relasjonene, i jobben?" },
-  { id: "r6", icon: "🌅", title: "Hva ville fremtidig deg gjort?", prompt: "Se for deg deg selv om fem år — roligere, mer i balanse. Hva ville han se tilbake på i dag og ønske du hadde gjort annerledes?" },
-  { id: "r7", icon: "🔥", title: "Hva har du stått i?", prompt: "Beskriv en periode som var tøff. Hva skjedde, og hva lærte du om deg selv av å komme deg gjennom den?" },
-  { id: "r8", icon: "❤️", title: "Hvem betyr mest?", prompt: "Hvem har betydd mest for deg dette året? Hva er det de gjør som treffer — og hva sier det om hva du selv trenger?" },
+  { id: "r1",  title: "Hva er du egentlig redd for?", prompt: "Ikke det du innrømmer i selskap. Det du tenker på om natten, alene — frykten du sjelden setter ord på. Hva er det?" },
+  { id: "r2",  title: "Hvem ville du vært uten forventningene andre har til deg?", prompt: "Se for deg at alle roller og krav falt bort i morgen. Ingen forventninger fra jobb, familie eller samfunn. Hvem er du da — og hva vil du?" },
+  { id: "r3",  title: "Hva har du aldri sagt høyt til noen?", prompt: "Det er noe der — noe du har båret i årevis uten å sette ord på det overfor andre. Hva er det? Skriv det her, bare for deg selv." },
+  { id: "r4",  title: "Hva prøver du å bevise — og for hvem?", prompt: "Bak mye av det vi gjør ligger et ønske om å bevise noe. Kanskje til en forelder, en gammel versjon av deg selv, eller noen som tvilt på deg. Hvem driver du egentlig for?" },
+  { id: "r5",  title: "Hva ville den yngre deg trengt å høre?", prompt: "Se for deg deg selv som 10–12 år. Hva trengte den gutten å høre fra en voksen han stolte på? Hva fikk han aldri høre — og hva betyr det at du ikke fikk det?" },
+  { id: "r6",  title: "Hva er du ikke villig til å se på i deg selv?", prompt: "Vi har alle deler av oss selv vi helst ser bort fra. En tendens, en frykt, en side vi rettferdiggjør eller dulmer. Hva er det for deg?" },
+  { id: "r7",  title: "Hva har du mistet som du aldri har sørget over?", prompt: "En drøm du la fra deg. Et forhold som stilnet. En versjon av deg selv du aldri ble. Hva har du mistet stille — uten å gi deg selv lov til å kjenne tapet?" },
+  { id: "r8",  title: "Hva er egentlig nok for deg?", prompt: "Ikke hva du sier er nok. Hva er det du faktisk jager — og hva ville det kreve for at du virkelig kunne si: dette holder?" },
+  { id: "r9",  title: "Hva er du redd folk egentlig vil se?", prompt: "Bak den beste versjonen du viser verden — hva er du redd de skal oppdage? Hva jobber du hardest for å skjule?" },
+  { id: "r10", title: "Hva betyr egentlig noe for deg?", prompt: "Fjern jobben, titlene, statusen og det du burde bry deg om. Hva sitter igjen som genuint viktig — og lever du etter det?" },
+  { id: "r11", title: "Hva har du aldri tilgitt deg selv for?", prompt: "Vi bærer alle noe. En feil, en beslutning, noe du ikke gjorde da du skulle. Hva er det for deg — og hva ville det betydd å slippe det?" },
+  { id: "r12", title: "Hvem tillater du deg å trenge noe av?", prompt: "Hvem i livet ditt ser deg når du sliter — og vet du om det? Hva gjør det med deg å trenge noe av noen, og hvem er det trygt å vise det til?" },
 ];
+const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
 
 const CHANNELS = ["Alle", "Jobb", "Samliv", "Far-rolle", "Sorg", "Generelt"];
 
@@ -704,16 +709,17 @@ function renderTrening() {
       <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
     </div>`).join("");
 
+  const sr = REFLECTIONS[SESSION_REFLECTION_IDX];
+  const srSaved = state.reflections[sr.id];
   html += `<h2>Refleksjon</h2>`;
-  html += `<div class="sub" style="margin-top:-14px;margin-bottom:10px">Spørsmål for deg selv — svarene lagres privat på telefonen din.</div>`;
-  html += REFLECTIONS.map(r => {
-    const saved = state.reflections[r.id];
-    const done = saved && saved.text;
-    return `<div class="card exCard" onclick="openReflection('${r.id}')">
-      <div class="exIcon" style="background:${done ? 'var(--teal-light)' : 'var(--coral-light)'}">${done ? '✓' : r.icon}</div>
-      <div class="meta"><b>${r.title}</b><span>${done ? 'Besvart ' + saved.date + ' — trykk for å lese eller endre' : 'Skriv for deg selv, helt privat'}</span></div>
-    </div>`;
-  }).join("");
+  html += `<div class="card" onclick="openReflection('${sr.id}')" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
+    <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:10px">DAGENS SPØRSMÅL</div>
+    <div style="font-size:1.05rem;font-weight:600;line-height:1.45;margin-bottom:10px;color:var(--text)">${sr.title}</div>
+    <div style="font-size:0.88rem;color:var(--text-soft);line-height:1.6;margin-bottom:16px">${sr.prompt}</div>
+    ${srSaved && srSaved.text
+      ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Besvart ${srSaved.date} — trykk for å lese eller endre</div>`
+      : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Skriv →</div>`}
+  </div>`;
 
   html += `<h2>Programmer <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 dager</span></h2>`;
   html += PROGRAMS.map(p => `
