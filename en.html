@@ -1026,17 +1026,47 @@ function savePseudonym() { const v = document.getElementById("pseudoInput").valu
 function toggleNotif(on) { state.settings.notifications = on; save(); }
 function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast("Saved"); }
 
+function detectCrisisInfo() {
+  const lang = (navigator.language || "en").toLowerCase();
+  const regions = {
+    "nb": { emergency: "113", lines: [{ name: "Mental Helse", sub: "Free · 24/7 · Norway", tel: "116123", display: "116 123" }, { name: "Kirkens SOS", sub: "Free · 24/7 · Norway", tel: "22400040", display: "22 40 00 40" }] },
+    "nn": { emergency: "113", lines: [{ name: "Mental Helse", sub: "Free · 24/7 · Norway", tel: "116123", display: "116 123" }, { name: "Kirkens SOS", sub: "Free · 24/7 · Norway", tel: "22400040", display: "22 40 00 40" }] },
+    "no": { emergency: "113", lines: [{ name: "Mental Helse", sub: "Free · 24/7 · Norway", tel: "116123", display: "116 123" }, { name: "Kirkens SOS", sub: "Free · 24/7 · Norway", tel: "22400040", display: "22 40 00 40" }] },
+    "sv": { emergency: "112", lines: [{ name: "Mind Självmordslinjen", sub: "Free · 24/7 · Sweden", tel: "90101", display: "90101" }] },
+    "da": { emergency: "112", lines: [{ name: "Livslinjen", sub: "Free · 24/7 · Denmark", tel: "70201201", display: "70 20 12 01" }] },
+    "fi": { emergency: "112", lines: [{ name: "Mieli Crisis Hotline", sub: "Free · 24/7 · Finland", tel: "09252501111", display: "09 2525 0111" }] },
+    "de": { emergency: "112", lines: [{ name: "Telefonseelsorge", sub: "Free · 24/7 · Germany", tel: "08001110111", display: "0800 111 0 111" }] },
+    "fr": { emergency: "15", lines: [{ name: "Numéro national prévention suicide", sub: "Free · 24/7 · France", tel: "3114", display: "3114" }] },
+    "nl": { emergency: "112", lines: [{ name: "0800-0113", sub: "Free · 24/7 · Netherlands", tel: "08000113", display: "0800-0113" }] },
+    "es": { emergency: "112", lines: [{ name: "Línea de atención a conducta suicida", sub: "Free · 24/7 · Spain", tel: "024", display: "024" }] },
+    "it": { emergency: "112", lines: [{ name: "Telefono Amico", sub: "Italy", tel: "0223272327", display: "02 2327 2327" }] },
+    "pt-br": { emergency: "192", lines: [{ name: "CVV", sub: "Free · 24/7 · Brazil", tel: "188", display: "188" }] },
+    "en-us": { emergency: "911", lines: [{ name: "988 Suicide & Crisis Lifeline", sub: "Call or text · 24/7 · US", tel: "988", display: "988" }], text: "Text HOME to 741741" },
+    "en-au": { emergency: "000", lines: [{ name: "Lifeline", sub: "Free · 24/7 · Australia", tel: "131114", display: "13 11 14" }] },
+    "en-nz": { emergency: "111", lines: [{ name: "Lifeline", sub: "Free · 24/7 · New Zealand", tel: "08005435354", display: "0800 543 354" }] },
+    "en-ca": { emergency: "911", lines: [{ name: "Crisis Services Canada", sub: "Free · 24/7 · Canada", tel: "18334564566", display: "1-833-456-4566" }] },
+  };
+  const full = regions[lang];
+  if (full) return full;
+  const short = regions[lang.split("-")[0]];
+  if (short) return short;
+  return { emergency: "112", lines: [{ name: "Samaritans", sub: "Free · 24/7 · UK & Ireland", tel: "116123", display: "116 123" }] };
+}
+
 function openSOS() {
   const cc = state.settings.crisisContact;
+  const info = detectCrisisInfo();
+  const lineHtml = info.lines.map(l =>
+    `<a class="callBtn" href="tel:${l.tel}"><span>${l.name}<small>${l.sub}</small></span><span>${l.display}</span></a>`
+  ).join("");
   openModal(`
     <h3>Crisis support</h3>
     <div class="sub">You don't need to be in crisis to call. They're there to listen.</div>
-    <a class="callBtn urgent" href="tel:911"><span>Emergency services<small>Call your local emergency number</small></span><span>911 / 999 / 112</span></a>
-    <a class="callBtn" href="tel:116123"><span>Samaritans<small>Free &middot; 24/7 &middot; UK &amp; Ireland</small></span><span>116 123</span></a>
-    <a class="callBtn" href="tel:988"><span>988 Suicide &amp; Crisis Lifeline<small>Call or text &middot; US</small></span><span>988</span></a>
-    <div style="background:var(--teal-light);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:0.85rem;color:var(--teal-dark)">
-      <b>Crisis Text Line (US):</b> Text HOME to <b>741741</b><br>
-      <b>International:</b> <a href="https://www.iasp.info/resources/Crisis_Centres/" style="color:var(--teal-dark)">Find a crisis centre near you &rarr;</a>
+    <a class="callBtn urgent" href="tel:${info.emergency}"><span>Emergency services<small>Call your local emergency number</small></span><span>${info.emergency}</span></a>
+    ${lineHtml}
+    ${info.text ? `<div style="background:var(--teal-light);border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:0.85rem;color:var(--teal-dark)">${info.text}</div>` : ""}
+    <div style="background:var(--teal-light);border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:0.85rem;color:var(--teal-dark)">
+      Not your country? <a href="https://www.iasp.info/resources/Crisis_Centres/" style="color:var(--teal-dark)">Find a crisis centre near you &rarr;</a>
     </div>
     ${cc ? `<a class="callBtn" style="background:var(--coral)" href="tel:${esc(cc.replace(/[^+\d]/g, ""))}"><span>Your personal contact<small>${esc(cc)}</small></span><span>Call</span></a>` : ""}
     <p style="font-size:0.8rem;color:var(--text-soft);margin-top:8px">This app is a support tool and is not a replacement for professional care.</p>
