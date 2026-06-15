@@ -1,32 +1,32 @@
 workflows:
   ios-workflow:
     name: Together iOS App Store
-    max_build_duration: 60
+    max_build_duration: 120
+    instance_type: mac_mini_m1
     integrations:
-      app_store_connect: Codemagic
+      app_store_connect: codemagic
     environment:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.kricliff.together
-      node: v20.x
+      node: v20.11.0
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Install dependencies
+      - name: Install npm dependencies
         script: npm install
-      - name: Capacitor sync
-        script: npx cap sync ios
       - name: Install CocoaPods
         script: |
-          cd ios/App
-          pod install
+          cd ios/App && pod install
+      - name: Capacitor sync
+        script: npx cap sync ios
       - name: Build IPA
         script: |
           xcode-project build-ipa \
             --workspace "ios/App/App.xcworkspace" \
             --scheme "App"
     artifacts:
-      - build/ios/ipa/*.ipa
+      - ios/App/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
