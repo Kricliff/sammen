@@ -142,6 +142,7 @@
   .feedItem { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; padding: 9px 0; border-bottom: 1px solid var(--border); }
   .feedItem:last-child { border-bottom: none; }
   .empty { color: var(--text-soft); font-size: 0.88rem; text-align: center; padding: 14px 0; }
+  .proTag { display:inline-block;font-size:0.62rem;font-weight:700;letter-spacing:0.06em;background:var(--coral);color:#fff;border-radius:4px;padding:2px 7px;vertical-align:middle;margin-left:5px }
   .toast { position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 0.85rem; z-index: 60; white-space: nowrap; animation: toastIn 0.25s ease; }
   @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
 </style>
@@ -179,6 +180,10 @@ const defaultState = {
   settings: { notifications: true, crisisContact: "" },
   dismissedNudges: {},
   reflections: {},
+  journal: [],
+  sleep: {},
+  socialGoal: null,
+  weeklySummary: {},
 };
 
 let state = loadState();
@@ -229,6 +234,20 @@ const REFLECTIONS = [
   { id: "r12", title: "Who do you allow yourself to need something from?", prompt: "Who in your life sees you when you're struggling — and do they know it? What does it do to you to need something from someone, and who is it safe to show that to?" },
 ];
 const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
+
+const IS_PRO = false;
+const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
+
+const SOCIAL_GOALS = [
+  "Talk to someone you trust about something that actually matters to you.",
+  "Send a message to someone you haven't heard from in a while.",
+  "Do something active with a friend this week — a walk, a coffee, anything.",
+  "Tell someone close to you what you appreciate about them — and say it directly.",
+  "Ask a colleague or friend: 'How are you really doing?' — and actually listen.",
+  "Share something you're struggling with with one person you trust. Don't solve it — just say it.",
+  "Invite someone to do something concrete — not just 'we should catch up'.",
+  "Write to someone you think about but rarely contact. It doesn't have to be much.",
+];
 
 const CHANNELS = ["All", "Work", "Relationships", "Fatherhood", "Grief", "General"];
 
@@ -367,6 +386,64 @@ function render() {
   else if (currentTab === "profile") renderProfile();
 }
 
+/* ---------- Pro helpers ---------- */
+function weekKey() {
+  const d = new Date();
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  const wk = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  return `${d.getFullYear()}-W${String(wk).padStart(2, '0')}`;
+}
+function lockedCard(title, desc, icon) {
+  return `<div class="card" onclick="showProModal()" style="cursor:pointer;opacity:0.8">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <span style="font-size:1.2rem">${icon}</span>
+      <span class="proTag">🔒 PRO</span>
+    </div>
+    <div style="font-weight:600;margin-bottom:4px">${title}</div>
+    <div class="sub">${desc}</div>
+  </div>`;
+}
+function showProModal() {
+  openModal(`
+    <h3>Together Pro</h3>
+    <div class="sub" style="margin-bottom:18px">Full access — subscription coming soon.</div>
+    ${['All exercises and audio guides','All 30-day programmes','Mood chart over 30 days','Journal with unlimited space','Sleep and energy log','Weekly structured review','New content every month'].map(f =>
+      `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.9rem"><span style="color:var(--teal);font-weight:700;margin-right:8px">✓</span>${f}</div>`
+    ).join('')}
+    <button class="btn" style="width:100%;margin-top:18px" onclick="closeModal()">Got it — looking forward to it</button>
+  `);
+}
+function socialGoalCard() {
+  const wk = weekKey();
+  const sg = state.socialGoal && state.socialGoal.weekKey === wk ? state.socialGoal : { weekKey: wk, done: false };
+  const wkNum = parseInt(wk.split('W')[1]);
+  const goal = SOCIAL_GOALS[wkNum % SOCIAL_GOALS.length];
+  return `<div class="card" style="border-left:3px solid var(--coral);padding-left:18px">
+    <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--coral);margin-bottom:8px">THIS WEEK'S SOCIAL GOAL</div>
+    <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px${sg.done ? ';text-decoration:line-through;opacity:0.55' : ''}">${goal}</div>
+    <button class="btn small${sg.done ? ' secondary' : ''}" onclick="toggleSocialGoal('${wk}')">${sg.done ? '✓ Done this week' : 'Mark as done'}</button>
+  </div>`;
+}
+function toggleSocialGoal(wk) {
+  const cur = state.socialGoal && state.socialGoal.weekKey === wk ? state.socialGoal : { weekKey: wk, done: false };
+  state.socialGoal = { weekKey: wk, done: !cur.done };
+  save(); render();
+}
+function renderMoodChart() {
+  const days = 30, bw = 7, gap = 2, h = 68;
+  const colors = ['var(--border)', '#e8a090', '#c9d4b8', '#7dc4c4', 'var(--teal)'];
+  const today = new Date();
+  const bars = Array.from({ length: days }, (_, i) => {
+    const d = new Date(today); d.setDate(d.getDate() - (days - 1 - i));
+    const lvl = (state.moods[d.toISOString().slice(0, 10)] || {}).level || 0;
+    const bh = lvl ? Math.round((lvl / 4) * h) : 3;
+    return `<rect x="${i * (bw + gap)}" y="${h - bh}" width="${bw}" height="${bh}" rx="2" fill="${colors[lvl]}"/>`;
+  }).join('');
+  const tw = days * (bw + gap) - gap;
+  return `<svg viewBox="0 0 ${tw} ${h}" preserveAspectRatio="none" style="width:100%;height:${h}px;display:block;margin:10px 0 4px">${bars}</svg>
+    <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:var(--text-soft)"><span>30 days ago</span><span>Today</span></div>`;
+}
+
 function suggestedExercise() {
   const t = moodOn(todayStr());
   if (t === null) return EXERCISES[0];
@@ -383,6 +460,9 @@ function renderHome() {
   const inact = inactivityNudge();
   const nudges = computeNudges();
   const ex = suggestedExercise();
+  const todaySleep = (state.sleep || {})[todayStr()];
+  const wk = weekKey();
+  const ws = (state.weeklySummary || {})[wk];
 
   let html = `<h1>${greeting}</h1><div class="sub">How are you doing today — really?</div>`;
   if (inact && !today) html += `<div class="card nudge"><p>${inact}</p></div>`;
@@ -400,6 +480,25 @@ function renderHome() {
   }
   html += `</div>`;
 
+  // Mood chart (Pro)
+  html += IS_PRO
+    ? `<div class="card"><b style="font-size:0.95rem">Mood chart <span style="font-weight:400;color:var(--text-soft);font-size:0.78rem">last 30 days</span></b>${renderMoodChart()}</div>`
+    : lockedCard('Mood chart', 'See the pattern in your mood over 30 days.', '📈');
+
+  // Sleep log (Pro)
+  html += IS_PRO
+    ? `<div class="card" onclick="openSleepLog()" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:0.95rem">Sleep and energy</b>
+          ${todaySleep ? `<span style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Logged</span>` : `<span class="btn small secondary" style="pointer-events:none">Log</span>`}
+        </div>
+        ${todaySleep ? `<div style="font-size:0.88rem;color:var(--text-soft);margin-top:6px">${todaySleep.hours}h sleep · energy ${'😴😕😐🙂⚡'.split('')[todaySleep.energy - 1] || ''}</div>` : ''}
+      </div>`
+    : lockedCard('Sleep and energy log', 'Log sleep and energy daily — spot the patterns over time.', '💤');
+
+  // Social goal (free)
+  html += socialGoalCard();
+
   for (const n of nudges) {
     html += `<div class="card nudge${n.warm ? " warm" : ""}"><p>${n.text}</p>
       <div class="actions">${n.actions.map((a, i) =>
@@ -415,14 +514,37 @@ function renderHome() {
       <button class="btn small">Start</button>
     </div>`;
 
+  // Journal (Pro)
+  html += `<h2>Journal</h2>`;
+  html += IS_PRO
+    ? `<div class="card" onclick="openJournal()" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:0.95rem">📓 My notes</b>
+          <span class="btn small secondary" style="pointer-events:none">Open →</span>
+        </div>
+        <div class="sub" style="margin-top:6px">${(state.journal || []).length} notes saved privately</div>
+      </div>`
+    : lockedCard('Journal', 'Unlimited private writing space. No questions — just room to think.', '📓');
+
+  // Weekly review (Pro)
+  html += `<h2>Weekly review</h2>`;
+  html += IS_PRO
+    ? `<div class="card" onclick="openWeeklyReview()" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:8px">THIS WEEK'S REFLECTION</div>
+        <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px">Three questions to close the week — what was hard, what went well, what do you carry forward.</div>
+        ${ws ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Completed ${ws.date}</div>`
+              : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Start →</div>`}
+      </div>`
+    : lockedCard('Weekly review', 'Three questions to close the week and go into the next one more grounded.', '📅');
+
   html += `<h2>Latest from Community</h2><div class="card">`;
   const feedItems = [];
   if (state.posts.length > 0) {
-    feedItems.push({ dot: "\u{1F4AC}", text: `Your post has received ${3 + state.posts.length * 2} support reactions` });
-    feedItems.push({ dot: "\u{1FAC2}", text: `2 men tapped "I've been there" on your post` });
+    feedItems.push({ dot: "💬", text: `Your post has received ${3 + state.posts.length * 2} support reactions` });
+    feedItems.push({ dot: "🫂", text: `2 men tapped "I've been there" on your post` });
   }
-  feedItems.push({ dot: "\u{1F4DD}", text: `New prompt in the feed: "${dailyPrompt()}"` });
-  feedItems.push({ dot: "\u{1F525}", text: "5 new posts in the Fatherhood channel today" });
+  feedItems.push({ dot: "📝", text: `New prompt in the feed: "${dailyPrompt()}"` });
+  feedItems.push({ dot: "🔥", text: "5 new posts in the Fatherhood channel today" });
   html += feedItems.map(f => `<div class="feedItem"><span class="dot">${f.dot}</span><span>${f.text}</span></div>`).join("");
   html += `</div>`;
 
@@ -442,6 +564,96 @@ function saveNote() {
 function nudgeAction(key, i) { const n = computeNudges().find(x => x.key === key); if (n) n.actions[i].fn(); }
 function dismissNudge(key) { state.dismissedNudges[key] = todayStr(); save(); render(); }
 
+/* ---------- Journal ---------- */
+function openJournal() {
+  const entries = [...(state.journal || [])].reverse().slice(0, 12);
+  openModal(`
+    <h3>📓 Journal</h3>
+    <textarea id="journalText" rows="6" placeholder="What's on your mind today?"></textarea>
+    <button class="btn" style="width:100%;margin-top:10px" onclick="saveJournal()">Save</button>
+    ${entries.length ? `<div style="margin-top:20px">
+      <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.07em;color:var(--text-soft);margin-bottom:10px">PREVIOUS ENTRIES</div>
+      ${entries.map(e => `<div style="padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="font-size:0.72rem;color:var(--text-soft);margin-bottom:4px">${e.date}</div>
+        <div style="font-size:0.88rem;line-height:1.5;white-space:pre-wrap">${esc(e.text.slice(0, 140))}${e.text.length > 140 ? '…' : ''}</div>
+      </div>`).join('')}
+    </div>` : ''}
+  `);
+}
+function saveJournal() {
+  const ta = document.getElementById('journalText');
+  if (!ta || !ta.value.trim()) return;
+  if (!state.journal) state.journal = [];
+  state.journal.push({ id: Date.now().toString(), date: todayStr(), text: ta.value });
+  save(); closeModal();
+  toast('Saved to your journal.');
+  render();
+}
+
+/* ---------- Sleep and energy ---------- */
+let _selEnergy = null;
+function openSleepLog() {
+  const saved = (state.sleep || {})[todayStr()] || { hours: 7, energy: 3 };
+  _selEnergy = saved.energy;
+  openModal(`
+    <h3>💤 Sleep and energy</h3>
+    <div style="margin:16px 0">
+      <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:8px">Hours of sleep last night</label>
+      <div style="display:flex;align-items:center;gap:12px">
+        <input type="range" id="sleepHrs" min="3" max="12" step="0.5" value="${saved.hours}" oninput="document.getElementById('sleepVal').textContent=this.value+'h'" style="flex:1">
+        <span id="sleepVal" style="font-weight:700;min-width:36px;text-align:right">${saved.hours}h</span>
+      </div>
+    </div>
+    <div style="margin:16px 0">
+      <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:10px">Energy level today</label>
+      <div style="display:flex;gap:8px">
+        ${[1,2,3,4,5].map(n => `<button id="eng${n}" class="btn small${saved.energy === n ? '' : ' secondary'}" onclick="selEnergy(${n})" style="flex:1;font-size:1.1rem">${['😴','😕','😐','🙂','⚡'][n-1]}</button>`).join('')}
+      </div>
+    </div>
+    <button class="btn" style="width:100%;margin-top:8px" onclick="saveSleepLog()">Save</button>
+  `);
+}
+function selEnergy(n) {
+  _selEnergy = n;
+  [1,2,3,4,5].forEach(i => { const b = document.getElementById('eng'+i); if (b) b.className = `btn small${i===n?'':' secondary'}`; });
+}
+function saveSleepLog() {
+  const sl = document.getElementById('sleepHrs');
+  if (!sl) return;
+  if (!state.sleep) state.sleep = {};
+  state.sleep[todayStr()] = { hours: parseFloat(sl.value), energy: _selEnergy || 3 };
+  _selEnergy = null;
+  save(); closeModal();
+  toast('Sleep and energy saved.');
+  render();
+}
+
+/* ---------- Weekly review ---------- */
+function openWeeklyReview() {
+  const wk = weekKey();
+  const saved = (state.weeklySummary || {})[wk] || {};
+  openModal(`
+    <h3>📅 Weekly review</h3>
+    <div class="sub" style="margin-bottom:18px">Take 5 minutes to look back on the week.</div>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:6px">What was hardest this week?</label>
+    <textarea id="ws1" rows="3" placeholder="Write freely...">${esc(saved.hard || '')}</textarea>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">What are you proud of?</label>
+    <textarea id="ws2" rows="3" placeholder="Big or small...">${esc(saved.proud || '')}</textarea>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">What do you carry into next week?</label>
+    <textarea id="ws3" rows="3" placeholder="An intention, a change, a person...">${esc(saved.next || '')}</textarea>
+    <button class="btn" style="width:100%;margin-top:14px" onclick="saveWeeklyReview('${wk}')">Save</button>
+  `);
+}
+function saveWeeklyReview(wk) {
+  const w1 = document.getElementById('ws1'), w2 = document.getElementById('ws2'), w3 = document.getElementById('ws3');
+  if (!w1) return;
+  if (!state.weeklySummary) state.weeklySummary = {};
+  state.weeklySummary[wk] = { hard: w1.value, proud: w2.value, next: w3.value, date: todayStr() };
+  save(); closeModal();
+  toast('Review saved.');
+  render();
+}
+
 function renderTraining() {
   let html = `<h1>Training</h1><div class="sub">Short tools. No pressure, just a little at a time.</div>`;
   if (state.activeProgram) {
@@ -460,11 +672,18 @@ function renderTraining() {
       </div></div>`;
   }
   html += `<h2>Micro-exercises <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">3&ndash;10 min</span></h2>`;
-  html += EXERCISES.map(e => `
-    <div class="card exCard" onclick="openExercise('${e.id}')">
-      <div class="exIcon">${e.icon}</div>
-      <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
-    </div>`).join("");
+  html += EXERCISES.map(e => {
+    const locked = !IS_PRO && !FREE_EXERCISE_IDS.has(e.id);
+    return locked
+      ? `<div class="card exCard" onclick="showProModal()" style="opacity:0.72;cursor:pointer">
+          <div class="exIcon" style="background:var(--coral-light)">${e.icon}</div>
+          <div class="meta"><b>${e.title}<span class="proTag">PRO</span></b><span>${e.desc} &middot; ${e.min} min</span></div>
+        </div>`
+      : `<div class="card exCard" onclick="openExercise('${e.id}')">
+          <div class="exIcon">${e.icon}</div>
+          <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
+        </div>`;
+  }).join("");
   const sr = REFLECTIONS[SESSION_REFLECTION_IDX];
   const srSaved = state.reflections[sr.id];
   html += `<h2>Reflection</h2>`;
@@ -478,8 +697,18 @@ function renderTraining() {
   </div>`;
 
   html += `<h2>Programmes <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 days</span></h2>`;
-  html += PROGRAMS.map(p => `
-    <div class="card">
+  html += PROGRAMS.map(p => {
+    if (!IS_PRO) return `<div class="card" onclick="showProModal()" style="cursor:pointer;opacity:0.72">
+      <div class="exCard" style="cursor:default">
+        <div class="exIcon" style="background:var(--coral-light)">${p.icon}</div>
+        <div class="meta"><b>${p.title}<span class="proTag">PRO</span></b><span>${p.desc}</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <span class="tag">${p.days} DAYS</span>
+        <span style="font-size:0.82rem;color:var(--coral);font-weight:500">🔒 Unlock with Pro</span>
+      </div>
+    </div>`;
+    return `<div class="card">
       <div class="exCard" style="cursor:default">
         <div class="exIcon">${p.icon}</div>
         <div class="meta"><b>${p.title}</b><span>${p.desc}</span></div>
@@ -490,7 +719,8 @@ function renderTraining() {
           ? `<span style="font-size:0.8rem;color:var(--teal-dark);font-weight:600">Active</span>`
           : `<button class="btn small secondary" onclick="startProgram('${p.id}')">Start</button>`}
       </div>
-    </div>`).join("");
+    </div>`;
+  }).join("");
   main.innerHTML = html;
 }
 

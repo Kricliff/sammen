@@ -335,6 +335,7 @@
   .feedItem:last-child { border-bottom: none; }
   .feedItem .dot { font-size: 1rem; }
   .empty { color: var(--text-soft); font-size: 0.88rem; text-align: center; padding: 14px 0; }
+  .proTag { display:inline-block;font-size:0.62rem;font-weight:700;letter-spacing:0.06em;background:var(--coral);color:#fff;border-radius:4px;padding:2px 7px;vertical-align:middle;margin-left:5px }
   .toast {
     position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%);
     background: var(--text); color: #fff;
@@ -378,8 +379,12 @@ const defaultState = {
   posts: [],               // user posts
   reactions: {},           // { postId: { support: bool, beenThere: bool } }
   settings: { notifications: true, crisisContact: "" },
-  dismissedNudges: {},     // { nudgeKey: dateDismissed }
-  reflections: {},         // { reflectionId: { text, date } }
+  dismissedNudges: {},
+  reflections: {},
+  journal: [],
+  sleep: {},
+  socialGoal: null,
+  weeklySummary: {},
 };
 
 let state = loadState();
@@ -439,6 +444,20 @@ const REFLECTIONS = [
   { id: "r12", title: "Hvem tillater du deg å trenge noe av?", prompt: "Hvem i livet ditt ser deg når du sliter — og vet du om det? Hva gjør det med deg å trenge noe av noen, og hvem er det trygt å vise det til?" },
 ];
 const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
+
+const IS_PRO = false;
+const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
+
+const SOCIAL_GOALS = [
+  "Snakk med én person du stoler på om noe som faktisk betyr noe for deg.",
+  "Send en melding til noen du ikke har hørt fra på lenge.",
+  "Gjør noe aktivt med en venn denne uken — en tur, en kopp kaffe, hva som helst.",
+  "Fortell noen nær deg hva du setter pris på ved dem — og si det rett ut.",
+  "Spør en kollega eller venn: «Hvordan har du det egentlig?» — og lytt skikkelig.",
+  "Del noe du sliter med, med én person du stoler på. Ikke løs det, bare si det.",
+  "Inviter noen til å gjøre noe konkret — ikke bare si «vi må møtes».",
+  "Skriv til noen du tenker på men sjelden kontakter. Det trenger ikke være stort.",
+];
 
 const CHANNELS = ["Alle", "Jobb", "Samliv", "Far-rolle", "Sorg", "Generelt"];
 
@@ -590,6 +609,64 @@ function render() {
   else if (currentTab === "profil") renderProfil();
 }
 
+/* ---------- Pro helpers ---------- */
+function weekKey() {
+  const d = new Date();
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  const wk = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  return `${d.getFullYear()}-W${String(wk).padStart(2, '0')}`;
+}
+function lockedCard(title, desc, icon) {
+  return `<div class="card" onclick="showProModal()" style="cursor:pointer;opacity:0.8">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <span style="font-size:1.2rem">${icon}</span>
+      <span class="proTag">🔒 PRO</span>
+    </div>
+    <div style="font-weight:600;margin-bottom:4px">${title}</div>
+    <div class="sub">${desc}</div>
+  </div>`;
+}
+function showProModal() {
+  openModal(`
+    <h3>Sammen Pro</h3>
+    <div class="sub" style="margin-bottom:18px">Full tilgang — abonnement kommer snart.</div>
+    ${['Alle øvelser og lydguider','Alle 30-dagers programmer','Stemningsgrafikk over 30 dager','Dagbok med ubegrenset plass','Søvn- og energilogg','Ukentlig strukturert oppsummering','Nytt innhold hver måned'].map(f =>
+      `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.9rem"><span style="color:var(--teal);font-weight:700;margin-right:8px">✓</span>${f}</div>`
+    ).join('')}
+    <button class="btn" style="width:100%;margin-top:18px" onclick="closeModal()">Forstått — gleder meg</button>
+  `);
+}
+function socialGoalCard() {
+  const wk = weekKey();
+  const sg = state.socialGoal && state.socialGoal.weekKey === wk ? state.socialGoal : { weekKey: wk, done: false };
+  const wkNum = parseInt(wk.split('W')[1]);
+  const goal = SOCIAL_GOALS[wkNum % SOCIAL_GOALS.length];
+  return `<div class="card" style="border-left:3px solid var(--coral);padding-left:18px">
+    <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--coral);margin-bottom:8px">UKENS SOSIALE MÅL</div>
+    <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px${sg.done ? ';text-decoration:line-through;opacity:0.55' : ''}">${goal}</div>
+    <button class="btn small${sg.done ? ' secondary' : ''}" onclick="toggleSocialGoal('${wk}')">${sg.done ? '✓ Gjort denne uken' : 'Marker som gjort'}</button>
+  </div>`;
+}
+function toggleSocialGoal(wk) {
+  const cur = state.socialGoal && state.socialGoal.weekKey === wk ? state.socialGoal : { weekKey: wk, done: false };
+  state.socialGoal = { weekKey: wk, done: !cur.done };
+  save(); render();
+}
+function renderMoodChart() {
+  const days = 30, bw = 7, gap = 2, h = 68;
+  const colors = ['var(--border)', '#e8a090', '#c9d4b8', '#7dc4c4', 'var(--teal)'];
+  const today = new Date();
+  const bars = Array.from({ length: days }, (_, i) => {
+    const d = new Date(today); d.setDate(d.getDate() - (days - 1 - i));
+    const lvl = (state.moods[d.toISOString().slice(0, 10)] || {}).level || 0;
+    const bh = lvl ? Math.round((lvl / 4) * h) : 3;
+    return `<rect x="${i * (bw + gap)}" y="${h - bh}" width="${bw}" height="${bh}" rx="2" fill="${colors[lvl]}"/>`;
+  }).join('');
+  const tw = days * (bw + gap) - gap;
+  return `<svg viewBox="0 0 ${tw} ${h}" preserveAspectRatio="none" style="width:100%;height:${h}px;display:block;margin:10px 0 4px">${bars}</svg>
+    <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:var(--text-soft)"><span>30 dager siden</span><span>I dag</span></div>`;
+}
+
 /* ---------- Hjem ---------- */
 function suggestedExercise() {
   const t = moodOn(todayStr());
@@ -606,6 +683,9 @@ function renderHjem() {
   const inact = inactivityNudge();
   const nudges = computeNudges();
   const ex = suggestedExercise();
+  const todaySleep = (state.sleep || {})[todayStr()];
+  const wk = weekKey();
+  const ws = (state.weeklySummary || {})[wk];
 
   let html = `<h1>${greeting}</h1><div class="sub">Hvordan er det i dag — egentlig?</div>`;
 
@@ -625,6 +705,25 @@ function renderHjem() {
   }
   html += `</div>`;
 
+  // Stemningsgrafikk (Pro)
+  html += IS_PRO
+    ? `<div class="card"><b style="font-size:0.95rem">Stemningsgrafikk <span style="font-weight:400;color:var(--text-soft);font-size:0.78rem">siste 30 dager</span></b>${renderMoodChart()}</div>`
+    : lockedCard('Stemningsgrafikk', 'Se mønsteret i humøret ditt over 30 dager.', '📈');
+
+  // Søvn- og energilogg (Pro)
+  html += IS_PRO
+    ? `<div class="card" onclick="openSleepLog()" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:0.95rem">Søvn og energi</b>
+          ${todaySleep ? `<span style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Logget</span>` : `<span class="btn small secondary" style="pointer-events:none">Logg</span>`}
+        </div>
+        ${todaySleep ? `<div style="font-size:0.88rem;color:var(--text-soft);margin-top:6px">${todaySleep.hours}t søvn · energi ${'😴😕😐🙂⚡'.split('')[todaySleep.energy - 1] || ''}</div>` : ''}
+      </div>`
+    : lockedCard('Søvn- og energilogg', 'Logg søvn og energi — se mønstrene over tid.', '💤');
+
+  // Sosialt mål (gratis)
+  html += socialGoalCard();
+
   // Smart nudges
   for (const n of nudges) {
     html += `<div class="card nudge${n.warm ? " warm" : ""}"><p>${n.text}</p>
@@ -634,7 +733,7 @@ function renderHjem() {
       </div></div>`;
   }
 
-  // Daily exercise
+  // Dagens øvelse
   html += `<h2>Dagens øvelse</h2>
     <div class="card exCard" onclick="openExercise('${ex.id}')">
       <div class="exIcon">${ex.icon}</div>
@@ -642,16 +741,39 @@ function renderHjem() {
       <button class="btn small">Start</button>
     </div>`;
 
-  // Activity feed
+  // Dagbok (Pro)
+  html += `<h2>Dagbok</h2>`;
+  html += IS_PRO
+    ? `<div class="card" onclick="openDagbok()" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:0.95rem">📓 Mine notater</b>
+          <span class="btn small secondary" style="pointer-events:none">Åpne →</span>
+        </div>
+        <div class="sub" style="margin-top:6px">${(state.journal || []).length} notater lagret privat</div>
+      </div>`
+    : lockedCard('Dagbok', 'Ubegrenset privat skriveflate. Ingen spørsmål — bare rom til å tenke.', '📓');
+
+  // Ukentlig oppsummering (Pro)
+  html += `<h2>Ukentlig oppsummering</h2>`;
+  html += IS_PRO
+    ? `<div class="card" onclick="openWeeklySummary()" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:8px">UKENS REFLEKSJON</div>
+        <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px">Tre spørsmål for å lukke uken — hva var tøfft, hva gikk bra, hva tar du med videre.</div>
+        ${ws ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ Fullført ${ws.date}</div>`
+              : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">Start →</div>`}
+      </div>`
+    : lockedCard('Ukentlig oppsummering', 'Tre spørsmål for å lukke uken og gå roligere inn i den neste.', '📅');
+
+  // Siste fra fellesskap
   html += `<h2>Siste fra Fellesskap</h2><div class="card">`;
   const myPosts = state.posts.length;
   const feedItems = [];
   if (myPosts > 0) {
-    feedItems.push({ dot: "\u{1F4AC}", text: `Innlegget ditt har fått ${3 + myPosts * 2} støtte-reaksjoner` });
-    feedItems.push({ dot: "\u{1FAC2}", text: `2 menn trykket «jeg har vært der» på innlegget ditt` });
+    feedItems.push({ dot: "💬", text: `Innlegget ditt har fått ${3 + myPosts * 2} støtte-reaksjoner` });
+    feedItems.push({ dot: "🫂", text: `2 menn trykket «jeg har vært der» på innlegget ditt` });
   }
-  feedItems.push({ dot: "\u{1F4DD}", text: `Ny prompt i feeden: «${dailyPrompt()}»` });
-  feedItems.push({ dot: "\u{1F525}", text: "5 nye innlegg i kanalen Far-rolle i dag" });
+  feedItems.push({ dot: "📝", text: `Ny prompt i feeden: «${dailyPrompt()}»` });
+  feedItems.push({ dot: "🔥", text: "5 nye innlegg i kanalen Far-rolle i dag" });
   html += feedItems.map(f => `<div class="feedItem"><span class="dot">${f.dot}</span><span>${f.text}</span></div>`).join("");
   html += `</div>`;
 
@@ -671,6 +793,96 @@ function saveNote() {
     save(); toast("Notat lagret — kun synlig for deg");
   }
 }
+/* ---------- Dagbok ---------- */
+function openDagbok() {
+  const entries = [...(state.journal || [])].reverse().slice(0, 12);
+  openModal(`
+    <h3>📓 Dagbok</h3>
+    <textarea id="journalText" rows="6" placeholder="Hva er i hodet ditt i dag?"></textarea>
+    <button class="btn" style="width:100%;margin-top:10px" onclick="saveDagbok()">Lagre</button>
+    ${entries.length ? `<div style="margin-top:20px">
+      <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.07em;color:var(--text-soft);margin-bottom:10px">TIDLIGERE NOTATER</div>
+      ${entries.map(e => `<div style="padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="font-size:0.72rem;color:var(--text-soft);margin-bottom:4px">${e.date}</div>
+        <div style="font-size:0.88rem;line-height:1.5;white-space:pre-wrap">${esc(e.text.slice(0, 140))}${e.text.length > 140 ? '…' : ''}</div>
+      </div>`).join('')}
+    </div>` : ''}
+  `);
+}
+function saveDagbok() {
+  const ta = document.getElementById('journalText');
+  if (!ta || !ta.value.trim()) return;
+  if (!state.journal) state.journal = [];
+  state.journal.push({ id: Date.now().toString(), date: todayStr(), text: ta.value });
+  save(); closeModal();
+  toast('Lagret i dagboken din.');
+  render();
+}
+
+/* ---------- Søvn og energi ---------- */
+let _selEnergy = null;
+function openSleepLog() {
+  const saved = (state.sleep || {})[todayStr()] || { hours: 7, energy: 3 };
+  _selEnergy = saved.energy;
+  openModal(`
+    <h3>💤 Søvn og energi</h3>
+    <div style="margin:16px 0">
+      <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:8px">Timer søvn i natt</label>
+      <div style="display:flex;align-items:center;gap:12px">
+        <input type="range" id="sleepHrs" min="3" max="12" step="0.5" value="${saved.hours}" oninput="document.getElementById('sleepVal').textContent=this.value+'t'" style="flex:1">
+        <span id="sleepVal" style="font-weight:700;min-width:36px;text-align:right">${saved.hours}t</span>
+      </div>
+    </div>
+    <div style="margin:16px 0">
+      <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:10px">Energinivå i dag</label>
+      <div style="display:flex;gap:8px">
+        ${[1,2,3,4,5].map(n => `<button id="eng${n}" class="btn small${saved.energy === n ? '' : ' secondary'}" onclick="selEnergy(${n})" style="flex:1;font-size:1.1rem">${['😴','😕','😐','🙂','⚡'][n-1]}</button>`).join('')}
+      </div>
+    </div>
+    <button class="btn" style="width:100%;margin-top:8px" onclick="saveSleepLog()">Lagre</button>
+  `);
+}
+function selEnergy(n) {
+  _selEnergy = n;
+  [1,2,3,4,5].forEach(i => { const b = document.getElementById('eng'+i); if (b) b.className = `btn small${i===n?'':' secondary'}`; });
+}
+function saveSleepLog() {
+  const sl = document.getElementById('sleepHrs');
+  if (!sl) return;
+  if (!state.sleep) state.sleep = {};
+  state.sleep[todayStr()] = { hours: parseFloat(sl.value), energy: _selEnergy || 3 };
+  _selEnergy = null;
+  save(); closeModal();
+  toast('Søvn og energi lagret.');
+  render();
+}
+
+/* ---------- Ukentlig oppsummering ---------- */
+function openWeeklySummary() {
+  const wk = weekKey();
+  const saved = (state.weeklySummary || {})[wk] || {};
+  openModal(`
+    <h3>📅 Ukentlig oppsummering</h3>
+    <div class="sub" style="margin-bottom:18px">Ta 5 minutter på å se tilbake på uken.</div>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:6px">Hva var tøffest denne uken?</label>
+    <textarea id="ws1" rows="3" placeholder="Skriv fritt...">${esc(saved.hard || '')}</textarea>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">Hva er du stolt av?</label>
+    <textarea id="ws2" rows="3" placeholder="Stort eller lite...">${esc(saved.proud || '')}</textarea>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">Hva tar du med inn i neste uke?</label>
+    <textarea id="ws3" rows="3" placeholder="En intensjon, en endring, en person...">${esc(saved.next || '')}</textarea>
+    <button class="btn" style="width:100%;margin-top:14px" onclick="saveWeeklySummary('${wk}')">Lagre</button>
+  `);
+}
+function saveWeeklySummary(wk) {
+  const w1 = document.getElementById('ws1'), w2 = document.getElementById('ws2'), w3 = document.getElementById('ws3');
+  if (!w1) return;
+  if (!state.weeklySummary) state.weeklySummary = {};
+  state.weeklySummary[wk] = { hard: w1.value, proud: w2.value, next: w3.value, date: todayStr() };
+  save(); closeModal();
+  toast('Oppsummering lagret.');
+  render();
+}
+
 let _nudgeCache = null;
 function nudgeAction(key, i) {
   const n = computeNudges().find(x => x.key === key);
@@ -703,11 +915,18 @@ function renderTrening() {
   }
 
   html += `<h2>Mikroøvelser <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">3&ndash;10 min</span></h2>`;
-  html += EXERCISES.map(e => `
-    <div class="card exCard" onclick="openExercise('${e.id}')">
-      <div class="exIcon">${e.icon}</div>
-      <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
-    </div>`).join("");
+  html += EXERCISES.map(e => {
+    const locked = !IS_PRO && !FREE_EXERCISE_IDS.has(e.id);
+    return locked
+      ? `<div class="card exCard" onclick="showProModal()" style="opacity:0.72;cursor:pointer">
+          <div class="exIcon" style="background:var(--coral-light)">${e.icon}</div>
+          <div class="meta"><b>${e.title}<span class="proTag">PRO</span></b><span>${e.desc} &middot; ${e.min} min</span></div>
+        </div>`
+      : `<div class="card exCard" onclick="openExercise('${e.id}')">
+          <div class="exIcon">${e.icon}</div>
+          <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
+        </div>`;
+  }).join("");
 
   const sr = REFLECTIONS[SESSION_REFLECTION_IDX];
   const srSaved = state.reflections[sr.id];
@@ -722,8 +941,18 @@ function renderTrening() {
   </div>`;
 
   html += `<h2>Programmer <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 dager</span></h2>`;
-  html += PROGRAMS.map(p => `
-    <div class="card">
+  html += PROGRAMS.map(p => {
+    if (!IS_PRO) return `<div class="card" onclick="showProModal()" style="cursor:pointer;opacity:0.72">
+      <div class="exCard" style="cursor:default">
+        <div class="exIcon" style="background:var(--coral-light)">${p.icon}</div>
+        <div class="meta"><b>${p.title}<span class="proTag">PRO</span></b><span>${p.desc}</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <span class="tag">${p.days} DAGER</span>
+        <span style="font-size:0.82rem;color:var(--coral);font-weight:500">🔒 Lås opp med Pro</span>
+      </div>
+    </div>`;
+    return `<div class="card">
       <div class="exCard" style="cursor:default">
         <div class="exIcon">${p.icon}</div>
         <div class="meta"><b>${p.title}</b><span>${p.desc}</span></div>
@@ -734,7 +963,8 @@ function renderTrening() {
           ? `<span style="font-size:0.8rem;color:var(--teal-dark);font-weight:600">P&aring;g&aring;r</span>`
           : `<button class="btn small secondary" onclick="startProgram('${p.id}')">Start</button>`}
       </div>
-    </div>`).join("");
+    </div>`;
+  }).join("");
 
   main.innerHTML = html;
 }
