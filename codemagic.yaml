@@ -11,13 +11,9 @@ workflows:
         bundle_identifier: com.kricliff.together
       node: v20.11.0
       xcode: latest
-      cocoapods: default
     scripts:
       - name: Install npm dependencies
         script: npm install
-      - name: Install CocoaPods
-        script: |
-          cd ios/App && pod install
       - name: Capacitor sync
         script: npx cap sync ios
       - name: Build IPA
