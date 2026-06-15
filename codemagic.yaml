@@ -3,14 +3,12 @@ workflows:
     name: Together iOS App Store
     max_build_duration: 120
     instance_type: mac_mini_m1
+    integrations:
+      app_store_connect: Codemagic
     environment:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.kricliff.together
-      vars:
-        APP_STORE_CONNECT_ISSUER_ID: $APP_STORE_CONNECT_ISSUER_ID
-        APP_STORE_CONNECT_KEY_IDENTIFIER: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        APP_STORE_CONNECT_PRIVATE_KEY: $APP_STORE_CONNECT_PRIVATE_KEY
       node: v20.11.0
       xcode: latest
       cocoapods: default
@@ -32,5 +30,5 @@ workflows:
       - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
-        auth: environment_variables
+        auth: integration
         submit_to_testflight: true
