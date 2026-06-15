@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Together — mental training for men</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="2" y="2" width="96" height="96" rx="22" fill="%231F4F4F"/><circle cx="40" cy="50" r="20" fill="%237FB8B8"/><circle cx="60" cy="50" r="20" fill="%23E8806A"/><path d="M50 32.7 A20 20 0 0 1 50 67.3 A20 20 0 0 1 50 32.7 Z" fill="%23F5F4F2"/></svg>'>
+<link rel="manifest" href="manifest-en.webmanifest">
+<meta name="theme-color" content="#1f4f4f">
+<link rel="apple-touch-icon" href="assets/ikon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Together">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2a7f7f;
+    --teal-dark: #1f6363;
+    --teal-light: #e3f0f0;
+    --coral: #e8806a;
+    --coral-light: #fdeae5;
+    --bg: #f5f4f2;
+    --card: #ffffff;
+    --text: #2b2f33;
+    --text-soft: #6b7278;
+    --border: #e6e3df;
+    --radius: 16px;
+    --shadow: 0 1px 4px rgba(40, 45, 50, 0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #dcdad6;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+  }
+  #app {
+    width: 100%;
+    max-width: 460px;
+    min-height: 100vh;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 0 30px rgba(0,0,0,0.15);
+  }
+  main { flex: 1; overflow-y: auto; padding: 20px 18px 90px; }
+  h1 { font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 1.45rem; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.2px; }
+  h2 { font-size: 1.05rem; font-weight: 600; margin: 22px 0 10px; }
+  .sub { color: var(--text-soft); font-size: 0.9rem; margin-bottom: 18px; }
+  .card { background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
+  .btn { display: inline-block; border: none; border-radius: 12px; padding: 11px 18px; font-size: 0.95rem; font-weight: 600; cursor: pointer; background: var(--teal); color: #fff; font-family: inherit; }
+  .btn:active { background: var(--teal-dark); }
+  .btn.secondary { background: var(--teal-light); color: var(--teal-dark); }
+  .btn.ghost { background: transparent; color: var(--teal-dark); padding: 8px 10px; }
+  .btn.small { padding: 7px 12px; font-size: 0.85rem; }
+  .btn:disabled { opacity: 0.5; cursor: default; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px 0; }
+  .brand { display: flex; align-items: center; gap: 8px; font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight: 500; color: #1f4f4f; font-size: 1.15rem; letter-spacing: 0.4px; }
+  .brand svg { display: block; }
+  #sosBtn { background: var(--coral-light); color: #b9503c; border: 1px solid #f2c4b8; border-radius: 999px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+  nav { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; padding: 6px 4px calc(8px + env(safe-area-inset-bottom)); }
+  nav button { flex: 1; background: none; border: none; font-family: inherit; font-size: 0.68rem; color: var(--text-soft); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; }
+  nav button .ico { font-size: 1.25rem; line-height: 1; }
+  nav button.active { color: var(--teal-dark); font-weight: 700; }
+  .moodRow { display: flex; gap: 10px; justify-content: space-between; margin: 12px 0 4px; }
+  .moodRow button { flex: 1; font-size: 1.7rem; background: var(--bg); border: 2px solid transparent; border-radius: 14px; padding: 10px 0 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: inherit; }
+  .moodRow button span { font-size: 0.65rem; color: var(--text-soft); }
+  .moodRow button.selected { border-color: var(--teal); background: var(--teal-light); }
+  textarea, input[type=text], input[type=tel] { width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 10px; font-family: inherit; font-size: 0.92rem; resize: vertical; background: #fff; color: var(--text); }
+  textarea:focus, input:focus { outline: 2px solid var(--teal-light); border-color: var(--teal); }
+  .nudge { border-left: 4px solid var(--teal); }
+  .nudge.warm { border-left-color: var(--coral); background: #fffaf8; }
+  .nudge p { font-size: 0.92rem; }
+  .nudge .actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .exCard { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+  .exIcon { width: 46px; height: 46px; border-radius: 12px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  .exCard .meta { flex: 1; }
+  .exCard .meta b { font-size: 0.95rem; display: block; }
+  .exCard .meta span { font-size: 0.8rem; color: var(--text-soft); }
+  .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; background: var(--teal-light); color: var(--teal-dark); border-radius: 999px; padding: 3px 9px; margin-right: 5px; }
+  .tag.coral { background: var(--coral-light); color: #b9503c; }
+  #breathOverlay { position: absolute; inset: 0; background: linear-gradient(170deg, #194d4d, #2a7f7f); z-index: 40; display: flex; flex-direction: column; align-items: center; color: #eaf4f4; padding: 20px; }
+  #breathOverlay .closeRow { width: 100%; display: flex; justify-content: flex-end; }
+  #breathOverlay .closeRow button { background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
+  #breathStage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; width: 100%; }
+  #breathBox { width: 240px; height: 240px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  #breathCircle { width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,0.22); border: 3px solid rgba(255,255,255,0.65); transform: scale(1); }
+  #breathPhase { font-size: 1.2rem; font-weight: 600; min-height: 1.6em; }
+  #breathOverlay .tempo { width: 100%; max-width: 280px; text-align: center; font-size: 0.85rem; }
+  #breathOverlay input[type=range] { width: 100%; margin-top: 8px; accent-color: #fff; }
+  #breathOverlay .controls { padding-bottom: 26px; display: flex; gap: 12px; }
+  #breathOverlay .btn { background: #fff; color: var(--teal-dark); }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 6px; }
+  .chips button { border: 1px solid var(--border); background: var(--card); border-radius: 999px; padding: 7px 14px; font-size: 0.82rem; font-family: inherit; cursor: pointer; white-space: nowrap; color: var(--text-soft); }
+  .chips button.active { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
+  .post .head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--teal-light); color: var(--teal-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .post .head .who b { font-size: 0.9rem; display: block; }
+  .post .head .who span { font-size: 0.74rem; color: var(--text-soft); }
+  .post .body { font-size: 0.93rem; line-height: 1.45; white-space: pre-wrap; }
+  .post .foot { display: flex; gap: 6px; margin-top: 10px; align-items: center; }
+  .post .foot button { border: 1px solid var(--border); background: var(--bg); border-radius: 999px; padding: 5px 11px; font-size: 0.78rem; font-family: inherit; cursor: pointer; color: var(--text-soft); }
+  .post .foot button.on { background: var(--teal-light); border-color: var(--teal); color: var(--teal-dark); font-weight: 600; }
+  .post .foot .report { margin-left: auto; border: none; background: none; font-size: 0.72rem; cursor: pointer; color: var(--text-soft); }
+  .promptCard { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; }
+  .promptCard .tag { background: rgba(255,255,255,0.2); color: #fff; }
+  .promptCard p { font-size: 1.02rem; font-weight: 600; margin: 8px 0 12px; }
+  .modalWrap { position: absolute; inset: 0; background: rgba(30,35,40,0.5); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
+  .modal { background: var(--card); border-radius: 20px 20px 0 0; width: 100%; padding: 22px 20px 30px; max-height: 85%; overflow-y: auto; }
+  .modal h3 { font-size: 1.15rem; margin-bottom: 6px; }
+  .modal .sub { margin-bottom: 14px; }
+  .callBtn { display: flex; align-items: center; justify-content: space-between; width: 100%; background: var(--teal); color: #fff; border: none; border-radius: 14px; padding: 16px; font-size: 1rem; font-weight: 700; font-family: inherit; cursor: pointer; margin-bottom: 10px; text-decoration: none; }
+  .callBtn small { font-weight: 400; opacity: 0.85; display: block; font-size: 0.78rem; }
+  .callBtn.urgent { background: #c0392b; }
+  .barChart { display: flex; align-items: flex-end; gap: 4px; height: 90px; margin: 10px 0 4px; }
+  .barChart .bar { flex: 1; background: var(--teal); border-radius: 4px 4px 0 0; min-height: 4px; opacity: 0.85; }
+  .barChart .bar.empty { background: var(--border); }
+  .chartLabels { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-soft); }
+  .statRow { display: flex; gap: 10px; }
+  .statRow .card { flex: 1; text-align: center; margin-bottom: 0; }
+  .statRow .num { font-size: 1.5rem; font-weight: 700; color: var(--teal-dark); }
+  .statRow .lbl { font-size: 0.74rem; color: var(--text-soft); }
+  .setRow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .setRow:last-child { border-bottom: none; }
+  .setRow span { font-size: 0.92rem; }
+  .switch { position: relative; width: 44px; height: 25px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch .sl { position: absolute; inset: 0; background: var(--border); border-radius: 999px; cursor: pointer; transition: background 0.2s; }
+  .switch .sl::before { content: ""; position: absolute; width: 19px; height: 19px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+  .switch input:checked + .sl { background: var(--teal); }
+  .switch input:checked + .sl::before { transform: translateX(19px); }
+  .progBar { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; margin: 8px 0 4px; }
+  .progBar div { height: 100%; background: var(--teal); border-radius: 999px; }
+  .articleBody { font-size: 0.95rem; line-height: 1.6; }
+  .articleBody p { margin-bottom: 12px; }
+  .feedItem { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .feedItem:last-child { border-bottom: none; }
+  .empty { color: var(--text-soft); font-size: 0.88rem; text-align: center; padding: 14px 0; }
+  .toast { position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 0.85rem; z-index: 60; white-space: nowrap; animation: toastIn 0.25s ease; }
+  @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="38" cy="50" r="24" fill="#2a7f7f"/>
+        <circle cx="62" cy="50" r="24" fill="#e8806a"/>
+        <path d="M50 29.2 A24 24 0 0 1 50 70.8 A24 24 0 0 1 50 29.2 Z" fill="#1f4f4f"/>
+      </svg>
+      together
+    </div>
+    <button id="sosBtn" title="Crisis support — always available">&#10084;&#65039; Crisis support</button>
+  </header>
+  <main id="main"></main>
+  <nav id="nav"></nav>
+</div>
+
+<script>
+"use strict";
+
+const LS_KEY = "together_state_v1";
+const todayStr = () => new Date().toISOString().slice(0, 10);
+
+const defaultState = {
+  pseudonym: "Stillwater" + Math.floor(100 + Math.random() * 900),
+  moods: {},
+  completedExercises: [],
+  activeProgram: null,
+  posts: [],
+  reactions: {},
+  settings: { notifications: true, crisisContact: "" },
+  dismissedNudges: {},
+};
+
+let state = loadState();
+function loadState() {
+  try { const raw = localStorage.getItem(LS_KEY); if (raw) return Object.assign(structuredClone(defaultState), JSON.parse(raw)); } catch (e) {}
+  return structuredClone(defaultState);
+}
+function save() { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+const MOODS = [
+  { level: 1, emoji: "\u{1F4A7}", label: "Heavy" },
+  { level: 2, emoji: "\u{1F32B}️", label: "Low" },
+  { level: 3, emoji: "\u{1F324}️", label: "Okay" },
+  { level: 4, emoji: "☀️", label: "Good" },
+];
+
+const EXERCISES = [
+  { id: "breath", icon: "\u{1F300}", title: "Breathing exercise", desc: "Calm breath with visual rhythm", min: 5, type: "breath" },
+  { id: "ground", icon: "\u{1F9ED}", title: "5-4-3-2-1 grounding", desc: "Ground yourself with your senses", min: 4, type: "guided",
+    steps: ["Find 5 things you can see around you.", "Notice 4 things you can touch.", "Listen for 3 sounds.", "Find 2 things you can smell.", "Notice 1 thing you can taste — or take a sip of water.", "Breathe out slowly. You are here, now."] },
+  { id: "reframe", icon: "\u{1F501}", title: "Reframe the thought", desc: "A short cognitive exercise", min: 6, type: "guided",
+    steps: ["What's the thought taking up space right now? Say it to yourself, briefly.", "How true is it, from 0 to 100%?", "What would you say to a good friend who thought the same?", "Formulate a more balanced version of the thought.", "Notice whether your body relaxes a little."] },
+  { id: "move", icon: "⚡", title: "Physical reset", desc: "Release tension in 3 minutes", min: 3, type: "guided",
+    steps: ["Stand up. Shake out your arms and legs for 20 seconds.", "10 slow squats — feel your legs working.", "Stretch your arms above your head, hold for 10 seconds.", "Roll your shoulders backwards 10 times.", "Stand still. Three deep breaths. Done."] },
+  { id: "visual", icon: "\u{1F3D4}️", title: "Safe place", desc: "Visualisation for calm", min: 7, type: "guided",
+    steps: ["Close your eyes or lower your gaze.", "Picture a place where you feel completely calm. Real or imagined.", "What do you see there? Add details.", "What do you hear? What do you feel against your skin?", "Stay there for a few calm breaths.", "Bring the calm back with you."] },
+];
+
+const PROGRAMS = [
+  { id: "sleep", title: "Better sleep", days: 21, icon: "\u{1F634}", desc: "Wind down your evenings and build a sleep routine that sticks." },
+  { id: "transition", title: "Handling transitions", days: 14, icon: "\u{1F9ED}", desc: "Steady through a job change, breakup, or other major shift." },
+  { id: "confidence", title: "Confidence and performance", days: 21, icon: "\u{1F3AF}", desc: "Train your confidence — at work, in sport, in life." },
+  { id: "father", title: "Better father and partner", days: 30, icon: "\u{1F46A}", desc: "Tools for presence, patience and communication at home." },
+];
+
+const CHANNELS = ["All", "Work", "Relationships", "Fatherhood", "Grief", "General"];
+
+const DAILY_PROMPTS = [
+  "What's been heaviest this week?",
+  "What are you quietly proud of lately?",
+  "What do you wish someone had said to you this week?",
+  "What do you do when your mind won't quiet down?",
+  "Who do you miss having a real conversation with?",
+  "What's given you a little energy recently?",
+  "What's the hardest part of your role right now — work, father, partner?",
+];
+
+const SEED_POSTS = [
+  { id: "s1", who: "NorthernOak74", channel: "Work", age: "2h",
+    text: "Reorganised out of the team I built. Left with a role I don't recognise myself in. Anyone been through something similar?",
+    support: 14, beenThere: 9, comments: 4 },
+  { id: "s2", who: "Stillwater88", channel: "Fatherhood", age: "5h",
+    text: "Snapped at my youngest today over something that was really about my own stress. He hugged me when I said sorry. Kids are generous.",
+    support: 31, beenThere: 18, comments: 7 },
+  { id: "s3", who: "WestCoastN", channel: "Relationships", age: "yesterday",
+    text: "The evenings are the hardest since the split. Started going for a walk around the block instead of scrolling. Helps a little. Not much, but a little.",
+    support: 22, beenThere: 15, comments: 5 },
+  { id: "s4", who: "CalmBreeze", channel: "Grief", age: "yesterday",
+    text: "Dad passed away last winter. People ask how Mum is doing. No one asks how I'm doing. Writing it here instead.",
+    support: 40, beenThere: 12, comments: 9 },
+  { id: "s5", who: "Compass42", channel: "General", age: "2d",
+    text: "Three weeks of the breathing exercise every morning now. Sounds silly, but I'm noticeably less short-tempered. Worth trying.",
+    support: 17, beenThere: 6, comments: 3 },
+];
+
+const ARTICLES = [
+  { id: "a1", icon: "\u{1F3A4}", title: "Performance anxiety — when demands take over", min: 3, cat: "Performance", program: "confidence",
+    body: ["Performance anxiety rarely comes from the task itself. It comes from what you think it means about you if things go wrong.", "Your body's alarm response — racing heart, restlessness, racing thoughts — is the same whether the threat is a bear or a presentation. Your brain is trying to protect you. It's just a bit too eager.", "What helps: lower the mental stakes ('this is one meeting, not a verdict'), breathe longer on the exhale than the inhale, and practise the situation in small doses rather than avoiding it.", "Avoidance brings relief today and more anxiety tomorrow. Gradual exposure does the opposite."] },
+  { id: "a2", icon: "\u{1F525}", title: "Anger is often something else", min: 3, cat: "Anger", program: "father",
+    body: ["For many men, anger is the only feeling that seems 'allowed'. Underneath is often something else: worry, shame, helplessness, hurt.", "Next time you feel it rising: try to name what happened a second before. Did you feel overruled? Unheard? Afraid of failing?", "Anger isn't dangerous in itself. It's information. The question is what you do with it — and whether the people around you have to bear the cost.", "A practical rule: pause before responding when your pulse is high. You can always return to the conversation. What you say in full anger you can rarely take back."] },
+  { id: "a3", icon: "\u{1F9CD}", title: "Loneliness among men — what nobody says out loud", min: 4, cat: "Loneliness", program: null,
+    body: ["Many men have colleagues, training partners and family — and are still lonely. Because none of those relationships have room for what actually weighs on them.", "Male friendships are often built around activity, not conversation. That's not wrong, but it means the heavy stuff never gets space.", "The good news: it takes less than you think. One honest sentence — 'it's been a tough stretch, actually' — opens more than a hundred surface-level conversations.", "Start with the friend you think can handle it best. He's probably been waiting for a chance to say something real himself."] },
+  { id: "a4", icon: "\u{1F504}", title: "Who am I without the job?", min: 3, cat: "Identity", program: "transition",
+    body: ["When your identity is largely built on what you achieve, a career change, redundancy or retirement becomes more than practical — it becomes existential.", "Ask yourself: what did people value in me before my title? Your temperament? Your calm? Your ability to fix things? That doesn't disappear with the job.", "Transition periods are uncomfortable because the old is gone and the new hasn't taken shape yet. It's a middle phase, not a final destination.", "Use the time to explore, not conclude. Identity is built through action, not rumination."] },
+  { id: "a5", icon: "\u{1F476}", title: "First-time father — the honest picture", min: 4, cat: "Fatherhood", program: "father",
+    body: ["Many fathers feel a mixture of love, detachment and inadequacy in the early months. It's common — and almost nobody talks about it.", "Bonding isn't always a lightning bolt. For many it builds gradually, through nappy changes, carrying, and sleepless nights. It counts just as much.", "You don't need to be perfect. The research is clear: 'good enough' and repair after mistakes is what builds secure children.", "And: look after the relationship. The early years with young children are one of the hardest periods for a couple. Short, honest check-ins with your partner are underrated."] },
+];
+
+const MYTHS = [
+  { myth: "Real men handle things themselves.", fact: "Asking for help takes more confidence than pretending everything's fine. Most of those who've done it only regret waiting so long." },
+  { myth: "Talking about problems makes them bigger.", fact: "Research shows the opposite: putting feelings into words reduces activity in the brain's alarm system." },
+  { myth: "Therapy is for people in crisis.", fact: "Mental training works like physical training — it's most effective before things become acute." },
+  { myth: "Medication is the only solution if it's serious.", fact: "Conversation, physical activity, sleep and community all have documented effects, alone or in combination." },
+];
+
+const CRISIS_PATTERNS = /suicide|take my (own )?life|don't want to (be|live|exist)|can't go on|end it all|end my life|hurt myself|self.harm|not worth living|want to die/i;
+
+function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+function moodOn(dateStr) { return state.moods[dateStr] ? state.moods[dateStr].level : null; }
+function lastNDates(n) { const out = []; for (let i = n - 1; i >= 0; i--) out.push(daysAgo(i)); return out; }
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function toast(msg) {
+  const t = document.createElement("div");
+  t.className = "toast"; t.textContent = msg;
+  document.getElementById("app").appendChild(t);
+  setTimeout(() => t.remove(), 2600);
+}
+function streak() {
+  let n = 0;
+  for (let i = 0; ; i++) {
+    if (state.moods[daysAgo(i)]) n++;
+    else if (i === 0) continue;
+    else break;
+  }
+  return n;
+}
+
+function computeNudges() {
+  const nudges = [];
+  const dismissed = (key) => state.dismissedNudges[key] === todayStr();
+  const last3 = [daysAgo(0), daysAgo(1), daysAgo(2)].map(moodOn);
+  if (last3.every(l => l !== null && l <= 2) && !dismissed("low3")) {
+    nudges.push({ key: "low3", warm: false,
+      text: "You've logged a few heavy days in a row. Want something concrete to work with? The programmes go one day at a time — you set the pace.",
+      actions: [{ label: "Show me the programmes", fn: () => { currentTab = "training"; render(); } }] });
+  }
+  const t = moodOn(todayStr()), y = moodOn(daysAgo(1));
+  if (t !== null && y !== null && Math.abs(t - y) >= 2 && !dismissed("jump")) {
+    nudges.push({ key: "jump", warm: false,
+      text: "Today looks quite different from yesterday. Something happen? No need to answer — but sometimes getting it down in two lines clears the head.",
+      actions: [{ label: "Write two lines", fn: () => { focusNote = true; render(); } }] });
+  }
+  const last14 = lastNDates(14).map(moodOn).filter(l => l !== null);
+  if (last14.length >= 10 && last14.every(l => l <= 2) && !dismissed("low14")) {
+    nudges.push({ key: "low14", warm: true,
+      text: "Your log has been heavy for a couple of weeks now. Staying in that for so long takes its toll — and you don't have to stay in it alone. A conversation with someone who knows this stuff doesn't commit you to anything.",
+      actions: [{ label: "See who you can talk to", fn: openSOS }] });
+  }
+  const last7 = lastNDates(7).map(moodOn).filter(l => l !== null);
+  if (last7.length >= 5 && last7.every(l => l >= 3) && !dismissed("high")) {
+    nudges.push({ key: "high", warm: false,
+      text: "A good stretch in your log. What's been working for you lately? What you've figured out could be exactly what someone else needs to read.",
+      actions: [{ label: "Share it in Community", fn: () => { currentTab = "community"; render(); } }] });
+  }
+  return nudges;
+}
+
+function inactivityNudge() {
+  for (let i = 0; i < 4; i++) if (state.moods[daysAgo(i)]) return null;
+  if (Object.keys(state.moods).length === 0) return null;
+  return "Good to see you again. Days go by — no explanation needed. How are things today?";
+}
+
+let currentTab = "home";
+let currentChannel = "All";
+let focusNote = false;
+const main = document.getElementById("main");
+
+const TABS = [
+  { id: "home", label: "Home", ico: "\u{1F3E0}" },
+  { id: "training", label: "Training", ico: "\u{1F9D8}" },
+  { id: "community", label: "Community", ico: "\u{1F4AC}" },
+  { id: "learn", label: "Learn", ico: "\u{1F4D6}" },
+  { id: "profile", label: "Profile", ico: "\u{1F464}" },
+];
+
+function renderNav() {
+  document.getElementById("nav").innerHTML = TABS.map(t =>
+    `<button class="${t.id === currentTab ? "active" : ""}" onclick="goTab('${t.id}')">
+       <span class="ico">${t.ico}</span>${t.label}</button>`).join("");
+}
+function goTab(id) { currentTab = id; render(); main.scrollTop = 0; }
+
+function render() {
+  renderNav();
+  if (currentTab === "home") renderHome();
+  else if (currentTab === "training") renderTraining();
+  else if (currentTab === "community") renderCommunity();
+  else if (currentTab === "learn") renderLearn();
+  else if (currentTab === "profile") renderProfile();
+}
+
+function suggestedExercise() {
+  const t = moodOn(todayStr());
+  if (t === null) return EXERCISES[0];
+  if (t === 1) return EXERCISES.find(e => e.id === "ground");
+  if (t === 2) return EXERCISES.find(e => e.id === "breath");
+  if (t === 3) return EXERCISES.find(e => e.id === "reframe");
+  return EXERCISES.find(e => e.id === "move");
+}
+
+function renderHome() {
+  const today = state.moods[todayStr()];
+  const h = new Date().getHours();
+  const greeting = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+  const inact = inactivityNudge();
+  const nudges = computeNudges();
+  const ex = suggestedExercise();
+
+  let html = `<h1>${greeting}</h1><div class="sub">How are you doing today — really?</div>`;
+  if (inact && !today) html += `<div class="card nudge"><p>${inact}</p></div>`;
+
+  html += `<div class="card">
+    <b style="font-size:0.95rem">Today's mood</b>
+    <div class="moodRow">${MOODS.map(m =>
+      `<button class="${today && today.level === m.level ? "selected" : ""}" onclick="setMood(${m.level})">${m.emoji}<span>${m.label}</span></button>`).join("")}
+    </div>`;
+  if (today) {
+    html += `<div style="margin-top:10px">
+      <textarea id="moodNote" rows="2" placeholder="A few words about the day? Optional — and completely private.">${esc(today.note || "")}</textarea>
+      <div style="text-align:right;margin-top:6px"><button class="btn small secondary" onclick="saveNote()">Save note</button></div>
+    </div>`;
+  }
+  html += `</div>`;
+
+  for (const n of nudges) {
+    html += `<div class="card nudge${n.warm ? " warm" : ""}"><p>${n.text}</p>
+      <div class="actions">${n.actions.map((a, i) =>
+        `<button class="btn small" onclick="nudgeAction('${n.key}',${i})">${a.label}</button>`).join("")}
+        <button class="btn small ghost" onclick="dismissNudge('${n.key}')">Not now</button>
+      </div></div>`;
+  }
+
+  html += `<h2>Today's exercise</h2>
+    <div class="card exCard" onclick="openExercise('${ex.id}')">
+      <div class="exIcon">${ex.icon}</div>
+      <div class="meta"><b>${ex.title}</b><span>${ex.desc} &middot; ${ex.min} min</span></div>
+      <button class="btn small">Start</button>
+    </div>`;
+
+  html += `<h2>Latest from Community</h2><div class="card">`;
+  const feedItems = [];
+  if (state.posts.length > 0) {
+    feedItems.push({ dot: "\u{1F4AC}", text: `Your post has received ${3 + state.posts.length * 2} support reactions` });
+    feedItems.push({ dot: "\u{1FAC2}", text: `2 men tapped "I've been there" on your post` });
+  }
+  feedItems.push({ dot: "\u{1F4DD}", text: `New prompt in the feed: "${dailyPrompt()}"` });
+  feedItems.push({ dot: "\u{1F525}", text: "5 new posts in the Fatherhood channel today" });
+  html += feedItems.map(f => `<div class="feedItem"><span class="dot">${f.dot}</span><span>${f.text}</span></div>`).join("");
+  html += `</div>`;
+
+  main.innerHTML = html;
+  if (focusNote) { focusNote = false; const ta = document.getElementById("moodNote"); if (ta) ta.focus(); }
+}
+
+function setMood(level) {
+  const existing = state.moods[todayStr()] || { note: "" };
+  state.moods[todayStr()] = { level, note: existing.note };
+  save(); render();
+}
+function saveNote() {
+  const ta = document.getElementById("moodNote");
+  if (ta && state.moods[todayStr()]) { state.moods[todayStr()].note = ta.value; save(); toast("Note saved — only visible to you"); }
+}
+function nudgeAction(key, i) { const n = computeNudges().find(x => x.key === key); if (n) n.actions[i].fn(); }
+function dismissNudge(key) { state.dismissedNudges[key] = todayStr(); save(); render(); }
+
+function renderTraining() {
+  let html = `<h1>Training</h1><div class="sub">Short tools. No pressure, just a little at a time.</div>`;
+  if (state.activeProgram) {
+    const p = PROGRAMS.find(x => x.id === state.activeProgram.id);
+    const start = new Date(state.activeProgram.startDate);
+    const day = Math.min(p.days, Math.floor((new Date() - start) / 86400000) + 1);
+    const pct = Math.round((day / p.days) * 100);
+    html += `<div class="card">
+      <span class="tag">ACTIVE PROGRAMME</span>
+      <h2 style="margin:8px 0 2px">${p.icon} ${p.title}</h2>
+      <div class="sub" style="margin-bottom:4px">Day ${day} of ${p.days}</div>
+      <div class="progBar"><div style="width:${pct}%"></div></div>
+      <div class="actions" style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn small" onclick="openProgramDay('${p.id}', ${day})">Today's content</button>
+        <button class="btn small ghost" onclick="quitProgram()">End programme</button>
+      </div></div>`;
+  }
+  html += `<h2>Micro-exercises <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">3&ndash;10 min</span></h2>`;
+  html += EXERCISES.map(e => `
+    <div class="card exCard" onclick="openExercise('${e.id}')">
+      <div class="exIcon">${e.icon}</div>
+      <div class="meta"><b>${e.title}</b><span>${e.desc} &middot; ${e.min} min</span></div>
+    </div>`).join("");
+  html += `<h2>Programmes <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 days</span></h2>`;
+  html += PROGRAMS.map(p => `
+    <div class="card">
+      <div class="exCard" style="cursor:default">
+        <div class="exIcon">${p.icon}</div>
+        <div class="meta"><b>${p.title}</b><span>${p.desc}</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <span class="tag">${p.days} DAYS</span>
+        ${state.activeProgram && state.activeProgram.id === p.id
+          ? `<span style="font-size:0.8rem;color:var(--teal-dark);font-weight:600">Active</span>`
+          : `<button class="btn small secondary" onclick="startProgram('${p.id}')">Start</button>`}
+      </div>
+    </div>`).join("");
+  main.innerHTML = html;
+}
+
+function startProgram(id) { state.activeProgram = { id, startDate: todayStr() }; save(); render(); toast("Programme started. One day at a time."); }
+function quitProgram() { state.activeProgram = null; save(); render(); }
+function openProgramDay(id, day) {
+  const p = PROGRAMS.find(x => x.id === id);
+  openModal(`
+    <h3>${p.icon} ${p.title} — day ${day}</h3>
+    <div class="sub">Short content + exercise + reflection</div>
+    <div class="articleBody">
+      <p><b>Today's focus:</b> ${programDayFocus(id, day)}</p>
+      <p><b>Exercise:</b> Do today's breathing exercise (5 min) before bed, or whenever you need a pause.</p>
+      <p><b>Reflection:</b> What's one small thing that worked today? Write it in your mood note on Home if you like.</p>
+    </div>
+    <button class="btn" style="width:100%;margin-top:14px" onclick="completeExercise('program-${id}-${day}'); closeModal()">Mark day as complete</button>
+  `);
+}
+function programDayFocus(id, day) {
+  const focuses = {
+    sleep: ["Map your evening routine as it actually is.", "Screen-free for the last 30 minutes before bed.", "Fixed bedtime — weekends too.", "Bedroom: dark, cool, quiet."],
+    transition: ["Name what has actually been lost — and what remains.", "What do you have control over today? Do one of those things.", "Talk to one person about how you're really doing.", "Small routines bring stability when the big things are in flux."],
+    confidence: ["Write down three situations you've handled well before.", "Practise taking up space: say one opinion out loud today.", "Replace 'I have to perform' with 'I'm here to contribute'.", "Posture affects how you feel — test it today."],
+    father: ["Ten minutes of undivided attention — phone away.", "Apologise if you get it wrong. It builds trust.", "Notice what triggers your impatience.", "Tell your partner one thing you appreciate about them."],
+  };
+  const f = focuses[id] || focuses.sleep;
+  return f[(day - 1) % f.length];
+}
+function completeExercise(id) { state.completedExercises.push({ id, date: todayStr() }); save(); toast("Well done. That counts."); render(); }
+
+function openExercise(id) {
+  const e = EXERCISES.find(x => x.id === id);
+  if (e.type === "breath") return openBreath();
+  let step = 0;
+  const show = () => {
+    openModal(`
+      <h3>${e.icon} ${e.title}</h3>
+      <div class="sub">Step ${step + 1} of ${e.steps.length}</div>
+      <div class="articleBody"><p style="font-size:1.05rem">${e.steps[step]}</p></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        ${step > 0 ? `<button class="btn secondary" style="flex:1" id="exPrev">Back</button>` : ""}
+        <button class="btn" style="flex:2" id="exNext">${step < e.steps.length - 1 ? "Next" : "Complete"}</button>
+      </div>`);
+    const prev = document.getElementById("exPrev");
+    if (prev) prev.onclick = () => { step--; show(); };
+    document.getElementById("exNext").onclick = () => {
+      if (step < e.steps.length - 1) { step++; show(); }
+      else { closeModal(); completeExercise(e.id); }
+    };
+  };
+  show();
+}
+
+let breathTimer = null;
+function openBreath() {
+  const ov = document.createElement("div");
+  ov.id = "breathOverlay";
+  ov.innerHTML = `
+    <div class="closeRow"><button onclick="closeBreath()">&#10005;</button></div>
+    <div id="breathStage">
+      <div id="breathBox"><div id="breathCircle"></div></div>
+      <div id="breathPhase">Ready when you are</div>
+      <div class="tempo">Pace: <b id="tempoVal">4</b> sec per phase
+        <input type="range" id="tempoRange" min="3" max="6" step="0.5" value="4">
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="breathStart">Start</button>
+    </div>`;
+  document.getElementById("app").appendChild(ov);
+  document.getElementById("tempoRange").oninput = (ev) => { document.getElementById("tempoVal").textContent = ev.target.value; };
+  document.getElementById("breathStart").onclick = toggleBreath;
+}
+function toggleBreath() {
+  const btn = document.getElementById("breathStart");
+  if (breathTimer) { stopBreathCycle(); btn.textContent = "Start"; document.getElementById("breathPhase").textContent = "Paused — continue when you're ready"; return; }
+  btn.textContent = "Stop";
+  runBreathCycle();
+}
+function runBreathCycle() {
+  const circle = document.getElementById("breathCircle");
+  const phaseEl = document.getElementById("breathPhase");
+  const phases = [
+    { name: "Breathe in", scale: 1.8 },
+    { name: "Hold", scale: 1.8 },
+    { name: "Breathe out", scale: 1.0 },
+    { name: "Hold", scale: 1.0 },
+  ];
+  let i = 0;
+  const step = () => {
+    if (!document.getElementById("breathCircle")) return stopBreathCycle();
+    const tempo = parseFloat(document.getElementById("tempoRange").value) * 1000;
+    const ph = phases[i % 4];
+    phaseEl.textContent = ph.name;
+    circle.style.transition = `transform ${tempo}ms ease-in-out`;
+    circle.style.transform = `scale(${ph.scale})`;
+    i++;
+    if (i === 8) completeExercise("breath");
+    breathTimer = setTimeout(step, tempo);
+  };
+  step();
+}
+function stopBreathCycle() { if (breathTimer) { clearTimeout(breathTimer); breathTimer = null; } }
+function closeBreath() { stopBreathCycle(); const ov = document.getElementById("breathOverlay"); if (ov) ov.remove(); }
+
+function dailyPrompt() {
+  const dayIdx = Math.floor(new Date() / 86400000) % DAILY_PROMPTS.length;
+  return DAILY_PROMPTS[dayIdx];
+}
+
+function renderCommunity() {
+  let html = `<h1>Community</h1><div class="sub">Anonymous. Open. Men who get it.</div>`;
+  html += `<div class="chips">${CHANNELS.map(c =>
+    `<button class="${c === currentChannel ? "active" : ""}" onclick="setChannel('${c}')">${c}</button>`).join("")}</div>`;
+  html += `<div class="card promptCard">
+    <span class="tag">TODAY'S PROMPT</span>
+    <p>${dailyPrompt()}</p>
+    <button class="btn small" style="background:#fff;color:var(--teal-dark)" onclick="openComposer()">Reply anonymously</button>
+  </div>`;
+  html += `<div style="text-align:right;margin-bottom:10px">
+    <button class="btn small secondary" onclick="openComposer()">+ New post</button></div>`;
+
+  const all = [...state.posts.map(p => ({ ...p, mine: true })), ...SEED_POSTS];
+  const filtered = currentChannel === "All" ? all : all.filter(p => p.channel === currentChannel);
+  if (filtered.length === 0) html += `<div class="empty">No posts in this channel yet. Be the first.</div>`;
+  html += filtered.map(p => {
+    const r = state.reactions[p.id] || {};
+    const sup = (p.support || 0) + (r.support ? 1 : 0);
+    const bt = (p.beenThere || 0) + (r.beenThere ? 1 : 0);
+    return `<div class="card post">
+      <div class="head">
+        <div class="avatar">${esc(p.who.slice(0, 2).toUpperCase())}</div>
+        <div class="who"><b>${esc(p.who)}${p.mine ? ' <span style="font-weight:400;color:var(--text-soft)">(you)</span>' : ""}</b>
+        <span>${p.channel} &middot; ${p.age || "now"}</span></div>
+      </div>
+      <div class="body">${esc(p.text)}</div>
+      <div class="foot">
+        <button class="${r.support ? "on" : ""}" onclick="react('${p.id}','support')">&#129309; Support &middot; ${sup}</button>
+        <button class="${r.beenThere ? "on" : ""}" onclick="react('${p.id}','beenThere')">&#129730; I've been there &middot; ${bt}</button>
+        <button class="report" onclick="reportPost('${p.id}')">Report</button>
+      </div>
+    </div>`;
+  }).join("");
+  main.innerHTML = html;
+}
+
+function setChannel(c) { currentChannel = c; render(); }
+function react(postId, kind) { const r = state.reactions[postId] || (state.reactions[postId] = {}); r[kind] = !r[kind]; save(); render(); }
+function reportPost(postId) {
+  openModal(`
+    <h3>Report post</h3>
+    <div class="sub">Thank you for flagging this. What does it concern?</div>
+    ${["Hateful or toxic content", "Concern for the author", "Spam or advertising", "Other"].map(reason =>
+      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="closeModal(); toast('Report sent. We\'ll look into it.')">${reason}</button>`).join("")}
+  `);
+}
+function openComposer() {
+  openModal(`
+    <h3>New post</h3>
+    <div class="sub">You're posting as <b>${esc(state.pseudonym)}</b> — never your real name.</div>
+    <div style="margin-bottom:10px">
+      <select id="postChannel" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);font-family:inherit;font-size:0.92rem">
+        ${CHANNELS.slice(1).map(c => `<option>${c}</option>`).join("")}
+      </select>
+    </div>
+    <textarea id="postText" rows="5" placeholder="Write it as it is. No one needs polished words here."></textarea>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="submitPost()">Post anonymously</button>
+  `);
+}
+function submitPost() {
+  const text = document.getElementById("postText").value.trim();
+  const channel = document.getElementById("postChannel").value;
+  if (!text) return;
+  if (CRISIS_PATTERNS.test(text)) {
+    closeModal();
+    openModal(`
+      <h3>We see you &#129505;</h3>
+      <div class="articleBody">
+        <p>What you're writing sounds heavy, and we're glad you're putting it into words. Your post will be published — but first, we want to remind you that there are people ready to talk with you right now, around the clock:</p>
+      </div>
+      <a class="callBtn urgent" href="tel:911"><span>Emergency services<small>Call your local emergency number</small></span><span>911 / 999 / 112</span></a>
+      <a class="callBtn" href="tel:116123"><span>Samaritans<small>Free &middot; available 24/7 &middot; UK &amp; Ireland</small></span><span>116 123</span></a>
+      <a class="callBtn" href="tel:988"><span>988 Suicide &amp; Crisis Lifeline<small>Call or text &middot; US</small></span><span>988</span></a>
+      <button class="btn secondary" style="width:100%;margin-top:6px" onclick="finalizePost()">Publish my post</button>
+    `);
+    pendingPost = { text, channel };
+    return;
+  }
+  doPublish(text, channel);
+}
+let pendingPost = null;
+function finalizePost() { if (pendingPost) { doPublish(pendingPost.text, pendingPost.channel); pendingPost = null; } }
+function doPublish(text, channel) {
+  state.posts.unshift({ id: "u" + Date.now(), who: state.pseudonym, channel, text, support: 0, beenThere: 0, comments: 0, age: "now" });
+  save(); closeModal();
+  currentTab = "community"; render();
+  toast("Posted. You're not alone in this.");
+}
+
+function renderLearn() {
+  let html = `<h1>Learn</h1><div class="sub">Short answers to real questions. 2&ndash;4 min reads.</div>`;
+  html += ARTICLES.map(a => `
+    <div class="card exCard" onclick="openArticle('${a.id}')">
+      <div class="exIcon">${a.icon}</div>
+      <div class="meta"><b>${a.title}</b><span>${a.cat} &middot; ${a.min} min</span></div>
+    </div>`).join("");
+  html += `<h2>Myths vs. facts</h2>`;
+  html += MYTHS.map(m => `
+    <div class="card">
+      <span class="tag coral">MYTH</span> <span style="font-size:0.92rem;font-style:italic">&laquo;${m.myth}&raquo;</span>
+      <div style="margin-top:10px"><span class="tag">FACT</span> <span style="font-size:0.92rem">${m.fact}</span></div>
+    </div>`).join("");
+  main.innerHTML = html;
+}
+
+function openArticle(id) {
+  const a = ARTICLES.find(x => x.id === id);
+  const prog = a.program ? PROGRAMS.find(p => p.id === a.program) : null;
+  openModal(`
+    <h3>${a.icon} ${a.title}</h3>
+    <div class="sub">${a.cat} &middot; ${a.min} min read</div>
+    <div class="articleBody">${a.body.map(p => `<p>${p}</p>`).join("")}</div>
+    ${prog ? `<div class="card nudge" style="margin-top:14px"><p>Want to go deeper? The <b>${prog.title}</b> programme (${prog.days} days) takes you through it step by step.</p>
+      <div class="actions"><button class="btn small" onclick="closeModal(); startProgram('${prog.id}'); goTab('training')">Start the programme</button></div></div>` : ""}
+  `);
+}
+
+function renderProfile() {
+  const dates = lastNDates(14);
+  const labels = [new Date(dates[0]), new Date(dates[13])].map(d => d.getDate() + "/" + (d.getMonth() + 1));
+  const completedCount = state.completedExercises.length;
+  const st = streak();
+
+  let html = `<h1>Profile</h1><div class="sub">Completely private — nothing here is visible to others.</div>`;
+  html += `<div class="statRow" style="margin-bottom:12px">
+    <div class="card"><div class="num">${st}</div><div class="lbl">day streak</div></div>
+    <div class="card"><div class="num">${completedCount}</div><div class="lbl">exercises done</div></div>
+    <div class="card"><div class="num">${state.posts.length}</div><div class="lbl">posts shared</div></div>
+  </div>`;
+  html += `<div class="card"><b style="font-size:0.95rem">Mood trend &mdash; last 14 days</b>
+    <div class="barChart">${dates.map(d => {
+      const l = moodOn(d);
+      return l === null
+        ? `<div class="bar empty" style="height:4px" title="${d}: not logged"></div>`
+        : `<div class="bar" style="height:${l * 25}%" title="${d}: ${MOODS[l - 1].label}"></div>`;
+    }).join("")}</div>
+    <div class="chartLabels"><span>${labels[0]}</span><span>today</span></div>
+  </div>`;
+
+  html += `<h2>My posts</h2>`;
+  if (state.posts.length === 0) {
+    html += `<div class="card"><div class="empty">You haven't shared anything yet. That's completely fine — read and recognise yourself at your own pace.</div></div>`;
+  } else {
+    html += state.posts.map(p => `<div class="card"><span class="tag">${p.channel}</span>
+      <div style="font-size:0.9rem;margin-top:8px">${esc(p.text.length > 120 ? p.text.slice(0, 120) + "…" : p.text)}</div></div>`).join("");
+  }
+
+  html += `<h2>Settings</h2><div class="card">
+    <div class="setRow"><span>Username</span>
+      <button class="btn small secondary" onclick="editPseudonym()">${esc(state.pseudonym)}</button></div>
+    <div class="setRow"><span>Notifications</span>
+      <label class="switch"><input type="checkbox" ${state.settings.notifications ? "checked" : ""} onchange="toggleNotif(this.checked)"><span class="sl"></span></label></div>
+    <div class="setRow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <span>Personal crisis contact (optional)</span>
+      <input type="tel" id="crisisContact" placeholder="Name / phone number of someone you trust" value="${esc(state.settings.crisisContact)}" onchange="saveCrisisContact(this.value)">
+    </div>
+  </div>`;
+
+  main.innerHTML = html;
+}
+
+function editPseudonym() {
+  openModal(`
+    <h3>Change username</h3>
+    <div class="sub">This is the name others see in Community. Choose something that can't identify you.</div>
+    <input type="text" id="pseudoInput" value="${esc(state.pseudonym)}" maxlength="24">
+    <button class="btn" style="width:100%;margin-top:12px" onclick="savePseudonym()">Save</button>
+  `);
+}
+function savePseudonym() { const v = document.getElementById("pseudoInput").value.trim(); if (v) { state.pseudonym = v; save(); } closeModal(); render(); }
+function toggleNotif(on) { state.settings.notifications = on; save(); }
+function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast("Saved"); }
+
+function openSOS() {
+  const cc = state.settings.crisisContact;
+  openModal(`
+    <h3>Crisis support</h3>
+    <div class="sub">You don't need to be in crisis to call. They're there to listen.</div>
+    <a class="callBtn urgent" href="tel:911"><span>Emergency services<small>Call your local emergency number</small></span><span>911 / 999 / 112</span></a>
+    <a class="callBtn" href="tel:116123"><span>Samaritans<small>Free &middot; 24/7 &middot; UK &amp; Ireland</small></span><span>116 123</span></a>
+    <a class="callBtn" href="tel:988"><span>988 Suicide &amp; Crisis Lifeline<small>Call or text &middot; US</small></span><span>988</span></a>
+    <div style="background:var(--teal-light);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:0.85rem;color:var(--teal-dark)">
+      <b>Crisis Text Line (US):</b> Text HOME to <b>741741</b><br>
+      <b>International:</b> <a href="https://www.iasp.info/resources/Crisis_Centres/" style="color:var(--teal-dark)">Find a crisis centre near you &rarr;</a>
+    </div>
+    ${cc ? `<a class="callBtn" style="background:var(--coral)" href="tel:${esc(cc.replace(/[^+\d]/g, ""))}"><span>Your personal contact<small>${esc(cc)}</small></span><span>Call</span></a>` : ""}
+    <p style="font-size:0.8rem;color:var(--text-soft);margin-top:8px">This app is a support tool and is not a replacement for professional care.</p>
+  `);
+}
+document.getElementById("sosBtn").onclick = openSOS;
+
+function openModal(innerHtml) {
+  closeModal();
+  const w = document.createElement("div");
+  w.className = "modalWrap"; w.id = "modalWrap";
+  w.innerHTML = `<div class="modal">${innerHtml}</div>`;
+  w.onclick = (e) => { if (e.target === w) closeModal(); };
+  document.getElementById("app").appendChild(w);
+}
+function closeModal() { const w = document.getElementById("modalWrap"); if (w) w.remove(); }
+
+render();
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>
