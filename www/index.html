@@ -61,8 +61,8 @@
   .btn.small { padding: 7px 12px; font-size: 0.85rem; }
   .btn:disabled { opacity: 0.5; cursor: default; }
   header { display: flex; justify-content: space-between; align-items: center; padding: calc(14px + env(safe-area-inset-top)) 18px 0; }
-  .brand { display: flex; align-items: center; }
-  .brand svg { display: block; height: 38px; width: auto; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight: 500; color: #1f4f4f; font-size: 1.2rem; letter-spacing: 0.3px; }
+  .brand svg { display: block; flex-shrink: 0; }
   #sosBtn { background: var(--coral-light); color: #b9503c; border: 1px solid #f2c4b8; border-radius: 999px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit; }
   nav { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; padding: 6px 4px calc(8px + env(safe-area-inset-bottom)); }
   nav button { flex: 1; background: none; border: none; font-family: inherit; font-size: 0.68rem; color: var(--text-soft); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; }
@@ -90,7 +90,6 @@
   #breathOverlay .closeRow button { background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
   #breathStage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; width: 100%; }
   #breathBox { width: 240px; height: 240px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  #breathCircle { width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,0.22); border: 3px solid rgba(255,255,255,0.65); transform: scale(1); }
   #breathPhase { font-size: 1.2rem; font-weight: 600; min-height: 1.6em; }
   #breathOverlay .tempo { width: 100%; max-width: 280px; text-align: center; font-size: 0.85rem; }
   #breathOverlay input[type=range] { width: 100%; margin-top: 8px; accent-color: #fff; }
@@ -151,12 +150,12 @@
 <div id="app">
   <header>
     <div class="brand">
-      <svg viewBox="0 0 360 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Together">
+      <svg width="38" height="38" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <circle cx="38" cy="50" r="24" fill="#2a7f7f"/>
         <circle cx="62" cy="50" r="24" fill="#e8806a"/>
         <path d="M50 29.2 A24 24 0 0 1 50 70.8 A24 24 0 0 1 50 29.2 Z" fill="#1f4f4f"/>
-        <text x="104" y="63" font-family="Outfit, 'Segoe UI', -apple-system, sans-serif" font-size="42" font-weight="500" letter-spacing="1" fill="#1f4f4f">together</text>
       </svg>
+      <span>together</span>
     </div>
     <button id="sosBtn" title="Crisis support, always available">&#10084;&#65039; Crisis support</button>
   </header>
@@ -796,15 +795,36 @@ function openExercise(id) {
   show();
 }
 
-let breathTimer = null;
+let breathRaf = null;
+let breathPhaseIdx = 0;
+const BREATH_C = 2 * Math.PI * 80;
+const BREATH_PHASES = [
+  { name: "Breathe in",  startOff: BREATH_C, endOff: 0 },
+  { name: "Hold",        startOff: 0,         endOff: 0 },
+  { name: "Breathe out", startOff: 0,         endOff: BREATH_C },
+  { name: "Hold",        startOff: BREATH_C,  endOff: BREATH_C },
+];
+
 function openBreath() {
+  breathPhaseIdx = 0;
   const ov = document.createElement("div");
   ov.id = "breathOverlay";
   ov.innerHTML = `
     <div class="closeRow"><button onclick="closeBreath()">&#10005;</button></div>
     <div id="breathStage">
-      <div id="breathBox"><div id="breathCircle"></div></div>
-      <div id="breathPhase">Ready when you are</div>
+      <div id="breathBox">
+        <svg viewBox="0 0 200 200" width="220" height="220">
+          <circle cx="100" cy="100" r="80" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="10"/>
+          <circle id="breathRing" cx="100" cy="100" r="80" fill="none" stroke="white" stroke-width="10"
+            stroke-dasharray="${BREATH_C.toFixed(2)}" stroke-dashoffset="${BREATH_C.toFixed(2)}"
+            stroke-linecap="round" transform="rotate(-90 100 100)"/>
+          <text id="breathPhaseText" x="100" y="90" text-anchor="middle"
+            font-family="inherit" font-size="15" font-weight="600" fill="rgba(255,255,255,0.9)">Ready</text>
+          <text id="breathCountText" x="100" y="128" text-anchor="middle"
+            font-family="inherit" font-size="44" font-weight="700" fill="white"></text>
+        </svg>
+      </div>
+      <div id="breathPhase" style="display:none"></div>
       <div class="tempo">Pace: <b id="tempoVal">4</b> sec per phase
         <input type="range" id="tempoRange" min="3" max="6" step="0.5" value="4">
       </div>
@@ -813,39 +833,46 @@ function openBreath() {
       <button class="btn" id="breathStart">Start</button>
     </div>`;
   document.getElementById("app").appendChild(ov);
-  document.getElementById("tempoRange").oninput = (ev) => { document.getElementById("tempoVal").textContent = ev.target.value; };
+  document.getElementById("tempoRange").oninput = ev => document.getElementById("tempoVal").textContent = ev.target.value;
   document.getElementById("breathStart").onclick = toggleBreath;
 }
 function toggleBreath() {
   const btn = document.getElementById("breathStart");
-  if (breathTimer) { stopBreathCycle(); btn.textContent = "Start"; document.getElementById("breathPhase").textContent = "Paused. Continue when you're ready"; return; }
+  if (breathRaf) {
+    stopBreathCycle();
+    btn.textContent = "Continue";
+    const pt = document.getElementById("breathPhaseText");
+    if (pt) pt.textContent = "Paused";
+    const ct = document.getElementById("breathCountText");
+    if (ct) ct.textContent = "";
+    return;
+  }
   btn.textContent = "Stop";
   runBreathCycle();
 }
 function runBreathCycle() {
-  const circle = document.getElementById("breathCircle");
-  const phaseEl = document.getElementById("breathPhase");
-  const phases = [
-    { name: "Breathe in", scale: 1.8 },
-    { name: "Hold", scale: 1.8 },
-    { name: "Breathe out", scale: 1.0 },
-    { name: "Hold", scale: 1.0 },
-  ];
-  let i = 0;
-  const step = () => {
-    if (!document.getElementById("breathCircle")) return stopBreathCycle();
+  let phaseStart = null;
+  const tick = ts => {
+    const ring = document.getElementById("breathRing");
+    if (!ring) { breathRaf = null; return; }
     const tempo = parseFloat(document.getElementById("tempoRange").value) * 1000;
-    const ph = phases[i % 4];
-    phaseEl.textContent = ph.name;
-    circle.style.transition = `transform ${tempo}ms ease-in-out`;
-    circle.style.transform = `scale(${ph.scale})`;
-    i++;
-    if (i === 8) completeExercise("breath");
-    breathTimer = setTimeout(step, tempo);
+    if (phaseStart === null) phaseStart = ts;
+    const t = Math.min((ts - phaseStart) / tempo, 1);
+    const ph = BREATH_PHASES[breathPhaseIdx % 4];
+    ring.style.strokeDashoffset = ph.startOff + (ph.endOff - ph.startOff) * t;
+    document.getElementById("breathPhaseText").textContent = ph.name;
+    const secs = Math.ceil((tempo - (ts - phaseStart)) / 1000);
+    document.getElementById("breathCountText").textContent = secs > 0 ? secs : "";
+    if (t >= 1) {
+      breathPhaseIdx++;
+      phaseStart = null;
+      if (breathPhaseIdx >= 8) { completeExercise("breath"); stopBreathCycle(); return; }
+    }
+    breathRaf = requestAnimationFrame(tick);
   };
-  step();
+  breathRaf = requestAnimationFrame(tick);
 }
-function stopBreathCycle() { if (breathTimer) { clearTimeout(breathTimer); breathTimer = null; } }
+function stopBreathCycle() { if (breathRaf) { cancelAnimationFrame(breathRaf); breathRaf = null; } }
 function closeBreath() { stopBreathCycle(); const ov = document.getElementById("breathOverlay"); if (ov) ov.remove(); }
 
 function dailyPrompt() {
@@ -991,6 +1018,26 @@ function renderProfile() {
     }).join("")}</div>
     <div class="chartLabels"><span>${labels[0]}</span><span>today</span></div>
   </div>`;
+
+  html += `<h2>Mood diary</h2>`;
+  const moodDays = lastNDates(30).reverse().filter(d => state.moods[d]).slice(0, 10);
+  if (moodDays.length === 0) {
+    html += `<div class="card"><div class="empty">No mood entries yet. Log your first mood on the Home tab.</div></div>`;
+  } else {
+    html += moodDays.map(d => {
+      const m = state.moods[d];
+      const mood = MOODS.find(x => x.level === m.level);
+      const today = todayStr(), yday = daysAgo(1);
+      const dateLabel = d === today ? "Today" : d === yday ? "Yesterday" : new Date(d + "T12:00:00").toLocaleDateString("en", { weekday: "long", month: "short", day: "numeric" });
+      return `<div class="card" style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:0.8rem;color:var(--text-soft)">${dateLabel}</span>
+          <span>${mood ? mood.emoji : ""} <b style="font-size:0.85rem;color:var(--teal-dark)">${mood ? mood.label : ""}</b></span>
+        </div>
+        ${m.note ? `<p style="font-size:0.85rem;color:var(--text);line-height:1.5;margin:8px 0 0;padding-top:8px;border-top:1px solid var(--border)">${esc(m.note)}</p>` : ""}
+      </div>`;
+    }).join("");
+  }
 
   html += `<h2>My posts</h2>`;
   if (state.posts.length === 0) {
