@@ -282,7 +282,7 @@ const REFLECTIONS = [
 ];
 const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
 
-const IS_PRO = false;
+const IS_PRO = true;
 const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
 
 const SOCIAL_GOALS = [
@@ -485,6 +485,7 @@ let mythOffset = 0;
 let articleOffset = 0;
 let researchOffset = 0;
 let currentChannel = "All";
+let communityPage = 0;
 let focusNote = false;
 const main = document.getElementById("main");
 
@@ -1040,11 +1041,13 @@ function renderCommunity() {
   html += `<div style="text-align:right;margin-bottom:10px">
     <button class="btn small secondary" onclick="openComposer()">+ New post</button></div>`;
 
+  const PAGE_SIZE = 6;
   const all = [...state.posts.map(p => ({ ...p, mine: true })), ...SEED_POSTS];
   const filtered = currentChannel === "All" ? all : all.filter(p => p.channel === currentChannel);
   if (filtered.length === 0) html += `<div class="empty">No posts in this channel yet. Be the first.</div>`;
-  html += filtered.map((p, idx) => {
-    if (!IS_PRO && idx >= 5) return '';
+  const pageStart = IS_PRO ? communityPage * PAGE_SIZE : 0;
+  const pagePosts = filtered.slice(pageStart, IS_PRO ? pageStart + PAGE_SIZE : 5);
+  html += pagePosts.map(p => {
     const r = state.reactions[p.id] || {};
     const sup = (p.support || 0) + (r.support ? 1 : 0);
     const bt = (p.beenThere || 0) + (r.beenThere ? 1 : 0);
@@ -1073,10 +1076,19 @@ function renderCommunity() {
       <button class="btn" style="width:100%" onclick="showProModal()">Go Pro</button>
     </div>`;
   }
+  if (IS_PRO && filtered.length > PAGE_SIZE) {
+    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 4px;gap:12px">
+      <button class="btn secondary" onclick="setCommunityPage(${communityPage - 1})" style="flex:1${communityPage === 0 ? ';opacity:.35;pointer-events:none' : ''}">← Previous</button>
+      <span style="color:var(--text-soft);font-size:0.85rem;white-space:nowrap">${communityPage + 1} of ${totalPages}</span>
+      <button class="btn secondary" onclick="setCommunityPage(${communityPage + 1})" style="flex:1${communityPage >= totalPages - 1 ? ';opacity:.35;pointer-events:none' : ''}">Next →</button>
+    </div>`;
+  }
   main.innerHTML = html;
 }
 
-function setChannel(c) { currentChannel = c; render(); }
+function setChannel(c) { currentChannel = c; communityPage = 0; render(); }
+function setCommunityPage(p) { communityPage = p; render(); }
 function react(postId, kind) { const r = state.reactions[postId] || (state.reactions[postId] = {}); r[kind] = !r[kind]; save(); render(); }
 const _origTexts = {};
 async function translatePost(id) {
