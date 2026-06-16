@@ -407,7 +407,7 @@ const MYTHS = [
 ];
 
 const RESEARCH = [
-  { title: "Men are 3× more likely to die by suicide", body: "In most Western countries, men account for around 75% of all suicides. Research points to emotional suppression, reluctance to seek help, and use of more lethal methods. Improved social connection and earlier help-seeking are the most effective protective factors.", source: "WHO, 2023", url: "https://www.who.int/news-room/fact-sheets/detail/suicide" },
+  { title: "Men benefit from therapy just as much as women — when they try it", body: "Large-scale meta-analyses find no significant difference in therapy outcomes between men and women for anxiety and depression. Men who engage with treatment recover at the same rate. The gap is not in effectiveness — it's in the decision to reach out.", source: "American Journal of Men's Health", url: "https://journals.sagepub.com/home/jmh" },
   { title: "Exercise works as well as medication for mild depression", body: "A 2023 meta-analysis of 218 studies found that physical activity is as effective as antidepressants for mild to moderate depression. Even 20 minutes of moderate exercise three times a week produced measurable improvements in mood within four weeks.", source: "British Journal of Sports Medicine, 2023", url: "https://bjsm.bmj.com/content/57/18/1203" },
   { title: "Men with close friendships live longer", body: "Harvard's 85-year study on adult development found that the quality of close relationships is the single strongest predictor of health and happiness in later life — stronger than wealth, IQ, or social class. Men with at least one close confidant reported significantly better mental and physical health.", source: "Harvard Study of Adult Development", url: "https://www.adultdevelopmentstudy.org/" },
   { title: "Loneliness is as harmful as smoking 15 cigarettes a day", body: "Research from Brigham Young University found that loneliness increases the risk of early death by 26%. For men — who are more likely to lose social connections after leaving work or education — the risk is particularly high.", source: "Brigham Young University, 2015", url: "https://news.byu.edu/news/social-isolation-loneliness-worse-you-smoking-15-cigarettes-day" },
@@ -1106,7 +1106,7 @@ function submitPost() {
       </div>
       <a class="callBtn urgent" href="tel:911"><span>Emergency services<small>Call your local emergency number</small></span><span>911 / 999 / 112</span></a>
       <a class="callBtn" href="tel:116123"><span>Samaritans<small>Free &middot; available 24/7 &middot; UK &amp; Ireland</small></span><span>116 123</span></a>
-      <a class="callBtn" href="tel:988"><span>988 Suicide &amp; Crisis Lifeline<small>Call or text &middot; US</small></span><span>988</span></a>
+      <a class="callBtn" href="tel:988"><span>988 Crisis Lifeline<small>Call or text &middot; US</small></span><span>988</span></a>
       <button class="btn secondary" style="width:100%;margin-top:6px" onclick="finalizePost()">Publish my post</button>
     `);
     pendingPost = { text, channel, prompt: composerPrompt };
