@@ -1097,11 +1097,12 @@ function renderCommunity() {
         <span>${p.channel} &middot; ${p.age || "now"}</span></div>
       </div>
       ${p.prompt ? `<div style="background:var(--teal-light);border-left:3px solid var(--teal);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:0.82rem;color:var(--teal-dark);"><span style="font-weight:700;font-size:0.7rem;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:3px">Today's prompt</span>${esc(p.prompt)}</div>` : ""}
-      <div class="body">${esc(p.text)}</div>
+      <div class="body" id="body_${p.id}">${esc(p.text)}</div>
       <div class="foot">
         <button class="${r.support ? "on" : ""}" onclick="react('${p.id}','support')">&#129309; Support &middot; ${sup}</button>
         <button class="${r.beenThere ? "on" : ""}" onclick="react('${p.id}','beenThere')">&#129730; I've been there &middot; ${bt}</button>
         ${p.mine ? `<button class="report" style="color:#b9503c" onclick="deletePost('${p.id}')">Delete</button>` : `<button class="report" onclick="reportPost('${p.id}')">Report</button>`}
+        <button id="trbtn_${p.id}" onclick="translatePost('${p.id}')" style="color:var(--teal)">Translate</button>
       </div>
     </div>`;
   }).join("");
@@ -1110,6 +1111,32 @@ function renderCommunity() {
 
 function setChannel(c) { currentChannel = c; render(); }
 function react(postId, kind) { const r = state.reactions[postId] || (state.reactions[postId] = {}); r[kind] = !r[kind]; save(); render(); }
+const _origTexts = {};
+async function translatePost(id) {
+  const el = document.getElementById('body_' + id);
+  const btn = document.getElementById('trbtn_' + id);
+  if (!el || !btn) return;
+  if (!_origTexts[id]) _origTexts[id] = el.textContent;
+  if (btn.dataset.on === '1') {
+    el.textContent = _origTexts[id];
+    btn.dataset.on = '0';
+    btn.textContent = 'Translate';
+    return;
+  }
+  btn.textContent = '…';
+  btn.disabled = true;
+  const lang = (navigator.language || 'en').split('-')[0];
+  try {
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(_origTexts[id])}&langpair=auto|${lang}`);
+    const d = await res.json();
+    if (d.responseStatus === 200) {
+      el.textContent = d.responseData.translatedText;
+      btn.dataset.on = '1';
+      btn.textContent = 'Show original';
+    } else { toast('Could not translate.'); btn.textContent = 'Translate'; }
+  } catch(e) { toast('Could not translate.'); btn.textContent = 'Translate'; }
+  btn.disabled = false;
+}
 function reportPost(postId) {
   openModal(`
     <h3>Report post</h3>
