@@ -28,12 +28,12 @@
     --text-soft: #6b7278;
     --border: #e6e3df;
     --radius: 16px;
-    --shadow: 0 1px 4px rgba(40, 45, 50, 0.08);
+    --shadow: 0 1px 3px rgba(40, 45, 50, 0.06), 0 4px 14px rgba(40, 45, 50, 0.09);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: #dcdad6;
     color: var(--text);
     display: flex;
@@ -53,9 +53,10 @@
   h1 { font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 1.45rem; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.2px; }
   h2 { font-size: 1.05rem; font-weight: 600; margin: 22px 0 10px; }
   .sub { color: var(--text-soft); font-size: 0.9rem; margin-bottom: 18px; }
-  .card { background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
-  .btn { display: inline-block; border: none; border-radius: 12px; padding: 11px 18px; font-size: 0.95rem; font-weight: 600; cursor: pointer; background: var(--teal); color: #fff; font-family: inherit; }
-  .btn:active { background: var(--teal-dark); }
+  .card { background: var(--card); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); margin-bottom: 14px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .card:active { transform: scale(0.985); box-shadow: 0 1px 4px rgba(40,45,50,0.05); }
+  .btn { display: inline-block; border: none; border-radius: 12px; padding: 11px 18px; font-size: 0.95rem; font-weight: 600; cursor: pointer; background: var(--teal); color: #fff; font-family: inherit; transition: transform 0.12s ease; }
+  .btn:active { background: var(--teal-dark); transform: scale(0.96); }
   .btn.secondary { background: var(--teal-light); color: var(--teal-dark); }
   .btn.ghost { background: transparent; color: var(--teal-dark); padding: 8px 10px; }
   .btn.small { padding: 7px 12px; font-size: 0.85rem; }
@@ -66,8 +67,9 @@
   #sosBtn { background: var(--coral-light); color: #b9503c; border: 1px solid #f2c4b8; border-radius: 999px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit; }
   nav { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; padding: 6px 4px calc(8px + env(safe-area-inset-bottom)); }
   nav button { flex: 1; background: none; border: none; font-family: inherit; font-size: 0.68rem; color: var(--text-soft); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; }
-  nav button .ico { font-size: 1.25rem; line-height: 1; }
+  nav button .ico { font-size: 1.25rem; line-height: 1; border-radius: 8px; padding: 4px 12px; transition: background 0.18s; }
   nav button.active { color: var(--teal-dark); font-weight: 700; }
+  nav button.active .ico { background: var(--teal-light); }
   .moodRow { display: flex; gap: 10px; justify-content: space-between; margin: 12px 0 4px; }
   .moodRow button { flex: 1; font-size: 1.7rem; background: var(--bg); border: 2px solid transparent; border-radius: 14px; padding: 10px 0 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: inherit; }
   .moodRow button span { font-size: 0.65rem; color: var(--text-soft); }
@@ -135,7 +137,7 @@
   .switch input:checked + .sl { background: var(--teal); }
   .switch input:checked + .sl::before { transform: translateX(19px); }
   .progBar { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; margin: 8px 0 4px; }
-  .progBar div { height: 100%; background: var(--teal); border-radius: 999px; }
+  .progBar div { height: 100%; background: linear-gradient(90deg, var(--teal-dark), var(--teal)); border-radius: 999px; }
   .articleBody { font-size: 0.95rem; line-height: 1.6; }
   .articleBody p { margin-bottom: 12px; }
   .feedItem { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; padding: 9px 0; border-bottom: 1px solid var(--border); }
