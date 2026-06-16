@@ -1043,7 +1043,8 @@ function renderCommunity() {
   const all = [...state.posts.map(p => ({ ...p, mine: true })), ...SEED_POSTS];
   const filtered = currentChannel === "All" ? all : all.filter(p => p.channel === currentChannel);
   if (filtered.length === 0) html += `<div class="empty">No posts in this channel yet. Be the first.</div>`;
-  html += filtered.map(p => {
+  html += filtered.map((p, idx) => {
+    if (!IS_PRO && idx >= 5) return '';
     const r = state.reactions[p.id] || {};
     const sup = (p.support || 0) + (r.support ? 1 : 0);
     const bt = (p.beenThere || 0) + (r.beenThere ? 1 : 0);
@@ -1063,6 +1064,15 @@ function renderCommunity() {
       </div>
     </div>`;
   }).join("");
+  if (!IS_PRO && filtered.length > 5) {
+    const more = filtered.length - 5;
+    html += `<div class="card" style="text-align:center;padding:28px 20px">
+      <div style="font-size:2rem;margin-bottom:10px">🔒</div>
+      <b style="font-size:1rem">${more} more post${more !== 1 ? 's' : ''} in this feed</b>
+      <p style="color:var(--text-soft);font-size:0.88rem;margin:8px 0 18px">Upgrade to Pro to read the full community feed.</p>
+      <button class="btn" style="width:100%" onclick="showProModal()">Go Pro</button>
+    </div>`;
+  }
   main.innerHTML = html;
 }
 
