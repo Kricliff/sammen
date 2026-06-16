@@ -282,7 +282,7 @@ const REFLECTIONS = [
 ];
 const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
 
-const IS_PRO = true;
+let IS_PRO = false;
 const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
 
 const SOCIAL_GOALS = [
@@ -532,12 +532,54 @@ function lockedCard(title, desc, icon) {
 function showProModal() {
   openModal(`
     <h3>Together Pro</h3>
-    <div class="sub" style="margin-bottom:18px">Full access. Subscription coming soon.</div>
-    ${['All exercises and audio guides','All 30-day programmes','Mood chart over 30 days','Journal with unlimited space','Sleep and energy log','Weekly structured review','New content every month'].map(f =>
+    <div class="sub" style="margin-bottom:18px">Unlock everything. Cancel anytime.</div>
+    ${['All exercises and audio guides','All 30-day programmes','Mood chart — 30 days','Unlimited journal','Sleep and energy log','Weekly structured review','New content every month'].map(f =>
       `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.9rem"><span style="color:var(--teal);font-weight:700;margin-right:8px">✓</span>${f}</div>`
     ).join('')}
-    <button class="btn" style="width:100%;margin-top:18px" onclick="closeModal()">Got it. Looking forward to it</button>
+    <button class="btn" style="width:100%;margin-top:18px" onclick="purchasePro()">Subscribe</button>
+    <button class="btn secondary" style="width:100%;margin-top:10px" onclick="restorePurchases()">Restore previous purchase</button>
+    <div style="font-size:0.72rem;color:var(--text-soft);text-align:center;margin-top:12px;line-height:1.5">Payment charged to your Apple ID. Renews automatically. Cancel anytime in Settings → Apple ID → Subscriptions.</div>
   `);
+}
+async function initRevenueCat() {
+  const RC = window.Capacitor?.Plugins?.Purchases;
+  if (!RC) return;
+  try {
+    await RC.configure({ apiKey: 'appcf2bf26f0b' });
+    const { customerInfo } = await RC.getCustomerInfo();
+    IS_PRO = !!customerInfo.entitlements.active['pro'];
+    if (IS_PRO) render();
+  } catch(e) { console.warn('RevenueCat:', e); }
+}
+async function purchasePro() {
+  const RC = window.Capacitor?.Plugins?.Purchases;
+  if (!RC) { toast("Purchases not available here."); return; }
+  const btn = document.querySelector('.modal .btn');
+  if (btn) { btn.disabled = true; btn.textContent = "Opening…"; }
+  try {
+    const { current } = await RC.getOfferings();
+    if (!current?.availablePackages?.length) {
+      toast("No subscription available right now.");
+      if (btn) { btn.disabled = false; btn.textContent = "Subscribe"; }
+      return;
+    }
+    const { customerInfo } = await RC.purchasePackage({ aPackage: current.availablePackages[0] });
+    IS_PRO = !!customerInfo.entitlements.active['pro'];
+    if (IS_PRO) { closeModal(); toast("Welcome to Pro!"); render(); }
+  } catch(e) {
+    if (e.code !== 'PURCHASE_CANCELLED') toast("Purchase failed. Please try again.");
+    if (btn) { btn.disabled = false; btn.textContent = "Subscribe"; }
+  }
+}
+async function restorePurchases() {
+  const RC = window.Capacitor?.Plugins?.Purchases;
+  if (!RC) return;
+  try {
+    const { customerInfo } = await RC.restorePurchases();
+    IS_PRO = !!customerInfo.entitlements.active['pro'];
+    toast(IS_PRO ? "Pro access restored." : "No active subscription found.");
+    if (IS_PRO) { closeModal(); render(); }
+  } catch(e) { toast("Could not restore. Please try again."); }
 }
 function socialGoalCard() {
   const wk = weekKey();
@@ -1469,6 +1511,7 @@ render();
   const sp = document.getElementById("splash");
   if (sp) setTimeout(() => sp.remove(), 2850);
   if (state.settings.notifications) setTimeout(setupDailyNotifications, 3000);
+  initRevenueCat();
 })();
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
