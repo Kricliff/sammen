@@ -1105,8 +1105,9 @@ async function translatePost(id) {
   btn.textContent = '…';
   btn.disabled = true;
   const lang = (navigator.language || 'en').split('-')[0];
+  if (lang === 'en') { btn.textContent = 'Translate'; btn.disabled = false; return; }
   try {
-    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(_origTexts[id])}&langpair=auto|${lang}`);
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(_origTexts[id])}&langpair=en|${lang}`);
     const d = await res.json();
     if (d.responseStatus === 200) {
       el.textContent = d.responseData.translatedText;
