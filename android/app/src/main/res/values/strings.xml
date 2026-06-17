@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Together Men\'s Mental Health</string>
+    <string name="title_activity_main">Together Men\'s Mental Health</string>
+    <string name="package_name">com.kricliff.together</string>
+    <string name="custom_url_scheme">com.kricliff.together</string>
+</resources>
