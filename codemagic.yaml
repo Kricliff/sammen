@@ -42,8 +42,6 @@ workflows:
     name: Together Android Google Play
     max_build_duration: 120
     instance_type: mac_mini_m1
-    integrations:
-      google_play: Codemagic
     environment:
       android_signing:
         - together_keystore
