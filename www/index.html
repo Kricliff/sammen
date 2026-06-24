@@ -530,14 +530,15 @@ function lockedCard(title, desc, icon) {
     <div class="sub">${desc}</div>
   </div>`;
 }
-function showProModal() {
+let _selectedProPkg = 0;
+async function showProModal() {
   openModal(`
     <h3>Together Pro</h3>
-    <div class="sub" style="margin-bottom:18px">Unlock everything. Cancel anytime.</div>
+    <div id="pro-options" style="margin:14px 0 6px"><div class="sub" style="text-align:center">Loading pricing…</div></div>
     ${['All exercises and audio guides','All 30-day programmes','Mood chart — 30 days','Unlimited journal','Sleep and energy log','Weekly structured review','New content every month'].map(f =>
       `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.9rem"><span style="color:var(--teal);font-weight:700;margin-right:8px">✓</span>${f}</div>`
     ).join('')}
-    <button class="btn" style="width:100%;margin-top:18px" onclick="purchasePro()">Subscribe</button>
+    <button class="btn" id="pro-btn" style="width:100%;margin-top:18px" onclick="purchasePro()" disabled>Loading…</button>
     <button class="btn secondary" style="width:100%;margin-top:10px" onclick="restorePurchases()">Restore previous purchase</button>
     <div style="font-size:0.72rem;color:var(--text-soft);text-align:center;margin-top:12px;line-height:1.5">Payment charged to your Apple ID. Renews automatically. Cancel anytime in Settings → Apple ID → Subscriptions.</div>
     <div style="font-size:0.72rem;color:var(--text-soft);text-align:center;margin-top:10px;line-height:1.6">
@@ -546,6 +547,42 @@ function showProModal() {
       <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" style="color:var(--teal)">Terms of Use</a>
     </div>
   `);
+  const RC = window.Capacitor?.Plugins?.Purchases;
+  const optEl = document.getElementById('pro-options');
+  const btn = document.getElementById('pro-btn');
+  if (!RC) {
+    if (optEl) optEl.innerHTML = `<div class="sub" style="text-align:center;color:var(--text-soft)">Available in the App Store version.</div>`;
+    return;
+  }
+  try {
+    const { current } = await RC.getOfferings();
+    const pkgs = current?.availablePackages || [];
+    if (!pkgs.length) {
+      if (optEl) optEl.innerHTML = `<div class="sub" style="text-align:center;color:var(--text-soft)">No subscription available right now.</div>`;
+      return;
+    }
+    _selectedProPkg = 0;
+    if (optEl) optEl.innerHTML = pkgs.map((pkg, i) => {
+      const price = pkg.product.priceString;
+      const isAnnual = pkg.packageType === 'ANNUAL';
+      const period = isAnnual ? 'year' : 'month';
+      const label = isAnnual ? 'Yearly' : 'Monthly';
+      return `<div onclick="selectProPkg(${i})" id="pkg-${i}" style="cursor:pointer;border:1.5px solid ${i===0?'var(--teal)':'var(--border)'};border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+        <div><b style="font-size:0.95rem">${label}</b><div style="font-size:0.78rem;color:var(--text-soft)">Auto-renews every ${period}. Cancel anytime.</div></div>
+        <b style="color:var(--teal)">${price}</b>
+      </div>`;
+    }).join('');
+    if (btn) { btn.textContent = 'Subscribe'; btn.disabled = false; }
+  } catch(e) {
+    if (optEl) optEl.innerHTML = `<div class="sub" style="text-align:center;color:var(--text-soft)">Could not load pricing. Please try again.</div>`;
+    if (btn) { btn.textContent = 'Subscribe'; btn.disabled = false; }
+  }
+}
+function selectProPkg(i) {
+  _selectedProPkg = i;
+  document.querySelectorAll('[id^="pkg-"]').forEach((el, idx) => {
+    el.style.borderColor = idx === i ? 'var(--teal)' : 'var(--border)';
+  });
 }
 async function initRevenueCat() {
   const RC = window.Capacitor?.Plugins?.Purchases;
@@ -569,7 +606,7 @@ async function purchasePro() {
       if (btn) { btn.disabled = false; btn.textContent = "Subscribe"; }
       return;
     }
-    const { customerInfo } = await RC.purchasePackage({ aPackage: current.availablePackages[0] });
+    const { customerInfo } = await RC.purchasePackage({ aPackage: current.availablePackages[_selectedProPkg || 0] });
     IS_PRO = !!customerInfo.entitlements.active['pro'];
     if (IS_PRO) { closeModal(); toast("Welcome to Pro!"); render(); }
   } catch(e) {
