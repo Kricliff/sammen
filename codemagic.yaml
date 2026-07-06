@@ -10,12 +10,12 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.kricliff.together
       node: latest
-      xcode: latest
+      xcode: 16
     scripts:
       - name: Install npm dependencies
         script: npm install --legacy-peer-deps
-      - name: Capacitor sync
-        script: npx cap sync ios
+      - name: Capacitor copy
+        script: npx cap copy ios
       - name: Install CocoaPods
         script: |
           cd ios/App

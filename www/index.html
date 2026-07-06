@@ -199,6 +199,10 @@
   <nav id="nav"></nav>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
 <script>
 "use strict";
 
@@ -239,6 +243,61 @@ function loadState() {
   return structuredClone(defaultState);
 }
 function save() { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+// Firebase / Firestore community
+let communityPosts = [];
+let communityLoaded = false;
+let communityUnsubscribe = null;
+let fbAuth = null, fbDb = null, fbUser = null;
+
+function formatAge(ts) {
+  if (!ts || !ts.toDate) return 'now';
+  const diff = Math.floor((Date.now() - ts.toDate().getTime()) / 1000);
+  if (diff < 60) return 'now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h';
+  return Math.floor(diff / 86400) + 'd';
+}
+
+async function initFirebase() {
+  if (typeof firebase === 'undefined') { communityLoaded = true; return; }
+  try {
+    firebase.initializeApp({
+      apiKey: "AIzaSyC0ylzSJstFSU30DGNTMbVPYmdqkNZnghQ",
+      authDomain: "together-4188b.firebaseapp.com",
+      projectId: "together-4188b",
+      storageBucket: "together-4188b.firebasestorage.app",
+      messagingSenderId: "586820726250",
+      appId: "1:586820726250:web:14cc5e82c3d70b7bb05693"
+    });
+    fbAuth = firebase.auth();
+    fbDb = firebase.firestore();
+    const cred = await fbAuth.signInAnonymously();
+    fbUser = cred.user;
+    setupCommunityListener();
+  } catch(e) {
+    console.warn('Firebase init failed:', e);
+    communityLoaded = true;
+    if (currentTab === 'community') render();
+  }
+}
+
+function setupCommunityListener() {
+  if (communityUnsubscribe) communityUnsubscribe();
+  communityUnsubscribe = fbDb.collection('posts')
+    .orderBy('createdAt', 'desc')
+    .limit(100)
+    .onSnapshot(snap => {
+      communityPosts = snap.docs.map(doc => {
+        const d = doc.data();
+        return { id: doc.id, who: d.who, channel: d.channel, text: d.text,
+          prompt: d.prompt || null, support: d.support || 0, beenThere: d.beenThere || 0,
+          age: formatAge(d.createdAt), mine: d.userId === fbUser?.uid };
+      });
+      communityLoaded = true;
+      if (currentTab === 'community') render();
+    }, () => { communityLoaded = true; if (currentTab === 'community') render(); });
+}
 
 const MOODS = [
   { level: 1, emoji: "\u{1F4A7}", label: "Heavy" },
@@ -761,8 +820,9 @@ function renderHome() {
 
   html += `<h2>Latest from Community</h2><div class="card">`;
   const feedItems = [];
-  if (state.posts.length > 0) {
-    feedItems.push({ dot: "💬", text: `Your post has received ${3 + state.posts.length * 2} support reactions` });
+  const myPostCount = communityPosts.filter(p => p.mine).length;
+  if (myPostCount > 0) {
+    feedItems.push({ dot: "💬", text: `Your post has received ${3 + myPostCount * 2} support reactions` });
     feedItems.push({ dot: "🫂", text: `2 men tapped "I've been there" on your post` });
   }
   feedItems.push({ dot: "📝", text: `New prompt in the feed: "${dailyPrompt()}"` });
@@ -1121,6 +1181,7 @@ function renderCommunity() {
   let html = `<h1>Community</h1><div class="sub">Anonymous. Open. Men who get it.</div>`;
   html += `<div class="chips">${CHANNELS.map(c =>
     `<button class="${c === currentChannel ? "active" : ""}" onclick="setChannel('${c}')">${c}</button>`).join("")}</div>`;
+  if (!communityLoaded) html += `<div style="text-align:center;padding:6px 0 2px;color:var(--text-soft);font-size:0.82rem">Loading community feed…</div>`;
   html += `<div class="card promptCard">
     <span class="tag">TODAY'S PROMPT</span>
     <p>${dailyPrompt()}</p>
@@ -1130,7 +1191,7 @@ function renderCommunity() {
     <button class="btn small secondary" onclick="openComposer()">+ New post</button></div>`;
 
   const PAGE_SIZE = 6;
-  const all = [...state.posts.map(p => ({ ...p, mine: true })), ...SEED_POSTS];
+  const all = communityLoaded && communityPosts.length > 0 ? communityPosts : SEED_POSTS;
   const filtered = currentChannel === "All" ? all : all.filter(p => p.channel === currentChannel);
   if (filtered.length === 0) html += `<div class="empty">No posts in this channel yet. Be the first.</div>`;
   const pageStart = IS_PRO ? communityPage * PAGE_SIZE : 0;
@@ -1177,7 +1238,20 @@ function renderCommunity() {
 
 function setChannel(c) { currentChannel = c; communityPage = 0; render(); }
 function setCommunityPage(p) { communityPage = p; render(); }
-function react(postId, kind) { const r = state.reactions[postId] || (state.reactions[postId] = {}); r[kind] = !r[kind]; save(); render(); }
+async function react(postId, kind) {
+  const r = state.reactions[postId] || (state.reactions[postId] = {});
+  const wasOn = r[kind];
+  r[kind] = !wasOn;
+  save(); render();
+  if (fbDb && communityPosts.some(p => p.id === postId)) {
+    const field = kind === 'support' ? 'support' : 'beenThere';
+    try {
+      await fbDb.collection('posts').doc(postId).update({
+        [field]: firebase.firestore.FieldValue.increment(wasOn ? -1 : 1)
+      });
+    } catch(e) { /* silent */ }
+  }
+}
 const _origTexts = {};
 async function translatePost(id) {
   const el = document.getElementById('body_' + id);
@@ -1257,10 +1331,27 @@ function submitPost() {
 }
 let pendingPost = null;
 function finalizePost() { if (pendingPost) { doPublish(pendingPost.text, pendingPost.channel, pendingPost.prompt); pendingPost = null; } }
-function doPublish(text, channel, prompt) {
-  state.posts.unshift({ id: "u" + Date.now(), who: state.pseudonym, channel, text, prompt: prompt || null, support: 0, beenThere: 0, comments: 0, age: "now" });
-  save(); closeModal();
-  currentTab = "community"; render();
+async function doPublish(text, channel, prompt) {
+  closeModal();
+  if (fbDb && fbUser) {
+    try {
+      await fbDb.collection('posts').add({
+        who: state.pseudonym, userId: fbUser.uid,
+        channel, text, prompt: prompt || null,
+        support: 0, beenThere: 0,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } catch(e) {
+      console.warn('Post failed:', e);
+      toast('Could not post. Check your connection.');
+      return;
+    }
+  } else {
+    communityPosts.unshift({ id: 'u' + Date.now(), who: state.pseudonym, channel, text,
+      prompt: prompt || null, support: 0, beenThere: 0, age: 'now', mine: true });
+    render();
+  }
+  currentTab = 'community';
   toast("Posted. You're not alone in this.");
 }
 
@@ -1335,7 +1426,7 @@ function renderProfile() {
   html += `<div class="statRow" style="margin-bottom:12px">
     <div class="card"><div class="num">${st}</div><div class="lbl">day streak</div></div>
     <div class="card"><div class="num">${completedCount}</div><div class="lbl">exercises done</div></div>
-    <div class="card"><div class="num">${state.posts.length}</div><div class="lbl">posts shared</div></div>
+    <div class="card"><div class="num">${communityPosts.filter(p => p.mine).length}</div><div class="lbl">posts shared</div></div>
   </div>`;
   const activeProgs = state.activePrograms || [];
   if (activeProgs.length > 0) {
@@ -1431,12 +1522,13 @@ function renderProfile() {
 function openMyPosts() { currentSubView = "my-posts"; render(); main.scrollTop = 0; }
 function closeSubView() { currentSubView = null; render(); main.scrollTop = 0; }
 function renderMyPosts() {
+  const myPosts = communityPosts.filter(p => p.mine);
   let html = `<button onclick="closeSubView()" style="background:none;border:none;font-family:inherit;font-size:0.92rem;color:var(--teal-dark);cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:6px">← Back to profile</button>
-    <h1>My posts</h1><div class="sub">${state.posts.length} post${state.posts.length !== 1 ? "s" : ""} shared</div>`;
-  if (state.posts.length === 0) {
+    <h1>My posts</h1><div class="sub">${myPosts.length} post${myPosts.length !== 1 ? "s" : ""} shared</div>`;
+  if (myPosts.length === 0) {
     html += `<div class="card"><div class="empty">You haven't shared anything yet. That's completely fine.</div></div>`;
   } else {
-    html += state.posts.map(p => `<div class="card" style="margin-bottom:10px">
+    html += myPosts.map(p => `<div class="card" style="margin-bottom:10px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <span class="tag">${esc(p.channel)}</span>
         <span style="font-size:0.78rem;color:var(--text-soft)">${p.age || "now"}</span>
@@ -1458,9 +1550,19 @@ function deletePost(id) {
     <button class="btn secondary" style="width:100%" onclick="closeModal()">Cancel</button>
   `);
 }
-function confirmDeletePost(id) {
-  state.posts = state.posts.filter(p => p.id !== id);
-  save(); closeModal(); render();
+async function confirmDeletePost(id) {
+  closeModal();
+  if (fbDb && communityPosts.some(p => p.id === id)) {
+    try {
+      await fbDb.collection('posts').doc(id).delete();
+    } catch(e) {
+      toast('Could not delete. Check your connection.');
+      return;
+    }
+  } else {
+    communityPosts = communityPosts.filter(p => p.id !== id);
+    render();
+  }
   toast("Post deleted.");
 }
 
@@ -1607,6 +1709,7 @@ render();
   if (sp) setTimeout(() => sp.remove(), 2850);
   if (state.settings.notifications) setTimeout(setupDailyNotifications, 3000);
   initRevenueCat();
+  initFirebase();
 })();
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
