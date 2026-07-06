@@ -16,6 +16,10 @@ workflows:
         script: npm install --legacy-peer-deps
       - name: Capacitor sync
         script: npx cap sync ios
+      - name: Install CocoaPods
+        script: |
+          cd ios/App
+          pod install --repo-update
       - name: Set build number
         script: |
           cd ios/App
@@ -25,7 +29,7 @@ workflows:
       - name: Build IPA
         script: |
           xcode-project build-ipa \
-            --project "ios/App/App.xcodeproj" \
+            --workspace "ios/App/App.xcworkspace" \
             --scheme "App"
       - name: Upload to TestFlight
         script: |
