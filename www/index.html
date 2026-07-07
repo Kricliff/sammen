@@ -488,7 +488,7 @@ const CRISIS_PATTERNS = /suicide|take my (own )?life|don't want to (be|live|exis
 // Note: this deliberately does NOT block a person's own distress (handled separately by CRISIS_PATTERNS with support resources).
 const OBJECTIONABLE_PATTERNS = /\b(n[i1]gg(er|a)|f[a4]gg?ots?|r[e3]tard(ed)?|k[i1]kes?|sp[i1]cs?|ch[i1]nks?|tr[a4]nn(y|ie)s?|c[u\*]nts?|wh[o0]res?|dyke)\b|\bkys\b|\bkill (yo)?urself\b|\bgo (and )?die\b|\byou should die\b|\bhang yourself\b/i;
 const REPORT_HIDE_THRESHOLD = 3; // a post reported this many times is auto-hidden from every user's feed
-const SUPPORT_EMAIL = "kricliff@gmail.com";
+const SUPPORT_EMAIL = "together@cliffordcoaching.no";
 
 function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
 function moodOn(dateStr) { return state.moods[dateStr] ? state.moods[dateStr].level : null; }
