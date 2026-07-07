@@ -1722,7 +1722,17 @@ function editPseudonym() {
 function savePseudonym() { const v = document.getElementById("pseudoInput").value.trim(); if (v) { state.pseudonym = v; save(); } closeModal(); render(); }
 function toggleNotif(on) {
   state.settings.notifications = on; save();
-  if (on) setupDailyNotifications();
+  if (on) setupDailyNotifications(true);
+  else cancelDailyNotifications();
+}
+async function cancelDailyNotifications() {
+  if (!window.Capacitor?.isNativePlatform?.()) return;
+  const LN = window.Capacitor?.Plugins?.LocalNotifications;
+  if (!LN) return;
+  try {
+    const { notifications: pending } = await LN.getPendingNotifications();
+    if (pending.length) await LN.cancel({ notifications: pending });
+  } catch (e) { console.log("Notif cancel failed:", e); }
 }
 function saveNotifTime(t) {
   state.settings.notifTime = t; save();
@@ -1738,6 +1748,11 @@ async function setupDailyNotifications(force) {
     try {
       const { display } = await LN.requestPermissions();
       if (display !== "granted") return;
+      // Android 8+ requires the channel to exist or the notification won't show. iOS ignores this.
+      try {
+        await LN.createChannel({ id: "daily-reminder", name: "Daily reminder",
+          description: "Your daily check-in reminder", importance: 4, visibility: 1 });
+      } catch (e) { /* not supported on iOS; ignore */ }
       const { notifications: pending } = await LN.getPendingNotifications();
       if (!force && pending.length > 10) return;
       if (pending.length) await LN.cancel({ notifications: pending });
