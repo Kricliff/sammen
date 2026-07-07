@@ -223,6 +223,9 @@ const defaultState = {
   sleep: {},
   socialGoal: null,
   weeklySummary: {},
+  guidelinesAccepted: false,
+  blocked: [],
+  hiddenPosts: [],
 };
 
 let state = loadState();
@@ -290,10 +293,10 @@ function setupCommunityListener() {
     .onSnapshot(snap => {
       communityPosts = snap.docs.map(doc => {
         const d = doc.data();
-        return { id: doc.id, who: d.who, channel: d.channel, text: d.text,
+        return { id: doc.id, who: d.who, userId: d.userId, channel: d.channel, text: d.text,
           prompt: d.prompt || null, support: d.support || 0, beenThere: d.beenThere || 0,
-          age: formatAge(d.createdAt), mine: d.userId === fbUser?.uid };
-      });
+          reports: d.reports || 0, age: formatAge(d.createdAt), mine: d.userId === fbUser?.uid };
+      }).filter(p => p.reports < REPORT_HIDE_THRESHOLD || p.mine);
       communityLoaded = true;
       if (currentTab === 'community') render();
     }, () => { communityLoaded = true; if (currentTab === 'community') render(); });
@@ -481,6 +484,11 @@ const RESEARCH = [
 ];
 
 const CRISIS_PATTERNS = /suicide|take my (own )?life|don't want to (be|live|exist)|can't go on|end it all|end my life|hurt myself|self.harm|not worth living|want to die/i;
+// Automated objectionable-content filter (hate speech, slurs, sexual solicitation, targeted harassment).
+// Note: this deliberately does NOT block a person's own distress (handled separately by CRISIS_PATTERNS with support resources).
+const OBJECTIONABLE_PATTERNS = /\b(n[i1]gg(er|a)|f[a4]gg?ots?|r[e3]tard(ed)?|k[i1]kes?|sp[i1]cs?|ch[i1]nks?|tr[a4]nn(y|ie)s?|c[u\*]nts?|wh[o0]res?|dyke)\b|\bkys\b|\bkill (yo)?urself\b|\bgo (and )?die\b|\byou should die\b|\bhang yourself\b/i;
+const REPORT_HIDE_THRESHOLD = 3; // a post reported this many times is auto-hidden from every user's feed
+const SUPPORT_EMAIL = "kricliff@gmail.com";
 
 function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
 function moodOn(dateStr) { return state.moods[dateStr] ? state.moods[dateStr].level : null; }
@@ -1178,6 +1186,7 @@ function dailyPrompt() {
 }
 
 function renderCommunity() {
+  if (!state.guidelinesAccepted) { main.innerHTML = communityGuidelinesGate(); return; }
   let html = `<h1>Community</h1><div class="sub">Anonymous. Open. Men who get it.</div>`;
   html += `<div class="chips">${CHANNELS.map(c =>
     `<button class="${c === currentChannel ? "active" : ""}" onclick="setChannel('${c}')">${c}</button>`).join("")}</div>`;
@@ -1191,7 +1200,8 @@ function renderCommunity() {
     <button class="btn small secondary" onclick="openComposer()">+ New post</button></div>`;
 
   const PAGE_SIZE = 6;
-  const all = communityLoaded && communityPosts.length > 0 ? communityPosts : SEED_POSTS;
+  const base = communityLoaded && communityPosts.length > 0 ? communityPosts : SEED_POSTS;
+  const all = base.filter(p => !isHidden(p));
   const filtered = currentChannel === "All" ? all : all.filter(p => p.channel === currentChannel);
   if (filtered.length === 0) html += `<div class="empty">No posts in this channel yet. Be the first.</div>`;
   const pageStart = IS_PRO ? communityPage * PAGE_SIZE : 0;
@@ -1211,7 +1221,7 @@ function renderCommunity() {
       <div class="foot">
         <button class="${r.support ? "on" : ""}" onclick="react('${p.id}','support')">&#129309; Support &middot; ${sup}</button>
         <button class="${r.beenThere ? "on" : ""}" onclick="react('${p.id}','beenThere')">&#129730; I've been there &middot; ${bt}</button>
-        ${p.mine ? `<button class="report" style="color:#b9503c" onclick="deletePost('${p.id}')">Delete</button>` : `<button class="report" onclick="reportPost('${p.id}')">Report</button>`}
+        ${p.mine ? `<button class="report" style="color:#b9503c" onclick="deletePost('${p.id}')">Delete</button>` : `<button class="report" onclick="postMenu('${p.id}')">⋯ More</button>`}
         <button id="trbtn_${p.id}" onclick="translatePost('${p.id}')" style="color:var(--teal)">Translate</button>
       </div>
     </div>`;
@@ -1233,8 +1243,19 @@ function renderCommunity() {
       <button class="btn secondary" onclick="setCommunityPage(${communityPage + 1})" style="flex:1${communityPage >= totalPages - 1 ? ';opacity:.35;pointer-events:none' : ''}">Next →</button>
     </div>`;
   }
+  html += `<div style="text-align:center;padding:18px 8px 4px;font-size:0.78rem;color:var(--text-soft);line-height:1.7">
+    We have zero tolerance for abuse or objectionable content. Reports are reviewed and actioned within 24 hours.<br>
+    <a onclick="showGuidelines()" style="color:var(--teal);cursor:pointer">Community guidelines</a>
+    &nbsp;·&nbsp;
+    <a onclick="openContact()" style="color:var(--teal);cursor:pointer">Report a problem</a>
+  </div>`;
   main.innerHTML = html;
 }
+function isHidden(p) {
+  if (state.hiddenPosts.includes(p.id)) return true;
+  return state.blocked.some(b => (b.uid && b.uid === p.userId) || (b.name && b.name === p.who));
+}
+function findPost(id) { return communityPosts.find(p => p.id === id) || SEED_POSTS.find(p => p.id === id); }
 
 function setChannel(c) { currentChannel = c; communityPage = 0; render(); }
 function setCommunityPage(p) { communityPage = p; render(); }
@@ -1279,13 +1300,127 @@ async function translatePost(id) {
   } catch(e) { toast('Could not translate.'); btn.textContent = 'Translate'; }
   btn.disabled = false;
 }
+function postMenu(id) {
+  openModal(`
+    <h3>Post options</h3>
+    <div class="sub">Help keep this a safe place.</div>
+    <button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="reportPost('${id}')">🚩 Report this post</button>
+    <button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="blockUser('${id}')">🚫 Block this user</button>
+    <button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="hidePost('${id}')">🙈 Hide this post</button>
+    <button class="btn secondary" style="width:100%" onclick="closeModal()">Cancel</button>
+  `);
+}
 function reportPost(postId) {
   openModal(`
     <h3>Report post</h3>
     <div class="sub">Thank you for flagging this. What does it concern?</div>
-    ${["Hateful or toxic content", "Concern for the author", "Spam or advertising", "Other"].map(reason =>
-      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="closeModal(); toast('Report sent. We\'ll look into it.')">${reason}</button>`).join("")}
+    ${["Hateful, abusive or toxic content", "Sexual or inappropriate content", "Concern for the author", "Spam or advertising", "Other"].map(reason =>
+      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="submitReport('${postId}', ${JSON.stringify(reason).replace(/"/g, '&quot;')})">${reason}</button>`).join("")}
+    <button class="btn secondary" style="width:100%;margin-top:4px" onclick="closeModal()">Cancel</button>
   `);
+}
+async function submitReport(postId, reason) {
+  const post = findPost(postId);
+  // Immediately hide from this user's feed
+  if (!state.hiddenPosts.includes(postId)) state.hiddenPosts.push(postId);
+  save(); closeModal(); render();
+  toast("Reported and hidden. We review reports within 24 hours.");
+  if (fbDb && fbUser) {
+    try {
+      await fbDb.collection('reports').add({
+        postId, reason, reporter: fbUser.uid,
+        who: post ? post.who : null, text: post ? post.text : null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      if (communityPosts.some(p => p.id === postId)) {
+        await fbDb.collection('posts').doc(postId).update({
+          reports: firebase.firestore.FieldValue.increment(1)
+        });
+      }
+    } catch(e) { /* report stored locally via hidden; silent on network error */ }
+  }
+}
+function blockUser(id) {
+  const post = findPost(id);
+  const name = post ? post.who : "this user";
+  openModal(`
+    <h3>Block ${esc(name)}?</h3>
+    <div class="sub">You will no longer see any posts from this user. You can unblock them later in your Profile.</div>
+    <button class="btn" style="width:100%;background:#b9503c;margin-bottom:8px" onclick="confirmBlock('${id}')">Block user</button>
+    <button class="btn secondary" style="width:100%" onclick="closeModal()">Cancel</button>
+  `);
+}
+function confirmBlock(id) {
+  const post = findPost(id);
+  if (post && !state.blocked.some(b => (b.uid && b.uid === post.userId) || b.name === post.who)) {
+    state.blocked.push({ uid: post.userId || null, name: post.who || null });
+  }
+  save(); closeModal(); render();
+  toast("User blocked. You won't see their posts.");
+}
+function hidePost(id) {
+  if (!state.hiddenPosts.includes(id)) state.hiddenPosts.push(id);
+  save(); closeModal(); render();
+  toast("Post hidden from your feed.");
+}
+
+const GUIDELINES_RULES = [
+  "Be respectful. This is a place for men to support each other.",
+  "Zero tolerance for hate speech, harassment, threats, or abuse of any kind.",
+  "No sexual, violent, illegal, or otherwise objectionable content.",
+  "No spam, advertising, or sharing others' private information.",
+  "Never share your own or anyone else's real identity."
+];
+function guidelinesInner(showAgree) {
+  return `
+    <p style="font-size:0.92rem;line-height:1.6;color:var(--text);margin-bottom:12px">Community is an anonymous, moderated space. By continuing you agree to our terms and to the community rules below. <b>There is zero tolerance for objectionable content or abusive behaviour.</b></p>
+    <ul style="margin:0 0 14px 18px;padding:0;font-size:0.9rem;line-height:1.6;color:var(--text)">
+      ${GUIDELINES_RULES.map(r => `<li style="margin-bottom:6px">${r}</li>`).join("")}
+    </ul>
+    <p style="font-size:0.9rem;line-height:1.6;color:var(--text);margin-bottom:6px">You can <b>report</b> any post, <b>block</b> any user, and <b>hide</b> or <b>delete</b> content at any time. We review every report and remove violating content — and remove the users who post it — <b>within 24 hours</b>.</p>
+    <p style="font-size:0.85rem;line-height:1.6;color:var(--text-soft);margin-bottom:14px">To report inappropriate activity, use the report button on any post or contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color:var(--teal)">${SUPPORT_EMAIL}</a>.</p>
+    <div style="font-size:0.78rem;color:var(--text-soft);text-align:center;line-height:1.7;margin-bottom:${showAgree ? '16' : '4'}px">
+      <a href="https://kricliff.github.io/sammen/privacy.html" target="_blank" style="color:var(--teal)">Privacy Policy</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" style="color:var(--teal)">Terms of Use (EULA)</a>
+    </div>`;
+}
+function communityGuidelinesGate() {
+  return `<h1>Community</h1><div class="sub">Anonymous. Open. Men who get it.</div>
+    <div class="card" style="margin-top:8px">
+      <h3 style="margin-bottom:10px">Before you join</h3>
+      ${guidelinesInner(true)}
+      <button class="btn" style="width:100%" onclick="acceptGuidelines()">I agree — enter Community</button>
+    </div>`;
+}
+function acceptGuidelines() { state.guidelinesAccepted = true; save(); render(); main.scrollTop = 0; }
+function showGuidelines() {
+  openModal(`<h3>Community guidelines</h3>${guidelinesInner(false)}
+    <button class="btn secondary" style="width:100%;margin-top:12px" onclick="closeModal()">Close</button>`);
+}
+function openContact() {
+  openModal(`
+    <h3>Report a problem / contact us</h3>
+    <div class="sub" style="margin-bottom:14px">To report inappropriate activity, abusive users, or any other concern, reach us directly. We act on reports within 24 hours.</div>
+    <a class="btn" style="width:100%;display:block;text-align:center;text-decoration:none" href="mailto:${SUPPORT_EMAIL}?subject=Together%20%E2%80%93%20Report%20inappropriate%20activity">Email ${SUPPORT_EMAIL}</a>
+    <button class="btn secondary" style="width:100%;margin-top:10px" onclick="closeModal()">Close</button>
+  `);
+}
+function openBlockedUsers() {
+  const list = state.blocked || [];
+  openModal(`
+    <h3>Blocked users</h3>
+    <div class="sub" style="margin-bottom:14px">${list.length === 0 ? "You haven't blocked anyone." : "You won't see posts from these users."}</div>
+    ${list.map((b, i) => `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:0.92rem">${esc(b.name || "Blocked user")}</span>
+        <button class="btn small secondary" onclick="unblockUser(${i})">Unblock</button>
+      </div>`).join("")}
+    <button class="btn secondary" style="width:100%;margin-top:14px" onclick="closeModal()">Close</button>
+  `);
+}
+function unblockUser(idx) {
+  state.blocked.splice(idx, 1);
+  save(); openBlockedUsers(); render();
 }
 let composerPrompt = null;
 function openPromptComposer() { openComposer(dailyPrompt()); }
@@ -1311,6 +1446,10 @@ function submitPost() {
   const text = document.getElementById("postText").value.trim();
   const channel = document.getElementById("postChannel").value;
   if (!text) return;
+  if (OBJECTIONABLE_PATTERNS.test(text)) {
+    toast("This post contains language that breaks our community guidelines and can't be posted.");
+    return;
+  }
   if (CRISIS_PATTERNS.test(text)) {
     closeModal();
     openModal(`
@@ -1492,6 +1631,12 @@ function renderProfile() {
     </div>`).join("");
     if (state.posts.length > 2) html += `<div style="text-align:center;margin-bottom:12px"><button class="btn small secondary" onclick="openMyPosts()">+ ${state.posts.length - 2} more posts</button></div>`;
   }
+
+  html += `<h2>Safety &amp; community</h2><div class="card">
+    <div class="setRow" onclick="showGuidelines()" style="cursor:pointer"><span>Community guidelines</span><span style="color:var(--text-soft)">›</span></div>
+    <div class="setRow" onclick="openBlockedUsers()" style="cursor:pointer"><span>Blocked users</span><span style="color:var(--text-soft)">${(state.blocked || []).length} ›</span></div>
+    <div class="setRow" onclick="openContact()" style="cursor:pointer"><span>Report inappropriate activity</span><span style="color:var(--text-soft)">›</span></div>
+  </div>`;
 
   html += `<h2>Settings</h2><div class="card">
     <div class="setRow"><span>Username</span>
