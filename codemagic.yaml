@@ -10,7 +10,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.kricliff.together
       node: latest
-      xcode: 16
+      xcode: latest
     scripts:
       - name: Install npm dependencies
         script: npm install --legacy-peer-deps
