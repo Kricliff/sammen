@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <clipPath id="cl">
+      <circle cx="400" cy="540" r="240"/>
+    </clipPath>
+  </defs>
+  <rect width="1080" height="1080" fill="#1F4F4F"/>
+  <circle cx="400" cy="540" r="240" fill="#7FB8B8"/>
+  <circle cx="680" cy="540" r="240" fill="#E8806A"/>
+  <circle cx="680" cy="540" r="240" fill="#F5F4F2" clip-path="url(#cl)"/>
+</svg>

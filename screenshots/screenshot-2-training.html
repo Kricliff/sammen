@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:1284px;height:2778px;overflow:hidden;background:#f5f4f2;font-family:'Outfit',-apple-system,sans-serif;color:#1f4f4f;}
+
+.status{height:132px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 60px 27px;font-size:36px;font-weight:700;}
+.status-icons{display:flex;align-items:center;gap:21px;}
+
+header{display:flex;justify-content:space-between;align-items:center;padding:24px 54px 0;}
+.logo svg{height:114px;width:auto;display:block;}
+.sos{background:#fce9e4;color:#b9503c;border:3px solid #f2c4b8;border-radius:999px;padding:18px 45px;font-size:36px;font-weight:700;font-family:inherit;}
+
+main{padding:60px 54px 0;}
+h2{font-size:96px;font-weight:700;margin-bottom:12px;}
+.sub{font-size:42px;color:#6b7280;margin-bottom:60px;}
+.label{font-size:30px;font-weight:700;letter-spacing:3px;color:#9ca3af;text-transform:uppercase;margin-bottom:27px;}
+.card{background:#fff;border-radius:48px;padding:54px;margin-bottom:36px;border:1px solid #e5e3e0;}
+.ctitle{font-size:42px;font-weight:600;margin-bottom:9px;}
+.csub{font-size:36px;color:#6b7280;line-height:1.4;}
+.btn{display:inline-flex;align-items:center;gap:12px;background:#2a7f7f;color:#fff;border:none;border-radius:999px;padding:27px 60px;font-size:39px;font-weight:600;font-family:inherit;}
+.btn-ghost{display:inline-flex;align-items:center;gap:12px;background:transparent;color:#2a7f7f;border:3px solid #2a7f7f;border-radius:999px;padding:27px 60px;font-size:39px;font-weight:600;font-family:inherit;}
+
+.session-item{display:flex;align-items:center;gap:30px;padding:36px 0;border-bottom:1px solid #f0eeeb;}
+.session-item:last-child{border-bottom:none;}
+.session-ico{font-size:72px;flex-shrink:0;}
+.session-info{flex:1;}
+.session-title{font-size:42px;font-weight:600;margin-bottom:6px;}
+.session-sub{font-size:33px;color:#6b7280;}
+.session-dur{font-size:33px;color:#9ca3af;font-weight:600;flex-shrink:0;}
+
+.breathe-visual{display:flex;justify-content:center;align-items:center;padding:60px 0;}
+.breathe-ring{position:relative;width:360px;height:360px;}
+.breathe-ring svg{width:100%;height:100%;}
+.breathe-label{text-align:center;margin-top:-12px;font-size:39px;font-weight:600;color:#2a7f7f;}
+.breathe-hint{text-align:center;font-size:33px;color:#9ca3af;margin-top:9px;}
+
+nav{position:fixed;bottom:0;left:0;right:0;width:1284px;background:#fff;border-top:3px solid #e5e3e0;display:flex;padding:27px 12px 66px;}
+nav button{flex:1;background:none;border:none;font-family:inherit;font-size:30px;color:#9ca3af;display:flex;flex-direction:column;align-items:center;gap:9px;padding:12px 0;}
+nav button .ico{font-size:63px;line-height:1;}
+nav button.active{color:#2a7f7f;}
+</style>
+</head>
+<body>
+
+<div class="status">
+  <span>9:41</span>
+  <div class="status-icons">
+    <svg width="54" height="36" viewBox="0 0 54 36"><rect x="0" y="18" width="9" height="18" rx="2" fill="#1f4f4f"/><rect x="13" y="12" width="9" height="24" rx="2" fill="#1f4f4f"/><rect x="26" y="6" width="9" height="30" rx="2" fill="#1f4f4f"/><rect x="39" y="0" width="9" height="36" rx="2" fill="#1f4f4f"/></svg>
+    <svg width="54" height="36" viewBox="0 0 60 40"><path d="M30 8 C44 8 56 16 60 28 L52 28 C49 20 40 14 30 14 C20 14 11 20 8 28 L0 28 C4 16 16 8 30 8Z" fill="#1f4f4f"/><path d="M30 20 C38 20 44 24 47 30 L39 30 C37 27 34 25 30 25 C26 25 23 27 21 30 L13 30 C16 24 22 20 30 20Z" fill="#1f4f4f"/><circle cx="30" cy="36" r="4" fill="#1f4f4f"/></svg>
+    <svg width="81" height="36" viewBox="0 0 81 36"><rect x="0" y="4" width="72" height="28" rx="6" stroke="#1f4f4f" stroke-width="3" fill="none"/><rect x="72" y="12" width="6" height="12" rx="2" fill="#1f4f4f"/><rect x="4" y="8" width="56" height="20" rx="4" fill="#1f4f4f"/></svg>
+  </div>
+</div>
+
+<header>
+  <div class="logo">
+    <svg viewBox="0 0 360 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="38" cy="50" r="24" fill="#2a7f7f"/>
+      <circle cx="62" cy="50" r="24" fill="#e8806a"/>
+      <path d="M50 29.2 A24 24 0 0 1 50 70.8 A24 24 0 0 1 50 29.2 Z" fill="#1f4f4f"/>
+      <text x="104" y="63" font-family="Outfit,'Segoe UI',sans-serif" font-size="42" font-weight="500" letter-spacing="1" fill="#1f4f4f">together</text>
+    </svg>
+  </div>
+  <div class="sos">❤️ Crisis</div>
+</header>
+
+<main>
+  <h2>Training</h2>
+  <p class="sub">Exercises built for men's minds</p>
+
+  <!-- Active breathing card -->
+  <div class="card" style="background:linear-gradient(135deg,#1f4f4f 0%,#2a7f7f 100%);border-color:transparent;">
+    <p class="label" style="color:rgba(255,255,255,0.6);margin-bottom:18px">ACTIVE EXERCISE</p>
+    <div class="breathe-visual">
+      <div class="breathe-ring">
+        <svg viewBox="0 0 360 360">
+          <circle cx="180" cy="180" r="150" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="18"/>
+          <circle cx="180" cy="180" r="150" fill="none" stroke="white" stroke-width="18"
+            stroke-dasharray="707 235" stroke-dashoffset="177" stroke-linecap="round" transform="rotate(-90 180 180)"/>
+          <circle cx="180" cy="180" r="108" fill="rgba(255,255,255,0.1)"/>
+          <text x="180" y="168" text-anchor="middle" font-family="Outfit,sans-serif" font-size="42" font-weight="600" fill="white">Breathe</text>
+          <text x="180" y="216" text-anchor="middle" font-family="Outfit,sans-serif" font-size="72" font-weight="700" fill="white">in</text>
+        </svg>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:36px;color:rgba(255,255,255,0.75);margin-bottom:36px">4 seconds · Round 2 of 5</p>
+    <div style="display:flex;justify-content:center;gap:24px;">
+      <button style="background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.3);border-radius:999px;padding:21px 54px;font-size:36px;font-weight:600;font-family:inherit;">Pause</button>
+      <button style="background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.3);border-radius:999px;padding:21px 54px;font-size:36px;font-weight:600;font-family:inherit;">Stop</button>
+    </div>
+  </div>
+
+  <!-- Audio sessions -->
+  <div class="card">
+    <p class="label" style="margin-bottom:12px">AUDIO SESSIONS</p>
+    <div class="session-item">
+      <span class="session-ico">🎧</span>
+      <div class="session-info">
+        <div class="session-title">Stress release</div>
+        <div class="session-sub">Body scan and grounding</div>
+      </div>
+      <div class="session-dur">12 min</div>
+    </div>
+    <div class="session-item">
+      <span class="session-ico">🌊</span>
+      <div class="session-info">
+        <div class="session-title">Deep focus</div>
+        <div class="session-sub">Binaural beats + narration</div>
+      </div>
+      <div class="session-dur">20 min</div>
+    </div>
+    <div class="session-item">
+      <span class="session-ico">🌙</span>
+      <div class="session-info">
+        <div class="session-title">Wind down</div>
+        <div class="session-sub">Evening relaxation routine</div>
+      </div>
+      <div class="session-dur">15 min</div>
+    </div>
+    <div class="session-item">
+      <span class="session-ico">💪</span>
+      <div class="session-info">
+        <div class="session-title">Morning reset</div>
+        <div class="session-sub">Start the day grounded</div>
+      </div>
+      <div class="session-dur">8 min</div>
+    </div>
+  </div>
+
+  <!-- Progress card -->
+  <div class="card" style="display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div class="ctitle">This week</div>
+      <div class="csub">4 sessions completed</div>
+    </div>
+    <div style="display:flex;gap:18px;align-items:flex-end;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:9px;">
+        <div style="width:30px;background:#e5e3e0;border-radius:6px;height:90px;display:flex;align-items:flex-end;"><div style="width:100%;background:#2a7f7f;border-radius:6px;height:30px;"></div></div>
+        <span style="font-size:24px;color:#9ca3af">M</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:9px;">
+        <div style="width:30px;background:#e5e3e0;border-radius:6px;height:90px;display:flex;align-items:flex-end;"><div style="width:100%;background:#2a7f7f;border-radius:6px;height:90px;"></div></div>
+        <span style="font-size:24px;color:#9ca3af">T</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:9px;">
+        <div style="width:30px;background:#e5e3e0;border-radius:6px;height:90px;display:flex;align-items:flex-end;"><div style="width:100%;background:#2a7f7f;border-radius:6px;height:60px;"></div></div>
+        <span style="font-size:24px;color:#9ca3af">W</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:9px;">
+        <div style="width:30px;background:#e5e3e0;border-radius:6px;height:90px;"></div>
+        <span style="font-size:24px;color:#9ca3af">T</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:9px;">
+        <div style="width:30px;background:#e5e3e0;border-radius:6px;height:90px;display:flex;align-items:flex-end;"><div style="width:100%;background:#e8806a;border-radius:6px;height:90px;"></div></div>
+        <span style="font-size:24px;color:#2a7f7f;font-weight:700">F</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:9px;">
+        <div style="width:30px;background:#e5e3e0;border-radius:6px;height:90px;"></div>
+        <span style="font-size:24px;color:#9ca3af">S</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:9px;">
+        <div style="width:30px;background:#e5e3e0;border-radius:6px;height:90px;"></div>
+        <span style="font-size:24px;color:#9ca3af">S</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav>
+  <button><span class="ico">🏠</span><span>Home</span></button>
+  <button class="active"><span class="ico">🧘</span><span>Training</span></button>
+  <button><span class="ico">💬</span><span>Community</span></button>
+  <button><span class="ico">📖</span><span>Learn</span></button>
+  <button><span class="ico">👤</span><span>Profile</span></button>
+</nav>
+
+</body>
+</html>

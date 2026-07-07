@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <style><![CDATA[
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap');
+  ]]></style>
+  <defs>
+    <clipPath id="cl">
+      <circle cx="445" cy="400" r="200"/>
+    </clipPath>
+  </defs>
+  <rect width="1080" height="1080" rx="130" fill="#1F4F4F"/>
+  <circle cx="445" cy="400" r="200" fill="#7FB8B8"/>
+  <circle cx="635" cy="400" r="200" fill="#E8806A"/>
+  <circle cx="635" cy="400" r="200" fill="#F5F4F2" clip-path="url(#cl)"/>
+  <text x="540" y="810" font-family="Outfit, sans-serif" font-weight="600" font-size="100" fill="#F5F4F2" text-anchor="middle" letter-spacing="4">Together</text>
+  <text x="540" y="892" font-family="Outfit, sans-serif" font-weight="400" font-size="48" fill="#7FB8B8" text-anchor="middle" letter-spacing="3">Men's Mental Health</text>
+</svg>

@@ -1,4 +1,4 @@
-# Minimal static file server for local preview (no Node/Python required)
+# Minimal static file server for local preview
 param([int]$Port = 8123)
 
 $root = $PSScriptRoot
@@ -27,6 +27,8 @@ while ($listener.IsListening) {
     $bytes = [System.IO.File]::ReadAllBytes($file)
     $ext = [System.IO.Path]::GetExtension($file).ToLower()
     if ($mime.ContainsKey($ext)) { $ctx.Response.ContentType = $mime[$ext] }
+    # Always serve fresh content — browser caching of index.html caused repeated stale-preview confusion
+    $ctx.Response.AddHeader("Cache-Control", "no-store, no-cache, must-revalidate")
     $ctx.Response.ContentLength64 = $bytes.Length
     $ctx.Response.OutputStream.Write($bytes, 0, $bytes.Length)
   } else {

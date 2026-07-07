@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:1284px;height:2778px;overflow:hidden;background:#f5f4f2;font-family:'Outfit',-apple-system,sans-serif;color:#1f4f4f;}
+
+.status{height:132px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 60px 27px;font-size:36px;font-weight:700;}
+
+header{display:flex;justify-content:space-between;align-items:center;padding:24px 54px 0;}
+.logo svg{height:114px;width:auto;display:block;}
+.sos{background:#fce9e4;color:#b9503c;border:3px solid #f2c4b8;border-radius:999px;padding:18px 45px;font-size:36px;font-weight:700;font-family:inherit;}
+
+main{padding:60px 54px 0;}
+h2{font-size:96px;font-weight:700;margin-bottom:12px;}
+.sub{font-size:42px;color:#6b7280;margin-bottom:60px;}
+.label{font-size:30px;font-weight:700;letter-spacing:3px;color:#9ca3af;text-transform:uppercase;margin-bottom:27px;}
+.card{background:#fff;border-radius:48px;padding:54px;margin-bottom:36px;border:1px solid #e5e3e0;}
+.ctitle{font-size:42px;font-weight:600;margin-bottom:9px;}
+.csub{font-size:36px;color:#6b7280;line-height:1.4;}
+
+/* Hero upgrade card */
+.hero{background:linear-gradient(160deg,#1f4f4f 0%,#2a7f7f 60%,#e8806a 130%);border-radius:48px;padding:72px 60px;margin-bottom:36px;color:white;text-align:center;}
+.pro-badge{display:inline-block;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);border-radius:999px;padding:12px 36px;font-size:33px;font-weight:700;letter-spacing:2px;margin-bottom:36px;}
+.hero-title{font-size:84px;font-weight:700;line-height:1.1;margin-bottom:24px;}
+.hero-sub{font-size:42px;color:rgba(255,255,255,0.8);line-height:1.4;margin-bottom:48px;}
+.price-row{display:flex;align-items:baseline;justify-content:center;gap:12px;margin-bottom:12px;}
+.price{font-size:96px;font-weight:700;}
+.price-period{font-size:39px;color:rgba(255,255,255,0.7);}
+.price-note{font-size:33px;color:rgba(255,255,255,0.6);margin-bottom:48px;}
+.btn-cta{display:block;width:100%;background:white;color:#1f4f4f;border:none;border-radius:999px;padding:36px;font-size:45px;font-weight:700;font-family:inherit;margin-bottom:24px;}
+.btn-free{display:block;text-align:center;font-size:36px;color:rgba(255,255,255,0.7);font-family:inherit;border:none;background:none;padding:12px;}
+
+/* Feature list */
+.feature-row{display:flex;align-items:center;gap:30px;padding:36px 0;border-bottom:1px solid #f0eeeb;}
+.feature-row:last-child{border-bottom:none;}
+.check{width:54px;height:54px;border-radius:50%;background:#e8f4f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.check svg{width:30px;height:30px;}
+.feature-ico{font-size:60px;flex-shrink:0;}
+.feature-text{flex:1;}
+.feature-title{font-size:42px;font-weight:600;margin-bottom:6px;}
+.feature-sub{font-size:33px;color:#6b7280;}
+.free-tag{font-size:27px;font-weight:700;color:#2a7f7f;background:#e8f4f4;border-radius:999px;padding:6px 21px;flex-shrink:0;}
+.pro-tag{font-size:27px;font-weight:700;color:#b9503c;background:#fce9e4;border-radius:999px;padding:6px 21px;flex-shrink:0;}
+
+nav{position:fixed;bottom:0;left:0;right:0;width:1284px;background:#fff;border-top:3px solid #e5e3e0;display:flex;padding:27px 12px 66px;}
+nav button{flex:1;background:none;border:none;font-family:inherit;font-size:30px;color:#9ca3af;display:flex;flex-direction:column;align-items:center;gap:9px;padding:12px 0;}
+nav button .ico{font-size:63px;line-height:1;}
+nav button.active{color:#2a7f7f;}
+</style>
+</head>
+<body>
+
+<div class="status">
+  <span>9:41</span>
+  <div style="display:flex;align-items:center;gap:21px;">
+    <svg width="54" height="36" viewBox="0 0 54 36"><rect x="0" y="18" width="9" height="18" rx="2" fill="#1f4f4f"/><rect x="13" y="12" width="9" height="24" rx="2" fill="#1f4f4f"/><rect x="26" y="6" width="9" height="30" rx="2" fill="#1f4f4f"/><rect x="39" y="0" width="9" height="36" rx="2" fill="#1f4f4f"/></svg>
+    <svg width="54" height="36" viewBox="0 0 60 40"><path d="M30 8 C44 8 56 16 60 28 L52 28 C49 20 40 14 30 14 C20 14 11 20 8 28 L0 28 C4 16 16 8 30 8Z" fill="#1f4f4f"/><path d="M30 20 C38 20 44 24 47 30 L39 30 C37 27 34 25 30 25 C26 25 23 27 21 30 L13 30 C16 24 22 20 30 20Z" fill="#1f4f4f"/><circle cx="30" cy="36" r="4" fill="#1f4f4f"/></svg>
+    <svg width="81" height="36" viewBox="0 0 81 36"><rect x="0" y="4" width="72" height="28" rx="6" stroke="#1f4f4f" stroke-width="3" fill="none"/><rect x="72" y="12" width="6" height="12" rx="2" fill="#1f4f4f"/><rect x="4" y="8" width="56" height="20" rx="4" fill="#1f4f4f"/></svg>
+  </div>
+</div>
+
+<header>
+  <div class="logo">
+    <svg viewBox="0 0 360 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="38" cy="50" r="24" fill="#2a7f7f"/>
+      <circle cx="62" cy="50" r="24" fill="#e8806a"/>
+      <path d="M50 29.2 A24 24 0 0 1 50 70.8 A24 24 0 0 1 50 29.2 Z" fill="#1f4f4f"/>
+      <text x="104" y="63" font-family="Outfit,'Segoe UI',sans-serif" font-size="42" font-weight="500" letter-spacing="1" fill="#1f4f4f">together</text>
+    </svg>
+  </div>
+  <div class="sos">❤️ Crisis</div>
+</header>
+
+<main>
+  <h2>Together Pro</h2>
+  <p class="sub">Everything you need to feel better</p>
+
+  <!-- Hero upgrade -->
+  <div class="hero">
+    <div class="pro-badge">✦ PRO</div>
+    <div class="hero-title">Go deeper.<br>Feel better.</div>
+    <div class="hero-sub">Unlock the full Together experience — journals, mood charts, audio sessions, and more.</div>
+    <div class="price-row">
+      <span class="price">$6.99</span>
+      <span class="price-period">/ month</span>
+    </div>
+    <div class="price-note">or $49.99 / year · 7-day free trial</div>
+    <button class="btn-cta">Start free trial</button>
+    <button class="btn-free">Continue with free plan</button>
+  </div>
+
+  <!-- Feature list -->
+  <div class="card">
+    <p class="label" style="margin-bottom:12px">WHAT YOU GET</p>
+
+    <div class="feature-row">
+      <span class="feature-ico">📊</span>
+      <div class="feature-text">
+        <div class="feature-title">Mood chart</div>
+        <div class="feature-sub">30-day visual overview of your emotional patterns</div>
+      </div>
+      <div class="pro-tag">PRO</div>
+    </div>
+    <div class="feature-row">
+      <span class="feature-ico">📓</span>
+      <div class="feature-text">
+        <div class="feature-title">Private journal</div>
+        <div class="feature-sub">Unlimited writing space, no prompts required</div>
+      </div>
+      <div class="pro-tag">PRO</div>
+    </div>
+    <div class="feature-row">
+      <span class="feature-ico">🎧</span>
+      <div class="feature-text">
+        <div class="feature-title">All audio sessions</div>
+        <div class="feature-sub">Stress release, focus, sleep, morning reset</div>
+      </div>
+      <div class="pro-tag">PRO</div>
+    </div>
+    <div class="feature-row">
+      <span class="feature-ico">📅</span>
+      <div class="feature-text">
+        <div class="feature-title">Weekly review</div>
+        <div class="feature-sub">Three questions to close the week with clarity</div>
+      </div>
+      <div class="pro-tag">PRO</div>
+    </div>
+    <div class="feature-row">
+      <span class="feature-ico">🌀</span>
+      <div class="feature-text">
+        <div class="feature-title">Daily check-in &amp; community</div>
+        <div class="feature-sub">Always free — no subscription needed</div>
+      </div>
+      <div class="free-tag">FREE</div>
+    </div>
+    <div class="feature-row">
+      <span class="feature-ico">❤️</span>
+      <div class="feature-text">
+        <div class="feature-title">Crisis support</div>
+        <div class="feature-sub">24/7 access to crisis lines, always free</div>
+      </div>
+      <div class="free-tag">FREE</div>
+    </div>
+  </div>
+</main>
+
+<nav>
+  <button><span class="ico">🏠</span><span>Home</span></button>
+  <button><span class="ico">🧘</span><span>Training</span></button>
+  <button><span class="ico">💬</span><span>Community</span></button>
+  <button><span class="ico">📖</span><span>Learn</span></button>
+  <button class="active"><span class="ico">👤</span><span>Profile</span></button>
+</nav>
+
+</body>
+</html>
