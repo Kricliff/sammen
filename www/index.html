@@ -1373,7 +1373,7 @@ const GUIDELINES_RULES = [
 ];
 function guidelinesInner(showAgree) {
   return `
-    <p style="font-size:0.92rem;line-height:1.6;color:var(--text);margin-bottom:12px">Community is an anonymous, moderated space. By continuing you agree to our terms and to the community rules below. <b>There is zero tolerance for objectionable content or abusive behaviour.</b></p>
+    <p style="font-size:0.92rem;line-height:1.6;color:var(--text);margin-bottom:12px">Community is an anonymous, moderated space. To use it, you must agree to our <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" style="color:var(--teal);font-weight:700">Terms of Use (EULA)</a> and the community rules below. <b>Our Terms of Use establish a zero-tolerance policy: objectionable content and abusive users are not permitted.</b></p>
     <ul style="margin:0 0 14px 18px;padding:0;font-size:0.9rem;line-height:1.6;color:var(--text)">
       ${GUIDELINES_RULES.map(r => `<li style="margin-bottom:6px">${r}</li>`).join("")}
     </ul>
@@ -1390,7 +1390,8 @@ function communityGuidelinesGate() {
     <div class="card" style="margin-top:8px">
       <h3 style="margin-bottom:10px">Before you join</h3>
       ${guidelinesInner(true)}
-      <button class="btn" style="width:100%" onclick="acceptGuidelines()">I agree — enter Community</button>
+      <p style="font-size:0.82rem;line-height:1.5;color:var(--text-soft);margin-bottom:12px">By tapping "I Agree" below, you confirm you have read and accept our <b>Terms of Use (EULA)</b>, including its zero-tolerance policy for objectionable content and abusive users.</p>
+      <button class="btn" style="width:100%" onclick="acceptGuidelines()">I Agree to the Terms of Use (EULA)</button>
     </div>`;
 }
 function acceptGuidelines() { state.guidelinesAccepted = true; save(); render(); main.scrollTop = 0; }
