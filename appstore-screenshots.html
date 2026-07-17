@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Together — App Store screenshot generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #dcdad6;
+    padding: 48px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 48px;
+    justify-content: center;
+  }
+  .shotWrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .canvas {
+    width: 430px; height: 932px;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 56px 28px 40px;
+    position: relative;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+  }
+  .headline {
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.28;
+    text-align: center;
+    max-width: 340px;
+    margin-bottom: 30px;
+    letter-spacing: -0.2px;
+  }
+  .frame {
+    flex: 1;
+    width: 340px;
+    max-width: 100%;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08);
+    background: #000;
+  }
+  .frame iframe { width: 100%; height: 100%; border: none; display: block; }
+  .bg-light { background: linear-gradient(160deg, #f5f4f2 0%, #e3f0f0 100%); }
+  .bg-light .headline { color: #1f6363; }
+  .bg-teal { background: linear-gradient(170deg, #2a7f7f 0%, #1a4f4f 100%); }
+  .bg-teal .headline { color: #f5faf9; }
+  .bg-coral { background: linear-gradient(160deg, #fdeae5 0%, #f5f4f2 100%); }
+  .bg-coral .headline { color: #1f6363; }
+  .bg-dark { background: linear-gradient(170deg, #141f1e 0%, #0c1615 100%); }
+  .bg-dark .headline { color: #f5faf9; }
+  .dl-btn {
+    font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    background: #2a7f7f; color: #fff; border: none; border-radius: 999px;
+    padding: 10px 22px;
+  }
+  .dl-btn:disabled { opacity: 0.5; cursor: default; }
+  .caption { font-size: 12px; color: #6b7278; text-align: center; max-width: 340px; }
+  .controls {
+    width: 100%; text-align: center; margin-bottom: 8px;
+    font-size: 13px; color: #6b7278;
+  }
+  .controls input { width: 70px; font-family: inherit; }
+</style>
+</head>
+<body>
+
+<div class="controls" style="width:100%">
+  Export width in pixels: <input type="number" id="targetW" value="1290"> (height scales automatically to match each frame's aspect ratio. Apple's current required sizes are shown in App Store Connect's Media Manager when you upload — adjust this number if it doesn't match.)
+</div>
+
+<div class="shotWrap">
+  <div class="canvas bg-light" id="shot1">
+    <div class="headline">A quiet place to check in with yourself.</div>
+    <div class="frame"><iframe id="f1" src="www/index.html"></iframe></div>
+  </div>
+  <button class="dl-btn" onclick="capture('shot1','together-1-home')">Download PNG</button>
+</div>
+
+<div class="shotWrap">
+  <div class="canvas bg-teal" id="shot2">
+    <div class="headline">Breathe through the moment.</div>
+    <div class="frame"><iframe id="f2" src="www/index.html"></iframe></div>
+  </div>
+  <button class="dl-btn" onclick="capture('shot2','together-2-breathing')">Download PNG</button>
+</div>
+
+<div class="shotWrap">
+  <div class="canvas bg-coral" id="shot3">
+    <div class="headline">You're not alone in this.</div>
+    <div class="frame"><iframe id="f3" src="www/index.html"></iframe></div>
+  </div>
+  <button class="dl-btn" onclick="capture('shot3','together-3-community')">Download PNG</button>
+</div>
+
+<div class="shotWrap">
+  <div class="canvas bg-teal" id="shot4">
+    <div class="headline">Track your progress, completely private.</div>
+    <div class="frame"><iframe id="f4" src="www/index.html"></iframe></div>
+  </div>
+  <button class="dl-btn" onclick="capture('shot4','together-4-profile')">Download PNG</button>
+</div>
+
+<div class="shotWrap">
+  <div class="canvas bg-dark" id="shot5">
+    <div class="headline">Beautiful in the dark, too.</div>
+    <div class="frame"><iframe id="f5" src="www/index.html"></iframe></div>
+  </div>
+  <button class="dl-btn" onclick="capture('shot5','together-5-dark')">Download PNG</button>
+</div>
+
+<script>
+// `let state` / `let currentTab` in the app don't attach to window (only
+// function declarations do), so they're reached here via contentWindow.eval,
+// which runs in the same global lexical scope as the app's own inline script.
+function seedMoods(win) {
+  const levels = [3, 3, 4, 2, 3, 4, 4, 3, 4, 4, 3, 4, 4, 4];
+  const sets = levels.map((lvl, idx) => `state.moods[daysAgo(${13 - idx})] = {level:${lvl}, note:""};`).join(" ");
+  win.eval(`
+    state.moods = {};
+    ${sets}
+    state.completedExercises = [
+      {id:"breath", date: daysAgo(0)}, {id:"ground", date: daysAgo(1)},
+      {id:"breath", date: daysAgo(2)}, {id:"sleep", date: daysAgo(3)},
+      {id:"breath", date: daysAgo(5)}, {id:"reframe", date: daysAgo(6)}
+    ];
+  `);
+}
+
+function hideScrollbar(win) {
+  const style = win.document.createElement("style");
+  style.textContent = `::-webkit-scrollbar { display: none; } * { scrollbar-width: none; overflow-anchor: none; }`;
+  win.document.head.appendChild(style);
+}
+function resetScroll(win) {
+  win.eval(`main.scrollTop = 0;`);
+  win.requestAnimationFrame(() => win.eval(`main.scrollTop = 0;`));
+}
+
+function setup(id, fn) {
+  const f = document.getElementById(id);
+  f.addEventListener("load", () => { try { win_ready(f.contentWindow, fn); } catch (e) { console.error(id, e); } });
+}
+function win_ready(win, fn) { win.setLang("en"); hideScrollbar(win); fn(win); }
+
+setup("f1", win => { seedMoods(win); win.render(); resetScroll(win); });
+
+setup("f2", win => {
+  win.openBreath();
+  win.toggleBreath();
+  setTimeout(() => win.stopBreathCycle(), 4300);
+});
+
+setup("f3", win => {
+  win.eval(`state.guidelinesAccepted = true; currentTab = "community";`);
+  win.render();
+  resetScroll(win);
+});
+
+setup("f4", win => {
+  seedMoods(win);
+  win.eval(`currentTab = "profile";`);
+  win.render();
+  resetScroll(win);
+});
+
+setup("f5", win => {
+  const style = win.document.createElement("style");
+  style.textContent = `:root {
+    --teal: #4fb8b8; --teal-dark: #2a7f7f; --teal-light: #1c3634;
+    --coral: #f0937d; --coral-light: #3d271f;
+    --bg: #141f1e; --card: #1c2b2a; --text: #eef1f0; --text-soft: #9db0ad; --border: #2c403d;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 14px rgba(0,0,0,0.35); --page-bg: #0c1615;
+  }`;
+  win.document.head.appendChild(style);
+  seedMoods(win);
+  win.render();
+  resetScroll(win);
+});
+
+// html2canvas can't reach across a nested browsing context (an <iframe> is
+// a separate document from the outside), so a direct capture of the whole
+// composition renders the phone screen as blank/black. Fix: snapshot the
+// iframe's own document directly (that works, since there's no boundary to
+// cross from inside), swap it in as a plain <img>, then capture the outer
+// composition normally.
+async function capture(canvasId, filename) {
+  const el = document.getElementById(canvasId);
+  const iframe = el.querySelector("iframe");
+  const innerCanvas = await html2canvas(iframe.contentDocument.body, {
+    width: iframe.clientWidth, height: iframe.clientHeight,
+    windowWidth: iframe.clientWidth, windowHeight: iframe.clientHeight,
+    useCORS: true, backgroundColor: null,
+  });
+  const img = document.createElement("img");
+  img.style.cssText = "width:100%;height:100%;display:block;object-fit:cover;";
+  img.src = innerCanvas.toDataURL("image/png");
+  iframe.style.display = "none";
+  iframe.insertAdjacentElement("afterend", img);
+
+  const targetW = parseFloat(document.getElementById("targetW").value) || 1290;
+  const scale = targetW / el.offsetWidth;
+  const canvas = await html2canvas(el, { scale, useCORS: true, backgroundColor: null });
+
+  img.remove();
+  iframe.style.display = "";
+
+  const link = document.createElement("a");
+  link.download = filename + ".png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+</script>
+
+</body>
+</html>
