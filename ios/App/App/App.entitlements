@@ -2,7 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
-	<string>$(TeamIdentifierPrefix)$(CFBundleIdentifier)</string>
+	<!-- iCloud Key-Value storage entitlement temporarily removed: Apple's
+	     provisioning profile generation isn't picking up the iCloud
+	     capability on this App ID despite it showing as enabled in the
+	     Developer Portal (confirmed by inspecting a freshly generated
+	     profile's contents). Re-add once that's resolved. -->
 </dict>
 </plist>
