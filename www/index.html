@@ -247,6 +247,45 @@ function loadState() {
 }
 function save() { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
 
+/* ---------- i18n (Norwegian + English) ---------- */
+function detectLang() { const l = (navigator.language || "en").toLowerCase(); return (l.startsWith("nb") || l.startsWith("nn") || l.startsWith("no")) ? "no" : "en"; }
+if (!state.settings.lang) state.settings.lang = detectLang();
+function L() { return state.settings.lang || "en"; }
+function t(k) { const d = T[L()]; return (d && d[k] != null) ? d[k] : (T.en[k] != null ? T.en[k] : k); }
+function setLang(l) { state.settings.lang = l; save(); render(); }
+const T = {
+  en: {
+    nav_home: "Home", nav_training: "Training", nav_community: "Community", nav_learn: "Learn", nav_profile: "Profile",
+    crisis_support: "Crisis support",
+    settings: "Settings", language: "Language", username: "Username", daily_reminder: "Daily reminder", reminder_time: "Reminder time",
+    crisis_contact: "Personal crisis contact (optional)", crisis_contact_ph: "Name / phone number of someone you trust",
+    your_data: "Your data", backup_my_data: "Back up my data", restore_from_backup: "Restore from backup",
+    data_note: "Your data lives only on this phone. Back it up to keep it if you delete or reinstall the app.",
+    found_broken: "Found something broken?", report_fix: "Report it and we'll fix it.",
+    backup_desc: "Copy this backup and keep it somewhere safe (Notes, email, or Files). If you delete or reinstall the app, paste it back under Restore to get your data back.",
+    copy_backup: "Copy backup", share_btn: "Share…", close: "Close",
+    restore_desc: "Paste a backup you saved earlier. This replaces all data currently in the app.",
+    restore_ph: "Paste your backup here", restore_replace: "Restore and replace", cancel: "Cancel",
+    saved: "Saved", backup_copied: "Backup copied. Save it somewhere safe.", data_restored: "Data restored.",
+    paste_first: "Paste a backup first.", invalid_backup: "That doesn't look like a valid backup.", not_together_backup: "That doesn't look like a Together backup."
+  },
+  no: {
+    nav_home: "Hjem", nav_training: "Trening", nav_community: "Fellesskap", nav_learn: "Lær", nav_profile: "Profil",
+    crisis_support: "Krisehjelp",
+    settings: "Innstillinger", language: "Språk", username: "Brukernavn", daily_reminder: "Daglig påminnelse", reminder_time: "Påminnelsestidspunkt",
+    crisis_contact: "Personlig krisekontakt (valgfritt)", crisis_contact_ph: "Navn / telefonnummer til en du stoler på",
+    your_data: "Dine data", backup_my_data: "Sikkerhetskopier data", restore_from_backup: "Gjenopprett fra kopi",
+    data_note: "Dataene dine finnes bare på denne telefonen. Ta en sikkerhetskopi for å beholde dem hvis du sletter eller installerer appen på nytt.",
+    found_broken: "Fant du noe som ikke virker?", report_fix: "Meld fra, så fikser vi det.",
+    backup_desc: "Kopier denne sikkerhetskopien og oppbevar den trygt (Notater, e-post eller Filer). Hvis du sletter eller installerer appen på nytt, limer du den inn under Gjenopprett for å få dataene tilbake.",
+    copy_backup: "Kopier sikkerhetskopi", share_btn: "Del…", close: "Lukk",
+    restore_desc: "Lim inn en sikkerhetskopi du har lagret tidligere. Dette erstatter alle data som ligger i appen nå.",
+    restore_ph: "Lim inn sikkerhetskopien her", restore_replace: "Gjenopprett og erstatt", cancel: "Avbryt",
+    saved: "Lagret", backup_copied: "Sikkerhetskopi kopiert. Oppbevar den trygt.", data_restored: "Data gjenopprettet.",
+    paste_first: "Lim inn en sikkerhetskopi først.", invalid_backup: "Dette ser ikke ut som en gyldig sikkerhetskopi.", not_together_backup: "Dette ser ikke ut som en Together-sikkerhetskopi."
+  }
+};
+
 // Firebase / Firestore community
 let communityPosts = [];
 let communityLoaded = false;
@@ -565,9 +604,12 @@ const TABS = [
 ];
 
 function renderNav() {
-  document.getElementById("nav").innerHTML = TABS.map(t =>
-    `<button class="${t.id === currentTab ? "active" : ""}" onclick="goTab('${t.id}')">
-       <span class="ico">${t.ico}</span>${t.label}</button>`).join("");
+  const nl = { home: t("nav_home"), training: t("nav_training"), community: t("nav_community"), learn: t("nav_learn"), profile: t("nav_profile") };
+  document.getElementById("nav").innerHTML = TABS.map(tb =>
+    `<button class="${tb.id === currentTab ? "active" : ""}" onclick="goTab('${tb.id}')">
+       <span class="ico">${tb.ico}</span>${nl[tb.id]}</button>`).join("");
+  const sos = document.getElementById("sosBtn");
+  if (sos) sos.innerHTML = "&#10084;&#65039; " + t("crisis_support");
 }
 function goTab(id) { currentTab = id; currentSubView = null; render(); main.scrollTop = 0; }
 
@@ -1643,31 +1685,34 @@ function renderProfile() {
     <div class="setRow" onclick="openContact()" style="cursor:pointer"><span>Report inappropriate activity</span><span style="color:var(--text-soft)">›</span></div>
   </div>`;
 
-  html += `<h2>Settings</h2><div class="card">
-    <div class="setRow"><span>Username</span>
+  const segBtn = (code, label) => `<button onclick="setLang('${code}')" style="border:none;padding:5px 12px;font-family:inherit;font-size:0.82rem;cursor:pointer;background:${L() === code ? "var(--teal)" : "transparent"};color:${L() === code ? "#fff" : "var(--text-soft)"}">${label}</button>`;
+  html += `<h2>${t("settings")}</h2><div class="card">
+    <div class="setRow"><span>${t("language")}</span>
+      <span style="display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden">${segBtn("no", "Norsk")}${segBtn("en", "English")}</span></div>
+    <div class="setRow"><span>${t("username")}</span>
       <button class="btn small secondary" onclick="editPseudonym()">${esc(state.pseudonym)}</button></div>
-    <div class="setRow"><span>Daily reminder</span>
+    <div class="setRow"><span>${t("daily_reminder")}</span>
       <label class="switch"><input type="checkbox" ${state.settings.notifications ? "checked" : ""} onchange="toggleNotif(this.checked)"><span class="sl"></span></label></div>
-    ${state.settings.notifications ? `<div class="setRow"><span style="color:var(--text-soft);font-size:0.88rem">Reminder time</span>
+    ${state.settings.notifications ? `<div class="setRow"><span style="color:var(--text-soft);font-size:0.88rem">${t("reminder_time")}</span>
       <input type="time" value="${state.settings.notifTime || "09:00"}" onchange="saveNotifTime(this.value)" style="border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-family:inherit;font-size:0.88rem;color:var(--text);background:var(--bg)"></div>` : ""}
     <div class="setRow" style="flex-direction:column;align-items:stretch;gap:8px">
-      <span>Personal crisis contact (optional)</span>
-      <input type="tel" id="crisisContact" placeholder="Name / phone number of someone you trust" value="${esc(state.settings.crisisContact)}" onchange="saveCrisisContact(this.value)">
+      <span>${t("crisis_contact")}</span>
+      <input type="tel" id="crisisContact" placeholder="${t("crisis_contact_ph")}" value="${esc(state.settings.crisisContact)}" onchange="saveCrisisContact(this.value)">
     </div>
   </div>`;
 
-  html += `<h2>Your data</h2><div class="card">
-    <div class="setRow" onclick="openBackup()" style="cursor:pointer"><span>Back up my data</span><span style="color:var(--text-soft)">›</span></div>
-    <div class="setRow" onclick="openRestore()" style="cursor:pointer"><span>Restore from backup</span><span style="color:var(--text-soft)">›</span></div>
+  html += `<h2>${t("your_data")}</h2><div class="card">
+    <div class="setRow" onclick="openBackup()" style="cursor:pointer"><span>${t("backup_my_data")}</span><span style="color:var(--text-soft)">›</span></div>
+    <div class="setRow" onclick="openRestore()" style="cursor:pointer"><span>${t("restore_from_backup")}</span><span style="color:var(--text-soft)">›</span></div>
   </div>
-  <div style="font-size:0.78rem;color:var(--text-soft);line-height:1.5;margin:-4px 2px 0">Your data lives only on this phone. Back it up to keep it if you delete or reinstall the app.</div>`;
+  <div style="font-size:0.78rem;color:var(--text-soft);line-height:1.5;margin:-4px 2px 0">${t("data_note")}</div>`;
 
   html += `<div style="margin:28px 0 48px">
     <button onclick="openBugReport()" style="width:100%;background:none;border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left">
       <span style="font-size:1.4rem;line-height:1">🐛</span>
       <div>
-        <div style="font-size:0.9rem;font-weight:600;color:var(--text)">Found something broken?</div>
-        <div style="font-size:0.78rem;color:var(--text-soft);margin-top:2px">Report it and we'll fix it.</div>
+        <div style="font-size:0.9rem;font-weight:600;color:var(--text)">${t("found_broken")}</div>
+        <div style="font-size:0.78rem;color:var(--text-soft);margin-top:2px">${t("report_fix")}</div>
       </div>
     </button>
   </div>`;
@@ -1786,21 +1831,21 @@ async function setupDailyNotifications(force) {
     Notification.requestPermission();
   }
 }
-function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast("Saved"); }
+function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast(t("saved")); }
 function openBackup() {
   const data = JSON.stringify(state);
   openModal(`
-    <h3>Back up my data</h3>
-    <div class="sub" style="margin-bottom:12px">Copy this backup and keep it somewhere safe (Notes, email, or Files). If you delete or reinstall the app, paste it back under Restore to get your data back.</div>
+    <h3>${t("backup_my_data")}</h3>
+    <div class="sub" style="margin-bottom:12px">${t("backup_desc")}</div>
     <textarea id="backupText" readonly rows="6" style="width:100%;font-family:monospace;font-size:0.78rem">${esc(data)}</textarea>
-    <button class="btn" style="width:100%;margin-top:12px" onclick="copyBackup()">Copy backup</button>
-    ${navigator.share ? `<button class="btn secondary" style="width:100%;margin-top:8px" onclick="shareBackup()">Share…</button>` : ""}
-    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">Close</button>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="copyBackup()">${t("copy_backup")}</button>
+    ${navigator.share ? `<button class="btn secondary" style="width:100%;margin-top:8px" onclick="shareBackup()">${t("share_btn")}</button>` : ""}
+    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">${t("close")}</button>
   `);
 }
 function copyBackup() {
   const ta = document.getElementById("backupText");
-  const done = () => toast("Backup copied. Save it somewhere safe.");
+  const done = () => toast(t("backup_copied"));
   if (navigator.clipboard) navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); document.execCommand("copy"); done(); });
   else { ta.select(); document.execCommand("copy"); done(); }
 }
@@ -1809,22 +1854,22 @@ async function shareBackup() {
 }
 function openRestore() {
   openModal(`
-    <h3>Restore from backup</h3>
-    <div class="sub" style="margin-bottom:12px">Paste a backup you saved earlier. This replaces all data currently in the app.</div>
-    <textarea id="restoreText" rows="6" placeholder="Paste your backup here" style="width:100%;font-family:monospace;font-size:0.78rem"></textarea>
-    <button class="btn" style="width:100%;margin-top:12px;background:#b9503c" onclick="confirmRestore()">Restore and replace</button>
-    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>
+    <h3>${t("restore_from_backup")}</h3>
+    <div class="sub" style="margin-bottom:12px">${t("restore_desc")}</div>
+    <textarea id="restoreText" rows="6" placeholder="${t("restore_ph")}" style="width:100%;font-family:monospace;font-size:0.78rem"></textarea>
+    <button class="btn" style="width:100%;margin-top:12px;background:#b9503c" onclick="confirmRestore()">${t("restore_replace")}</button>
+    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">${t("cancel")}</button>
   `);
 }
 function confirmRestore() {
   const raw = (document.getElementById("restoreText").value || "").trim();
-  if (!raw) { toast("Paste a backup first."); return; }
+  if (!raw) { toast(t("paste_first")); return; }
   let obj;
-  try { obj = JSON.parse(raw); } catch(e) { toast("That doesn't look like a valid backup."); return; }
-  if (!obj || typeof obj !== "object" || !("pseudonym" in obj)) { toast("That doesn't look like a Together backup."); return; }
+  try { obj = JSON.parse(raw); } catch(e) { toast(t("invalid_backup")); return; }
+  if (!obj || typeof obj !== "object" || !("pseudonym" in obj)) { toast(t("not_together_backup")); return; }
   state = Object.assign(structuredClone(defaultState), obj);
   state.settings = Object.assign(structuredClone(defaultState.settings), obj.settings || {});
-  save(); closeModal(); toast("Data restored."); render();
+  save(); closeModal(); toast(t("data_restored")); render();
 }
 function openBugReport() {
   openModal(`
