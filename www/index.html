@@ -340,15 +340,8 @@ const T = {
     crisis_support: "Crisis support",
     settings: "Settings", language: "Language", username: "Username", daily_reminder: "Daily reminder", reminder_time: "Reminder time",
     crisis_contact: "Personal crisis contact (optional)", crisis_contact_ph: "Name / phone number of someone you trust",
-    your_data: "Your data", backup_my_data: "Back up my data", restore_from_backup: "Restore from backup",
-    data_note: "Your data lives only on this phone. Back it up to keep it if you delete or reinstall the app.",
     found_broken: "Found something broken?", report_fix: "Report it and we'll fix it.",
-    backup_desc: "Copy this backup and keep it somewhere safe (Notes, email, or Files). If you delete or reinstall the app, paste it back under Restore to get your data back.",
-    copy_backup: "Copy backup", share_btn: "Share…", close: "Close",
-    restore_desc: "Paste a backup you saved earlier. This replaces all data currently in the app.",
-    restore_ph: "Paste your backup here", restore_replace: "Restore and replace", cancel: "Cancel",
-    saved: "Saved", backup_copied: "Backup copied. Save it somewhere safe.", data_restored: "Data restored.",
-    paste_first: "Paste a backup first.", invalid_backup: "That doesn't look like a valid backup.", not_together_backup: "That doesn't look like a Together backup.",
+    close: "Close", cancel: "Cancel", saved: "Saved",
     mood_heavy: "Heavy", mood_low: "Low", mood_okay: "Okay", mood_good: "Good",
     greeting_morning: "Good morning", greeting_afternoon: "Good afternoon", greeting_evening: "Good evening",
     home_sub: "How are you doing today, really?",
@@ -572,15 +565,8 @@ const T = {
     crisis_support: "Krisehjelp",
     settings: "Innstillinger", language: "Språk", username: "Brukernavn", daily_reminder: "Daglig påminnelse", reminder_time: "Påminnelsestidspunkt",
     crisis_contact: "Personlig krisekontakt (valgfritt)", crisis_contact_ph: "Navn / telefonnummer til en du stoler på",
-    your_data: "Dine data", backup_my_data: "Sikkerhetskopier data", restore_from_backup: "Gjenopprett fra kopi",
-    data_note: "Dataene dine finnes bare på denne telefonen. Ta en sikkerhetskopi for å beholde dem hvis du sletter eller installerer appen på nytt.",
     found_broken: "Fant du noe som ikke virker?", report_fix: "Meld fra, så fikser vi det.",
-    backup_desc: "Kopier denne sikkerhetskopien og oppbevar den trygt (Notater, e-post eller Filer). Hvis du sletter eller installerer appen på nytt, limer du den inn under Gjenopprett for å få dataene tilbake.",
-    copy_backup: "Kopier sikkerhetskopi", share_btn: "Del…", close: "Lukk",
-    restore_desc: "Lim inn en sikkerhetskopi du har lagret tidligere. Dette erstatter alle data som ligger i appen nå.",
-    restore_ph: "Lim inn sikkerhetskopien her", restore_replace: "Gjenopprett og erstatt", cancel: "Avbryt",
-    saved: "Lagret", backup_copied: "Sikkerhetskopi kopiert. Oppbevar den trygt.", data_restored: "Data gjenopprettet.",
-    paste_first: "Lim inn en sikkerhetskopi først.", invalid_backup: "Dette ser ikke ut som en gyldig sikkerhetskopi.", not_together_backup: "Dette ser ikke ut som en Together-sikkerhetskopi.",
+    close: "Lukk", cancel: "Avbryt", saved: "Lagret",
     mood_heavy: "Tungt", mood_low: "Lavt", mood_okay: "Greit", mood_good: "Bra",
     greeting_morning: "God morgen", greeting_afternoon: "God ettermiddag", greeting_evening: "God kveld",
     home_sub: "Hvordan har du det i dag, egentlig?",
@@ -2306,12 +2292,6 @@ function renderProfile() {
     </div>
   </div>`;
 
-  html += `<h2>${t("your_data")}</h2><div class="card">
-    <div class="setRow" onclick="openBackup()" style="cursor:pointer"><span>${t("backup_my_data")}</span><span style="color:var(--text-soft)">›</span></div>
-    <div class="setRow" onclick="openRestore()" style="cursor:pointer"><span>${t("restore_from_backup")}</span><span style="color:var(--text-soft)">›</span></div>
-  </div>
-  <div style="font-size:0.78rem;color:var(--text-soft);line-height:1.5;margin:-4px 2px 0">${t("data_note")}</div>`;
-
   html += `<div style="margin:28px 0 48px">
     <button onclick="openBugReport()" style="width:100%;background:none;border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left">
       <span style="font-size:1.4rem;line-height:1">🐛</span>
@@ -2439,45 +2419,6 @@ async function setupDailyNotifications(force) {
   }
 }
 function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast(t("saved")); }
-function openBackup() {
-  const data = JSON.stringify(state);
-  openModal(`
-    <h3>${t("backup_my_data")}</h3>
-    <div class="sub" style="margin-bottom:12px">${t("backup_desc")}</div>
-    <textarea id="backupText" readonly rows="6" style="width:100%;font-family:monospace;font-size:0.78rem">${esc(data)}</textarea>
-    <button class="btn" style="width:100%;margin-top:12px" onclick="copyBackup()">${t("copy_backup")}</button>
-    ${navigator.share ? `<button class="btn secondary" style="width:100%;margin-top:8px" onclick="shareBackup()">${t("share_btn")}</button>` : ""}
-    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">${t("close")}</button>
-  `);
-}
-function copyBackup() {
-  const ta = document.getElementById("backupText");
-  const done = () => toast(t("backup_copied"));
-  if (navigator.clipboard) navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); document.execCommand("copy"); done(); });
-  else { ta.select(); document.execCommand("copy"); done(); }
-}
-async function shareBackup() {
-  try { await navigator.share({ title: "Together backup", text: document.getElementById("backupText").value }); } catch(e) {}
-}
-function openRestore() {
-  openModal(`
-    <h3>${t("restore_from_backup")}</h3>
-    <div class="sub" style="margin-bottom:12px">${t("restore_desc")}</div>
-    <textarea id="restoreText" rows="6" placeholder="${t("restore_ph")}" style="width:100%;font-family:monospace;font-size:0.78rem"></textarea>
-    <button class="btn" style="width:100%;margin-top:12px;background:#b9503c" onclick="confirmRestore()">${t("restore_replace")}</button>
-    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">${t("cancel")}</button>
-  `);
-}
-function confirmRestore() {
-  const raw = (document.getElementById("restoreText").value || "").trim();
-  if (!raw) { toast(t("paste_first")); return; }
-  let obj;
-  try { obj = JSON.parse(raw); } catch(e) { toast(t("invalid_backup")); return; }
-  if (!obj || typeof obj !== "object" || !("pseudonym" in obj)) { toast(t("not_together_backup")); return; }
-  state = Object.assign(structuredClone(defaultState), obj);
-  state.settings = Object.assign(structuredClone(defaultState.settings), obj.settings || {});
-  save(); closeModal(); toast(t("data_restored")); render();
-}
 function openBugReport() {
   openModal(`
     <h3>Report a bug</h3>
