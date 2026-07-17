@@ -680,7 +680,11 @@ async function purchasePro() {
     IS_PRO = !!customerInfo.entitlements.active['pro'];
     if (IS_PRO) { closeModal(); toast("Welcome to Pro!"); render(); }
   } catch(e) {
-    if (e.code !== 'PURCHASE_CANCELLED') toast("Purchase failed. Please try again.");
+    if (e.code !== 'PURCHASE_CANCELLED') {
+      console.warn('Purchase error:', e);
+      const detail = e.code || e.message || 'unknown';
+      toast("Purchase failed (" + detail + "). Please try again.");
+    }
     if (btn) { btn.disabled = false; btn.textContent = "Subscribe"; }
   }
 }
