@@ -29,12 +29,29 @@
     --border: #e6e3df;
     --radius: 16px;
     --shadow: 0 1px 3px rgba(40, 45, 50, 0.06), 0 4px 14px rgba(40, 45, 50, 0.09);
+    --page-bg: #dcdad6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --teal: #4fb8b8;
+      --teal-dark: #2a7f7f;
+      --teal-light: #1c3634;
+      --coral: #f0937d;
+      --coral-light: #3d271f;
+      --bg: #141f1e;
+      --card: #1c2b2a;
+      --text: #eef1f0;
+      --text-soft: #9db0ad;
+      --border: #2c403d;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.35);
+      --page-bg: #0c1615;
+    }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; }
   body {
     font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #dcdad6;
+    background: var(--page-bg);
     color: var(--text);
     display: flex;
     justify-content: center;
@@ -74,10 +91,10 @@
   .moodRow button { flex: 1; font-size: 1.7rem; background: var(--bg); border: 2px solid transparent; border-radius: 14px; padding: 10px 0 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: inherit; }
   .moodRow button span { font-size: 0.65rem; color: var(--text-soft); }
   .moodRow button.selected { border-color: var(--teal); background: var(--teal-light); }
-  textarea, input[type=text], input[type=tel] { width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 10px; font-family: inherit; font-size: 0.92rem; resize: vertical; background: #fff; color: var(--text); }
-  textarea:focus, input:focus { outline: 2px solid var(--teal-light); border-color: var(--teal); }
+  textarea, input[type=text], input[type=tel], select { width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 10px; font-family: inherit; font-size: 0.92rem; resize: vertical; background: var(--card); color: var(--text); }
+  textarea:focus, input:focus, select:focus { outline: 2px solid var(--teal-light); border-color: var(--teal); }
   .nudge { border-left: 4px solid var(--teal); }
-  .nudge.warm { border-left-color: var(--coral); background: #fffaf8; }
+  .nudge.warm { border-left-color: var(--coral); background: var(--coral-light); }
   .nudge p { font-size: 0.92rem; }
   .nudge .actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
   .exCard { display: flex; align-items: center; gap: 14px; cursor: pointer; }
@@ -87,12 +104,20 @@
   .exCard .meta span { font-size: 0.8rem; color: var(--text-soft); }
   .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; background: var(--teal-light); color: var(--teal-dark); border-radius: 999px; padding: 3px 9px; margin-right: 5px; }
   .tag.coral { background: var(--coral-light); color: #b9503c; }
-  #breathOverlay { position: absolute; inset: 0; background: linear-gradient(170deg, #194d4d, #2a7f7f); z-index: 40; display: flex; flex-direction: column; align-items: center; color: #eaf4f4; padding: calc(20px + env(safe-area-inset-top)) 20px 20px; }
-  #breathOverlay .closeRow { width: 100%; display: flex; justify-content: flex-end; }
+  #breathOverlay { position: absolute; inset: 0; background: linear-gradient(170deg, #194d4d, #2a7f7f); z-index: 40; display: flex; flex-direction: column; align-items: center; color: #eaf4f4; padding: calc(20px + env(safe-area-inset-top)) 20px 20px; overflow: hidden; }
+  #breathOverlay .closeRow { width: 100%; display: flex; justify-content: flex-end; z-index: 5; }
   #breathOverlay .closeRow button { background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
-  #breathStage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; width: 100%; }
-  #breathBox { width: 240px; height: 240px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  #breathPhase { font-size: 1.2rem; font-weight: 600; min-height: 1.6em; }
+  #breathStage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; width: 100%; position: relative; z-index: 2; }
+  .orbWrap { position: relative; width: 260px; height: 260px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .aura { position: absolute; left: 50%; top: 50%; width: 200px; height: 200px; border-radius: 50%; border: 1px solid rgba(232,128,106,0.4); transform: translate(-50%,-50%) scale(0.6); opacity: 0.2; }
+  .orb { position: absolute; left: 50%; top: 50%; width: 168px; height: 168px; border-radius: 50%; background: radial-gradient(circle at 42% 36%, #ffffff, var(--coral) 80%); transform: translate(-50%,-50%) scale(0.5); box-shadow: 0 0 40px 6px rgba(232,128,106,0.28); }
+  #breathRingSvg { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+  .orbTxt { position: relative; z-index: 3; text-align: center; pointer-events: none; }
+  .orbPhase { font-size: 15px; font-weight: 600; letter-spacing: 0.02em; color: rgba(255,255,255,0.92); text-shadow: 0 1px 6px rgba(0,0,0,0.35); }
+  .orbCount { font-size: 46px; font-weight: 700; line-height: 1; margin-top: 2px; min-height: 0.9em; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,0.4); }
+  .bParticle { position: absolute; border-radius: 50%; background: #fff; opacity: 0; animation: bdrift linear infinite; }
+  @keyframes bdrift { 0% { opacity: 0; transform: translateY(16px); } 25% { opacity: 0.5; } 75% { opacity: 0.35; } 100% { opacity: 0; transform: translateY(-56px); } }
+  #breathCycleText { font-size: 0.8rem; opacity: 0.65; min-height: 1.2em; z-index: 2; }
   #breathOverlay .tempo { width: 100%; max-width: 280px; text-align: center; font-size: 0.85rem; }
   #breathOverlay input[type=range] { width: 100%; margin-top: 8px; accent-color: #fff; }
   #breathOverlay .controls { padding-bottom: 26px; display: flex; gap: 12px; }
@@ -144,7 +169,7 @@
   .feedItem:last-child { border-bottom: none; }
   .empty { color: var(--text-soft); font-size: 0.88rem; text-align: center; padding: 14px 0; }
   .proTag { display:inline-block;font-size:0.62rem;font-weight:700;letter-spacing:0.06em;background:var(--coral);color:#fff;border-radius:4px;padding:2px 7px;vertical-align:middle;margin-left:5px }
-  .toast { position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 0.85rem; z-index: 60; white-space: nowrap; animation: toastIn 0.25s ease; }
+  .toast { position: absolute; bottom: 95px; left: 50%; transform: translateX(-50%); background: #2b2f33; color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 0.85rem; z-index: 60; white-space: nowrap; animation: toastIn 0.25s ease; }
   @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
   /* ── Splash animation ── */
@@ -294,6 +319,7 @@ function restoreFromICloud() {
   state = Object.assign(structuredClone(defaultState), parsed);
   state.settings = Object.assign(structuredClone(defaultState.settings), parsed.settings || {});
   state.settings.icloudPromptDismissed = true;
+  hapticSuccess();
   save(); closeModal(); render();
   toast(t("icloud_restored_toast"));
 }
@@ -1090,6 +1116,17 @@ function toast(msg) {
   document.getElementById("app").appendChild(el);
   setTimeout(() => el.remove(), 2600);
 }
+/* ---------- Haptics (native only, safe no-op elsewhere) ---------- */
+function haptic(style) {
+  const h = window.Capacitor?.Plugins?.Haptics;
+  if (!h) return;
+  try { h.impact({ style: style || "LIGHT" }); } catch (e) {}
+}
+function hapticSuccess() {
+  const h = window.Capacitor?.Plugins?.Haptics;
+  if (!h) return;
+  try { h.notification({ type: "SUCCESS" }); } catch (e) {}
+}
 function streak() {
   let n = 0;
   for (let i = 0; ; i++) {
@@ -1271,7 +1308,7 @@ async function purchasePro() {
     }
     const { customerInfo } = await RC.purchasePackage({ aPackage: current.availablePackages[_selectedProPkg || 0] });
     IS_PRO = !!customerInfo.entitlements.active['pro'];
-    if (IS_PRO) { closeModal(); toast(t("welcome_pro_toast")); render(); }
+    if (IS_PRO) { hapticSuccess(); closeModal(); toast(t("welcome_pro_toast")); render(); }
   } catch(e) {
     if (e.code !== 'PURCHASE_CANCELLED') {
       console.warn('Purchase error:', e);
@@ -1443,6 +1480,7 @@ function renderHome() {
 function setMood(level) {
   const existing = state.moods[todayStr()] || { note: "" };
   state.moods[todayStr()] = { level, note: existing.note };
+  haptic();
   save(); render();
 }
 function saveNote() {
@@ -1473,6 +1511,7 @@ function saveJournal() {
   if (!ta || !ta.value.trim()) return;
   if (!state.journal) state.journal = [];
   state.journal.push({ id: Date.now().toString(), date: todayStr(), text: ta.value });
+  haptic();
   save(); closeModal();
   toast(t("saved_to_journal"));
   render();
@@ -1511,6 +1550,7 @@ function saveSleepLog() {
   if (!state.sleep) state.sleep = {};
   state.sleep[todayStr()] = { hours: parseFloat(sl.value), energy: _selEnergy || 3 };
   _selEnergy = null;
+  haptic();
   save(); closeModal();
   toast(t("sleep_saved"));
   render();
@@ -1537,6 +1577,7 @@ function saveWeeklyReview(wk) {
   if (!w1) return;
   if (!state.weeklySummary) state.weeklySummary = {};
   state.weeklySummary[wk] = { hard: w1.value, proud: w2.value, next: w3.value, date: todayStr() };
+  hapticSuccess();
   save(); closeModal();
   toast(t("review_saved"));
   render();
@@ -1645,7 +1686,7 @@ function programDayFocus(id, day) {
   const f = t('focus_' + id) || t('focus_sleep');
   return f[(day - 1) % f.length];
 }
-function completeExercise(id) { state.completedExercises.push({ id, date: todayStr() }); save(); toast(t("exercise_complete_toast")); render(); }
+function completeExercise(id) { state.completedExercises.push({ id, date: todayStr() }); hapticSuccess(); save(); toast(t("exercise_complete_toast")); render(); }
 
 function openReflection(id) {
   const saved = state.reflections[id] || { text: "", date: null };
@@ -1662,6 +1703,7 @@ function saveReflection(id) {
   if (!ta) return;
   if (!ta.value.trim()) { closeModal(); return; }
   state.reflections[id] = { text: ta.value, date: todayStr() };
+  haptic();
   save();
   closeModal();
   toast(t("reflection_saved_toast"));
@@ -1694,36 +1736,40 @@ function openExercise(id) {
 
 let breathRaf = null;
 let breathPhaseIdx = 0;
-const BREATH_C = 2 * Math.PI * 80;
+const BREATH_R = 96, BREATH_C = 2 * Math.PI * BREATH_R;
+function easeInOutBreath(x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
 function breathPhases() {
-  return [
-    { name: t("breath_in"),  startOff: BREATH_C, endOff: 0 },
-    { name: t("breath_hold"), startOff: 0,         endOff: 0 },
-    { name: t("breath_out"), startOff: 0,         endOff: BREATH_C },
-    { name: t("breath_hold"), startOff: BREATH_C,  endOff: BREATH_C },
-  ];
+  return [t("breath_in"), t("breath_hold"), t("breath_out"), t("breath_hold")];
 }
 
 function openBreath() {
   breathPhaseIdx = 0;
   const ov = document.createElement("div");
   ov.id = "breathOverlay";
-  ov.innerHTML = `
+  let parts = "";
+  for (let i = 0; i < 16; i++) {
+    const l = Math.round(Math.random() * 100), bo = Math.round(8 + Math.random() * 72),
+      d = (6 + Math.random() * 7).toFixed(1), dl = (Math.random() * 8).toFixed(1), s = (2 + Math.random() * 2.5).toFixed(1);
+    parts += `<div class="bParticle" style="left:${l}%;bottom:${bo}%;width:${s}px;height:${s}px;animation-duration:${d}s;animation-delay:${dl}s"></div>`;
+  }
+  ov.innerHTML = parts + `
     <div class="closeRow"><button onclick="closeBreath()">&#10005;</button></div>
     <div id="breathStage">
-      <div id="breathBox" style="position:relative;">
-        <svg viewBox="0 0 200 200" width="220" height="220">
-          <circle cx="100" cy="100" r="80" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="10"/>
-          <circle id="breathRing" cx="100" cy="100" r="80" fill="none" stroke="white" stroke-width="10"
-            stroke-dasharray="${BREATH_C.toFixed(2)}" stroke-dashoffset="${BREATH_C.toFixed(2)}"
-            stroke-linecap="round" transform="rotate(-90 100 100)"/>
+      <div class="orbWrap">
+        <div class="aura" id="aura2"></div><div class="aura" id="aura1"></div>
+        <div class="orb" id="breathOrb"></div>
+        <svg id="breathRingSvg" width="232" height="232" viewBox="0 0 232 232">
+          <circle cx="116" cy="116" r="${BREATH_R}" fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="4"/>
+          <circle id="breathRing" cx="116" cy="116" r="${BREATH_R}" fill="none" stroke="#fff" stroke-width="4"
+            stroke-linecap="round" stroke-dasharray="${BREATH_C.toFixed(1)}" stroke-dashoffset="${BREATH_C.toFixed(1)}"
+            transform="rotate(-90 116 116)"/>
         </svg>
-        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-          <div id="breathPhaseText" style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.9);text-align:center;">${t("breath_press_start")}</div>
-          <div id="breathCountText" style="font-size:44px;font-weight:700;color:white;line-height:1;margin-top:4px;min-height:1em;text-align:center;"></div>
+        <div class="orbTxt">
+          <div id="breathPhaseText" class="orbPhase">${t("breath_press_start")}</div>
+          <div id="breathCountText" class="orbCount"></div>
         </div>
       </div>
-      <div id="breathCycleText" style="font-size:0.8rem;opacity:0.65;margin-top:-4px;min-height:1.2em"></div>
+      <div id="breathCycleText"></div>
       <div class="tempo">${t("breath_pace")} <b id="tempoVal">4</b> ${t("breath_sec_phase")}
         <input type="range" id="tempoRange" min="3" max="6" step="0.5" value="4">
       </div>
@@ -1755,14 +1801,24 @@ function runBreathCycle() {
   let phaseStart = null;
   const phases = breathPhases();
   const tick = ts => {
-    const ring = document.getElementById("breathRing");
-    if (!ring) { breathRaf = null; return; }
+    const orb = document.getElementById("breathOrb");
+    if (!orb) { breathRaf = null; return; }
     const tempo = parseFloat(document.getElementById("tempoRange").value) * 1000;
     if (phaseStart === null) phaseStart = ts;
     const frac = Math.min((ts - phaseStart) / tempo, 1);
-    const ph = phases[breathPhaseIdx % 4];
-    ring.style.strokeDashoffset = ph.startOff + (ph.endOff - ph.startOff) * frac;
-    document.getElementById("breathPhaseText").textContent = ph.name;
+    const ph = breathPhaseIdx % 4;
+    let bv;
+    if (ph === 0) bv = easeInOutBreath(frac);
+    else if (ph === 1) bv = 1;
+    else if (ph === 2) bv = easeInOutBreath(1 - frac);
+    else bv = 0;
+    orb.style.transform = `translate(-50%,-50%) scale(${(0.5 + 0.5 * bv).toFixed(3)})`;
+    orb.style.boxShadow = `0 0 ${Math.round(38 + 52 * bv)}px ${Math.round(6 + 10 * bv)}px rgba(232,128,106,${(0.24 + 0.32 * bv).toFixed(2)})`;
+    const a1 = document.getElementById("aura1"), a2 = document.getElementById("aura2");
+    a1.style.transform = `translate(-50%,-50%) scale(${(0.6 + 0.5 * bv).toFixed(3)})`; a1.style.opacity = (0.14 + 0.34 * bv).toFixed(2);
+    a2.style.transform = `translate(-50%,-50%) scale(${(0.72 + 0.82 * bv).toFixed(3)})`; a2.style.opacity = (0.08 + 0.2 * bv).toFixed(2);
+    document.getElementById("breathRing").style.strokeDashoffset = (BREATH_C * (1 - bv)).toFixed(1);
+    document.getElementById("breathPhaseText").textContent = phases[ph];
     const secs = Math.ceil((tempo - (ts - phaseStart)) / 1000);
     document.getElementById("breathCountText").textContent = secs > 0 ? secs : "";
     const cycleEl = document.getElementById("breathCycleText");
@@ -1860,6 +1916,7 @@ async function react(postId, kind) {
   const r = state.reactions[postId] || (state.reactions[postId] = {});
   const wasOn = r[kind];
   r[kind] = !wasOn;
+  haptic();
   save(); render();
   if (fbDb && communityPosts.some(p => p.id === postId)) {
     const field = kind === 'support' ? 'support' : 'beenThere';
@@ -1952,6 +2009,7 @@ function confirmBlock(id) {
   if (post && !state.blocked.some(b => (b.uid && b.uid === post.userId) || b.name === post.who)) {
     state.blocked.push({ uid: post.userId || null, name: post.who || null });
   }
+  haptic();
   save(); closeModal(); render();
   toast(t("user_blocked_toast"));
 }
@@ -1985,7 +2043,7 @@ function communityGuidelinesGate() {
       <button class="btn" style="width:100%" onclick="acceptGuidelines()">${t("i_agree_btn")}</button>
     </div>`;
 }
-function acceptGuidelines() { state.guidelinesAccepted = true; save(); render(); main.scrollTop = 0; }
+function acceptGuidelines() { state.guidelinesAccepted = true; haptic(); save(); render(); main.scrollTop = 0; }
 function showGuidelines() {
   openModal(`<h3>${t("community_guidelines_modal_title")}</h3>${guidelinesInner(false)}
     <button class="btn secondary" style="width:100%;margin-top:12px" onclick="closeModal()">${t("close")}</button>`);
@@ -2083,6 +2141,7 @@ async function doPublish(text, channel, prompt) {
     render();
   }
   currentTab = 'community';
+  hapticSuccess();
   toast(t("posted_toast"));
 }
 
@@ -2310,6 +2369,7 @@ async function confirmDeletePost(id) {
     communityPosts = communityPosts.filter(p => p.id !== id);
     render();
   }
+  haptic();
   toast(t("post_deleted_toast"));
 }
 
@@ -2323,6 +2383,7 @@ function editPseudonym() {
 }
 function savePseudonym() { const v = document.getElementById("pseudoInput").value.trim(); if (v) { state.pseudonym = v; save(); } closeModal(); render(); }
 function toggleNotif(on) {
+  haptic();
   state.settings.notifications = on; save();
   if (on) setupDailyNotifications(true);
   else cancelDailyNotifications();
