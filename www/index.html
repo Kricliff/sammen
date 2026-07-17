@@ -216,7 +216,7 @@ const defaultState = {
   activePrograms: [],
   posts: [],
   reactions: {},
-  settings: { notifications: true, notifTime: "09:00", crisisContact: "" },
+  settings: { notifications: true, notifTime: "09:00", crisisContact: "", icloudPromptDismissed: false },
   dismissedNudges: {},
   reflections: {},
   journal: [],
@@ -245,7 +245,62 @@ function loadState() {
   } catch (e) {}
   return structuredClone(defaultState);
 }
-function save() { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function save() { localStorage.setItem(LS_KEY, JSON.stringify(state)); scheduleICloudPush(); }
+
+/* ---------- iCloud sync (restore data after delete/reinstall) ---------- */
+let _icloudPushTimer = null;
+function scheduleICloudPush() {
+  const ic = window.Capacitor?.Plugins?.ICloudSync;
+  if (!ic) return;
+  clearTimeout(_icloudPushTimer);
+  _icloudPushTimer = setTimeout(() => {
+    ic.setValue({ value: JSON.stringify(state) }).catch(() => {});
+  }, 2000);
+}
+function stateLooksFresh() {
+  return Object.keys(state.moods).length === 0
+    && state.completedExercises.length === 0
+    && (state.journal || []).length === 0
+    && (state.posts || []).length === 0;
+}
+async function checkICloudRestore() {
+  const ic = window.Capacitor?.Plugins?.ICloudSync;
+  if (!ic || state.settings.icloudPromptDismissed || !stateLooksFresh()) return;
+  try {
+    const { available } = await ic.isAvailable();
+    if (!available) return;
+    const { value } = await ic.getValue();
+    if (!value) return;
+    const parsed = JSON.parse(value);
+    if (!parsed || typeof parsed !== "object" || !("pseudonym" in parsed)) return;
+    // Don't prompt if the iCloud copy is itself empty (nothing meaningful to restore)
+    const hasContent = Object.keys(parsed.moods || {}).length > 0
+      || (parsed.completedExercises || []).length > 0
+      || (parsed.journal || []).length > 0
+      || (parsed.posts || []).length > 0;
+    if (!hasContent) return;
+    openModal(`
+      <h3>${t("icloud_found_title")}</h3>
+      <div class="sub" style="margin-bottom:14px">${t("icloud_found_body")}</div>
+      <button class="btn" style="width:100%;margin-bottom:8px" onclick="restoreFromICloud()">${t("icloud_restore_btn")}</button>
+      <button class="btn secondary" style="width:100%" onclick="dismissICloudPrompt()">${t("icloud_fresh_btn")}</button>
+    `);
+    window._icloudPending = parsed;
+  } catch (e) { /* silent — iCloud unavailable or not signed in */ }
+}
+function restoreFromICloud() {
+  const parsed = window._icloudPending;
+  if (!parsed) { closeModal(); return; }
+  state = Object.assign(structuredClone(defaultState), parsed);
+  state.settings = Object.assign(structuredClone(defaultState.settings), parsed.settings || {});
+  state.settings.icloudPromptDismissed = true;
+  save(); closeModal(); render();
+  toast(t("icloud_restored_toast"));
+}
+function dismissICloudPrompt() {
+  state.settings.icloudPromptDismissed = true;
+  save(); closeModal();
+}
 
 /* ---------- i18n (Norwegian + English) ---------- */
 function detectLang() { const l = (navigator.language || "en").toLowerCase(); return (l.startsWith("nb") || l.startsWith("nn") || l.startsWith("no")) ? "no" : "en"; }
@@ -481,7 +536,10 @@ const T = {
     auto_renews_pre: "Auto-renews every", cancel_anytime: "Cancel anytime.",
     subscribe_btn: "Subscribe", purchases_not_available: "Purchases not available here.", opening_btn: "Opening…",
     welcome_pro_toast: "Welcome to Pro!", purchase_failed_pre: "Purchase failed (", purchase_failed_post: "). Please try again.",
-    pro_access_restored: "Pro access restored.", no_active_sub: "No active subscription found.", could_not_restore: "Could not restore. Please try again."
+    pro_access_restored: "Pro access restored.", no_active_sub: "No active subscription found.", could_not_restore: "Could not restore. Please try again.",
+    icloud_found_title: "Welcome back", icloud_found_body: "We found data from a previous install on your iCloud account. Would you like to restore it?",
+    icloud_restore_btn: "Restore my data", icloud_fresh_btn: "Start fresh",
+    icloud_restored_toast: "Data restored from iCloud.", icloud_restore_failed: "Could not restore from iCloud."
   },
   no: {
     nav_home: "Hjem", nav_training: "Trening", nav_community: "Fellesskap", nav_learn: "Lær", nav_profile: "Profil",
@@ -710,7 +768,10 @@ const T = {
     auto_renews_pre: "Fornyes automatisk hver", cancel_anytime: "Avbryt når som helst.",
     subscribe_btn: "Abonner", purchases_not_available: "Kjøp er ikke tilgjengelig her.", opening_btn: "Åpner…",
     welcome_pro_toast: "Velkommen til Pro!", purchase_failed_pre: "Kjøp mislyktes (", purchase_failed_post: "). Prøv igjen.",
-    pro_access_restored: "Pro-tilgang gjenopprettet.", no_active_sub: "Ingen aktivt abonnement funnet.", could_not_restore: "Kunne ikke gjenopprette. Prøv igjen."
+    pro_access_restored: "Pro-tilgang gjenopprettet.", no_active_sub: "Ingen aktivt abonnement funnet.", could_not_restore: "Kunne ikke gjenopprette. Prøv igjen.",
+    icloud_found_title: "Velkommen tilbake", icloud_found_body: "Vi fant data fra en tidligere installasjon på din iCloud-konto. Vil du gjenopprette den?",
+    icloud_restore_btn: "Gjenopprett dataene mine", icloud_fresh_btn: "Start på nytt",
+    icloud_restored_toast: "Data gjenopprettet fra iCloud.", icloud_restore_failed: "Kunne ikke gjenopprette fra iCloud."
   }
 };
 
@@ -2450,6 +2511,7 @@ render();
   if (state.settings.notifications) setTimeout(setupDailyNotifications, 3000);
   initRevenueCat();
   initFirebase();
+  setTimeout(checkICloudRestore, 1200);
 })();
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
