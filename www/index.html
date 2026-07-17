@@ -1656,6 +1656,12 @@ function renderProfile() {
     </div>
   </div>`;
 
+  html += `<h2>Your data</h2><div class="card">
+    <div class="setRow" onclick="openBackup()" style="cursor:pointer"><span>Back up my data</span><span style="color:var(--text-soft)">›</span></div>
+    <div class="setRow" onclick="openRestore()" style="cursor:pointer"><span>Restore from backup</span><span style="color:var(--text-soft)">›</span></div>
+  </div>
+  <div style="font-size:0.78rem;color:var(--text-soft);line-height:1.5;margin:-4px 2px 0">Your data lives only on this phone. Back it up to keep it if you delete or reinstall the app.</div>`;
+
   html += `<div style="margin:28px 0 48px">
     <button onclick="openBugReport()" style="width:100%;background:none;border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left">
       <span style="font-size:1.4rem;line-height:1">🐛</span>
@@ -1781,6 +1787,45 @@ async function setupDailyNotifications(force) {
   }
 }
 function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast("Saved"); }
+function openBackup() {
+  const data = JSON.stringify(state);
+  openModal(`
+    <h3>Back up my data</h3>
+    <div class="sub" style="margin-bottom:12px">Copy this backup and keep it somewhere safe (Notes, email, or Files). If you delete or reinstall the app, paste it back under Restore to get your data back.</div>
+    <textarea id="backupText" readonly rows="6" style="width:100%;font-family:monospace;font-size:0.78rem">${esc(data)}</textarea>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="copyBackup()">Copy backup</button>
+    ${navigator.share ? `<button class="btn secondary" style="width:100%;margin-top:8px" onclick="shareBackup()">Share…</button>` : ""}
+    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">Close</button>
+  `);
+}
+function copyBackup() {
+  const ta = document.getElementById("backupText");
+  const done = () => toast("Backup copied. Save it somewhere safe.");
+  if (navigator.clipboard) navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); document.execCommand("copy"); done(); });
+  else { ta.select(); document.execCommand("copy"); done(); }
+}
+async function shareBackup() {
+  try { await navigator.share({ title: "Together backup", text: document.getElementById("backupText").value }); } catch(e) {}
+}
+function openRestore() {
+  openModal(`
+    <h3>Restore from backup</h3>
+    <div class="sub" style="margin-bottom:12px">Paste a backup you saved earlier. This replaces all data currently in the app.</div>
+    <textarea id="restoreText" rows="6" placeholder="Paste your backup here" style="width:100%;font-family:monospace;font-size:0.78rem"></textarea>
+    <button class="btn" style="width:100%;margin-top:12px;background:#b9503c" onclick="confirmRestore()">Restore and replace</button>
+    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>
+  `);
+}
+function confirmRestore() {
+  const raw = (document.getElementById("restoreText").value || "").trim();
+  if (!raw) { toast("Paste a backup first."); return; }
+  let obj;
+  try { obj = JSON.parse(raw); } catch(e) { toast("That doesn't look like a valid backup."); return; }
+  if (!obj || typeof obj !== "object" || !("pseudonym" in obj)) { toast("That doesn't look like a Together backup."); return; }
+  state = Object.assign(structuredClone(defaultState), obj);
+  state.settings = Object.assign(structuredClone(defaultState.settings), obj.settings || {});
+  save(); closeModal(); toast("Data restored."); render();
+}
 function openBugReport() {
   openModal(`
     <h3>Report a bug</h3>
