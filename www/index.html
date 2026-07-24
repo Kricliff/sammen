@@ -255,6 +255,7 @@ const defaultState = {
   guidelinesAccepted: false,
   blocked: [],
   hiddenPosts: [],
+  hiddenReplies: [],
 };
 
 let state = loadState();
@@ -375,9 +376,6 @@ const T = {
     completed_on: "✓ Completed", start_arrow: "Start →",
     weekly_review_locked_desc: "Three questions to close the week and go into the next one more grounded.",
     latest_from_community: "Latest from Community",
-    feed_support: "Your post has received", feed_support_reactions: "support reactions",
-    feed_beenthere: "2 men tapped \"I've been there\" on your post",
-    feed_new_prompt: "New prompt in the feed:", feed_fatherhood: "5 new posts in the Fatherhood channel today",
     nudge_not_now: "Not now",
     nudge_low3: "You've logged a few heavy days in a row. Want something concrete to work with? The programmes go one day at a time. You set the pace.",
     nudge_low3_action: "Show me the programmes",
@@ -391,7 +389,7 @@ const T = {
     ex_breath_title: "Breathing exercise", ex_breath_desc: "Calm breath with visual rhythm",
     ex_ground_title: "5-4-3-2-1 grounding", ex_ground_desc: "Ground yourself with your senses",
     ex_reframe_title: "Reframe the thought", ex_reframe_desc: "A short cognitive exercise",
-    ex_move_title: "Physical reset", ex_move_desc: "Release tension in 3 minutes",
+    ex_move_title: "Physical reset", ex_move_desc: "Release tension quickly",
     ex_visual_title: "Safe place", ex_visual_desc: "Visualisation for calm",
     journal_title: "📓 Journal", journal_ph: "What's on your mind today?", save: "Save",
     previous_entries: "PREVIOUS ENTRIES", saved_to_journal: "Saved to your journal.",
@@ -503,6 +501,9 @@ const T = {
     support_lbl: "Support", been_there_lbl: "I've been there",
     delete_btn: "Delete", more_menu_btn: "⋯ More", translate_btn: "Translate", show_original_btn: "Show original",
     could_not_translate: "Could not translate.",
+    replies_word: "Replies", hide_replies: "Hide replies", reply_ph: "Write a reply…", reply_send: "Reply",
+    reply_empty: "No replies yet. Be the first to respond.", reply_posted_toast: "Reply posted.",
+    reply_report_btn: "🚩 Report", report_reply_title: "Report reply",
     more_post_word: "more post", in_this_feed: "in this feed",
     upgrade_pro_feed: "Upgrade to Pro to read the full community feed.", go_pro_btn: "Go Pro",
     prev_btn: "← Previous", next_page_btn: "Next →", of_page: "of",
@@ -583,6 +584,10 @@ const T = {
     profile_tab_overview: "Oversikt", profile_tab_journal: "Dagbok", profile_tab_weekly: "Ukentlig",
     journal_history_empty: "Ingen dagboknotater ennå.", weekly_history_empty: "Ingen ukentlige refleksjoner ennå.",
     crisis_contact: "Personlig krisekontakt (valgfritt)", crisis_contact_ph: "Navn / telefonnummer til en du stoler på",
+    coach_contact_title: "Avtal en samtale med meg", coach_contact_desc: "Ønsker du å ta en prat med meg som coach? Fyll ut skjemaet, så tar jeg kontakt.",
+    coach_contact_btn: "Kontakt meg", coach_contact_name: "Navn", coach_contact_phone: "Telefonnummer", coach_contact_email: "E-postadresse", coach_contact_reason: "Hva gjelder henvendelsen?",
+    coach_contact_submit: "Send henvendelse", coach_contact_note: "Jeg tar kontakt innen 24 timer.",
+    coach_contact_missing: "Fyll ut navn, minst én kontaktmåte og grunn først", coach_contact_sent: "Åpner e-post … husk å sende den",
     your_data: "Dine data", backup_my_data: "Sikkerhetskopier data", restore_from_backup: "Gjenopprett fra kopi",
     data_note: "Dataene dine finnes bare på denne telefonen. Ta en sikkerhetskopi for å beholde dem hvis du sletter eller installerer appen på nytt.",
     found_broken: "Fant du noe som ikke virker?", report_fix: "Meld fra, så fikser vi det.",
@@ -611,9 +616,6 @@ const T = {
     completed_on: "✓ Fullført", start_arrow: "Start →",
     weekly_review_locked_desc: "Tre spørsmål for å avslutte uken og gå mer jordet inn i den neste.",
     latest_from_community: "Siste fra Fellesskap",
-    feed_support: "Innlegget ditt har fått", feed_support_reactions: "støttereaksjoner",
-    feed_beenthere: "2 menn trykket «jeg har vært der» på innlegget ditt",
-    feed_new_prompt: "Ny prompt i feeden:", feed_fatherhood: "5 nye innlegg i Far-kanalen i dag",
     nudge_not_now: "Ikke nå",
     nudge_low3: "Du har registrert noen tunge dager på rad. Vil du ha noe konkret å jobbe med? Programmene går én dag om gangen. Du setter tempoet.",
     nudge_low3_action: "Vis meg programmene",
@@ -627,7 +629,7 @@ const T = {
     ex_breath_title: "Pusteøvelse", ex_breath_desc: "Rolig pust med visuell rytme",
     ex_ground_title: "5-4-3-2-1 jording", ex_ground_desc: "Jord deg selv med sansene",
     ex_reframe_title: "Snu tanken", ex_reframe_desc: "En kort kognitiv øvelse",
-    ex_move_title: "Fysisk reset", ex_move_desc: "Slipp spenning på 3 minutter",
+    ex_move_title: "Fysisk reset", ex_move_desc: "Slipp spenning raskt",
     ex_visual_title: "Trygt sted", ex_visual_desc: "Visualisering for ro",
     journal_title: "📓 Dagbok", journal_ph: "Hva tenker du på i dag?", save: "Lagre",
     previous_entries: "TIDLIGERE NOTATER", saved_to_journal: "Lagret i dagboken din.",
@@ -739,6 +741,9 @@ const T = {
     support_lbl: "Støtte", been_there_lbl: "Jeg har vært der",
     delete_btn: "Slett", more_menu_btn: "⋯ Mer", translate_btn: "Oversett", show_original_btn: "Vis original",
     could_not_translate: "Kunne ikke oversette.",
+    replies_word: "Svar", hide_replies: "Skjul svar", reply_ph: "Skriv et svar…", reply_send: "Svar",
+    reply_empty: "Ingen svar ennå. Bli den første til å svare.", reply_posted_toast: "Svar publisert.",
+    reply_report_btn: "🚩 Rapporter", report_reply_title: "Rapporter svar",
     more_post_word: "flere innlegg", in_this_feed: "i denne feeden",
     upgrade_pro_feed: "Oppgrader til Pro for å lese hele fellesskapsfeeden.", go_pro_btn: "Bli Pro",
     prev_btn: "← Forrige", next_page_btn: "Neste →", of_page: "av",
@@ -818,6 +823,8 @@ let communityPosts = [];
 let communityLoaded = false;
 let communityUnsubscribe = null;
 let fbAuth = null, fbDb = null, fbUser = null;
+let openReplyThreads = {};
+let repliesCache = {};
 
 function formatAge(ts) {
   if (!ts || !ts.toDate) return 'now';
@@ -1479,7 +1486,7 @@ function renderHome() {
   html += `<h2>${t("todays_exercise")}</h2>
     <div class="card exCard" onclick="openExercise('${ex.id}')">
       <div class="exIcon">${ex.icon}</div>
-      <div class="meta"><b>${t('ex_' + ex.id + '_title')}</b><span>${t('ex_' + ex.id + '_desc')} &middot; ${ex.min} min</span></div>
+      <div class="meta"><b>${t('ex_' + ex.id + '_title')}</b><span>${t('ex_' + ex.id + '_desc')}</span></div>
       <button class="btn small">${t("start")}</button>
     </div>`;
 
@@ -1506,17 +1513,20 @@ function renderHome() {
       </div>`
     : lockedCard(t("weekly_review"), t("weekly_review_locked_desc"), '📅');
 
-  html += `<h2>${t("latest_from_community")}</h2><div class="card">`;
-  const feedItems = [];
-  const myPostCount = communityPosts.filter(p => p.mine).length;
-  if (myPostCount > 0) {
-    feedItems.push({ dot: "💬", text: `${t("feed_support")} ${3 + myPostCount * 2} ${t("feed_support_reactions")}` });
-    feedItems.push({ dot: "🫂", text: t("feed_beenthere") });
+  html += `<h2>${t("latest_from_community")}</h2>`;
+  const feedBase = communityLoaded && communityPosts.length > 0 ? communityPosts : SEED_POSTS;
+  const recentPosts = feedBase.filter(p => !isHidden(p)).slice(0, 2);
+  if (recentPosts.length === 0) {
+    html += `<div class="card"><div class="empty">${t("no_posts_yet")}</div></div>`;
+  } else {
+    html += recentPosts.map(p => `<div class="card" style="margin-bottom:8px;cursor:pointer" onclick="goTab('community')">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:0.82rem;font-weight:600">${esc(p.who)}</span>
+        <span style="font-size:0.76rem;color:var(--text-soft)">${channelLabel(p.channel)} &middot; ${p.age || t("now_lbl")}</span>
+      </div>
+      <div style="font-size:0.85rem;color:var(--text)">${esc(p.text.length > 100 ? p.text.slice(0, 100) + "…" : p.text)}</div>
+    </div>`).join("");
   }
-  feedItems.push({ dot: "📝", text: `${t("feed_new_prompt")} "${dailyPrompt()}"` });
-  feedItems.push({ dot: "🔥", text: t("feed_fatherhood") });
-  html += feedItems.map(f => `<div class="feedItem"><span class="dot">${f.dot}</span><span>${f.text}</span></div>`).join("");
-  html += `</div>`;
 
   main.innerHTML = html;
   if (focusNote) { focusNote = false; const ta = document.getElementById("moodNote"); if (ta) ta.focus(); }
@@ -1599,17 +1609,17 @@ function renderTraining() {
       </div>`;
     }).join("");
   }
-  html += `<h2>${t("micro_exercises")} <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">3&ndash;10 min</span></h2>`;
+  html += `<h2>${t("micro_exercises")}</h2>`;
   html += EXERCISES.map(e => {
     const locked = !IS_PRO && !FREE_EXERCISE_IDS.has(e.id);
     return locked
       ? `<div class="card exCard" onclick="showProModal()" style="opacity:0.72;cursor:pointer">
           <div class="exIcon" style="background:var(--coral-light)">${e.icon}</div>
-          <div class="meta"><b>${t('ex_' + e.id + '_title')}<span class="proTag">PRO</span></b><span>${t('ex_' + e.id + '_desc')} &middot; ${e.min} min</span></div>
+          <div class="meta"><b>${t('ex_' + e.id + '_title')}<span class="proTag">PRO</span></b><span>${t('ex_' + e.id + '_desc')}</span></div>
         </div>`
       : `<div class="card exCard" onclick="openExercise('${e.id}')">
           <div class="exIcon">${e.icon}</div>
-          <div class="meta"><b>${t('ex_' + e.id + '_title')}</b><span>${t('ex_' + e.id + '_desc')} &middot; ${e.min} min</span></div>
+          <div class="meta"><b>${t('ex_' + e.id + '_title')}</b><span>${t('ex_' + e.id + '_desc')}</span></div>
         </div>`;
   }).join("");
   const sr = REFLECTIONS[SESSION_REFLECTION_IDX];
@@ -1870,6 +1880,12 @@ function renderCommunity() {
         ${p.mine ? `<button class="report" style="color:#b9503c" onclick="deletePost('${p.id}')">${t("delete_btn")}</button>` : `<button class="report" onclick="postMenu('${p.id}')">${t("more_menu_btn")}</button>`}
         <button id="trbtn_${p.id}" onclick="translatePost('${p.id}')" style="color:var(--teal)">${t("translate_btn")}</button>
       </div>
+      <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+        <button onclick="toggleReplies('${p.id}')" style="background:none;border:none;color:var(--teal);font-family:inherit;font-size:0.82rem;cursor:pointer;padding:0">
+          &#128172; ${openReplyThreads[p.id] ? t("hide_replies") : `${t("replies_word")} (${p.replyCount || 0})`}
+        </button>
+        ${openReplyThreads[p.id] ? renderReplyThread(p.id) : ""}
+      </div>
     </div>`;
   }).join("");
   if (!IS_PRO && filtered.length > 5) {
@@ -1902,6 +1918,99 @@ function isHidden(p) {
   return state.blocked.some(b => (b.uid && b.uid === p.userId) || (b.name && b.name === p.who));
 }
 function findPost(id) { return communityPosts.find(p => p.id === id) || SEED_POSTS.find(p => p.id === id); }
+
+function isHiddenReply(r) {
+  if (state.hiddenReplies.includes(r.id)) return true;
+  return state.blocked.some(b => (b.uid && b.uid === r.userId) || (b.name && b.name === r.who));
+}
+async function toggleReplies(postId) {
+  const willOpen = !openReplyThreads[postId];
+  openReplyThreads[postId] = willOpen;
+  haptic();
+  if (willOpen && !repliesCache[postId]) {
+    repliesCache[postId] = [];
+    render();
+    if (fbDb) {
+      try {
+        const snap = await fbDb.collection("posts").doc(postId).collection("replies").orderBy("createdAt", "asc").get();
+        repliesCache[postId] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      } catch (e) { console.warn("Load replies failed:", e); }
+    }
+  }
+  render();
+}
+function renderReplyThread(postId) {
+  const replies = (repliesCache[postId] || []).filter(r => !isHiddenReply(r));
+  const list = replies.length
+    ? replies.map(r => `<div style="padding:8px 0;border-top:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <b style="font-size:0.8rem">${esc(r.who)}</b>
+          <button style="font-size:0.72rem;color:#b9503c;background:none;border:none;cursor:pointer;font-family:inherit" onclick="reportReply('${postId}','${r.id}')">${t("reply_report_btn")}</button>
+        </div>
+        <div style="font-size:0.85rem;margin-top:2px">${esc(r.text)}</div>
+      </div>`).join("")
+    : `<div class="empty" style="font-size:0.82rem;padding:8px 0">${t("reply_empty")}</div>`;
+  return `<div style="margin-top:6px">
+    ${list}
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input type="text" id="replyInput_${postId}" placeholder="${t("reply_ph")}" style="flex:1">
+      <button class="btn small" onclick="submitReply('${postId}')">${t("reply_send")}</button>
+    </div>
+  </div>`;
+}
+async function submitReply(postId) {
+  const input = document.getElementById("replyInput_" + postId);
+  const text = input.value.trim();
+  if (!text) return;
+  if (OBJECTIONABLE_PATTERNS.test(text)) { toast(t("guideline_break_toast")); return; }
+  const reply = { who: state.pseudonym, userId: fbUser ? fbUser.uid : null, text };
+  if (fbDb && fbUser) {
+    try {
+      const ref = await fbDb.collection("posts").doc(postId).collection("replies").add({
+        who: state.pseudonym, userId: fbUser.uid, text,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      reply.id = ref.id;
+      if (communityPosts.some(p => p.id === postId)) {
+        await fbDb.collection("posts").doc(postId).update({
+          replyCount: firebase.firestore.FieldValue.increment(1)
+        });
+      }
+    } catch (e) { console.warn("Reply failed:", e); toast(t("could_not_post")); return; }
+  } else {
+    reply.id = "local" + Date.now();
+  }
+  if (!repliesCache[postId]) repliesCache[postId] = [];
+  repliesCache[postId].push(reply);
+  input.value = "";
+  hapticSuccess();
+  toast(t("reply_posted_toast"));
+  render();
+}
+function reportReply(postId, replyId) {
+  openModal(`
+    <h3>${t("report_reply_title")}</h3>
+    <div class="sub">${t("report_post_sub")}</div>
+    ${[t("report_reason_1"), t("report_reason_2"), t("report_reason_3"), t("report_reason_4"), t("report_reason_5")].map(reason =>
+      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="submitReplyReport('${postId}','${replyId}', ${JSON.stringify(reason).replace(/"/g, '&quot;')})">${reason}</button>`).join("")}
+    <button class="btn secondary" style="width:100%;margin-top:4px" onclick="closeModal()">${t("cancel")}</button>
+  `);
+}
+async function submitReplyReport(postId, replyId, reason) {
+  const reply = (repliesCache[postId] || []).find(r => r.id === replyId);
+  if (!state.hiddenReplies.includes(replyId)) state.hiddenReplies.push(replyId);
+  save(); closeModal(); render();
+  toast(t("reported_hidden_toast"));
+  if (fbDb && fbUser) {
+    try {
+      await fbDb.collection("reports").add({
+        postId, replyId, reason, reporter: fbUser.uid,
+        who: reply ? reply.who : null, text: reply ? reply.text : null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } catch (e) { /* report stored locally via hiddenReplies; silent on network error */ }
+  }
+}
 
 function setChannel(c) { currentChannel = c; communityPage = 0; render(); }
 function setCommunityPage(p) { communityPage = p; render(); }
@@ -2387,6 +2496,14 @@ function renderProfile() {
   </div>
   <div style="font-size:0.78rem;color:var(--text-soft);line-height:1.5;margin:-4px 2px 0">${t("data_note")}</div>`;
 
+  if (L() === "no") {
+    html += `<div class="card" style="margin-top:14px">
+      <b style="font-size:0.95rem">${t("coach_contact_title")}</b>
+      <p style="font-size:0.85rem;color:var(--text-soft);margin:6px 0 12px">${t("coach_contact_desc")}</p>
+      <button class="btn secondary" style="width:100%" onclick="showCoachContactModal()">${t("coach_contact_btn")}</button>
+    </div>`;
+  }
+
   html += `<div style="margin:28px 0 48px">
     <button onclick="openBugReport()" style="width:100%;background:none;border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left">
       <span style="font-size:1.4rem;line-height:1">🐛</span>
@@ -2565,6 +2682,35 @@ async function setupWeeklyReflectionNotif(force) {
   } catch (e) { console.log("Weekly reflection setup failed:", e); }
 }
 function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast(t("saved")); }
+function showCoachContactModal() {
+  openModal(`
+    <h3>${t("coach_contact_title")}</h3>
+    <div class="sub" style="margin-bottom:14px">${t("coach_contact_desc")}</div>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:6px">${t("coach_contact_name")}</label>
+    <input type="text" id="coachName">
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">${t("coach_contact_phone")}</label>
+    <input type="text" id="coachPhone">
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">${t("coach_contact_email")}</label>
+    <input type="text" id="coachEmail">
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">${t("coach_contact_reason")}</label>
+    <textarea id="coachReason" rows="3"></textarea>
+    <div class="sub" style="font-size:0.78rem;margin-top:10px">${t("coach_contact_note")}</div>
+    <button class="btn" style="width:100%;margin-top:14px" onclick="submitCoachContact()">${t("coach_contact_submit")}</button>
+  `);
+}
+function submitCoachContact() {
+  const name = document.getElementById("coachName").value.trim();
+  const phone = document.getElementById("coachPhone").value.trim();
+  const email = document.getElementById("coachEmail").value.trim();
+  const reason = document.getElementById("coachReason").value.trim();
+  if (!name || (!phone && !email) || !reason) { toast(t("coach_contact_missing")); return; }
+  const subject = encodeURIComponent("Henvendelse fra Together-appen");
+  const body = encodeURIComponent(`Navn: ${name}\nTelefon: ${phone || "-"}\nE-post: ${email || "-"}\nGrunn: ${reason}`);
+  window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+  haptic();
+  closeModal();
+  toast(t("coach_contact_sent"));
+}
 function openBackup() {
   const data = JSON.stringify(state);
   openModal(`
