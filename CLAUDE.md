@@ -31,6 +31,8 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 | `android/` | Android-prosjekt (under oppsett) |
 | `codemagic.yaml` | CI/CD — ios-workflow og android-workflow |
 | `capacitor.config.json` | App ID: `com.kricliff.together`, webDir: `www` |
+| `support.html` | Support-side for App Store Connects påkrevde Support URL per locale |
+| `serve.js` | Avhengighetsfri statisk server (`node serve.js`) — brukes for live testing i browser, unngår at `npx` blokkeres av PowerShell execution policy |
 
 ## Build-lærdommer (dyrekjøpte — ikke gjenta feilene)
 
@@ -42,25 +44,31 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - **Valider codemagic.yaml lokalt før push** — 4 schema-feil gikk gjennom full CI-runde unødvendig.
 - `npm install --legacy-peer-deps` (påkrevd pga RevenueCat v9 + Capacitor v8).
 - **Node v24 / npm 11 ER installert lokalt** (`C:\Program Files\nodejs`) — npx-kommandoer fungerer i `Projects\sammen`.
+- **`@capacitor/local-notifications` API er `LN.getPending()`, IKKE `getPendingNotifications()`** — sistnevnte finnes ikke og feiler stille inn i try/catch. Denne bugen lot daglige påminnelser aldri trigges i en hel økt før den ble oppdaget ved å sammenligne med Keelstone.
+- Én gang en App Store-versjon er "Ready for Distribution", er dens pre-release train stengt (feil 90062/90186) — krever å bumpe `MARKETING_VERSION` til neste versjon og opprette en ny versjonsoppføring i ASC for å laste opp nye builds. App Information-feltene (navn/subtitle) er også låst til ny versjon opprettes.
 
 ## App-arkitektur
 
 - Vanilla JS + localStorage (ingen React/Vue)
 - Capacitor 8 wrapper for iOS og Android
 - RevenueCat (`@revenuecat/purchases-capacitor`, API-nøkkel `appl_…` i www/index.html) for abonnement
-- Firebase (web-SDK via CDN — ingen native pods): Firestore + Anonymous Auth for Community
-  - Prosjekt: `together-4188b`; samlinger: `posts` (innlegg) og `reports` (moderasjonsrapporter)
+- Firebase (web-SDK via CDN — ingen native pods): Firestore + Anonymous Auth for Community + cloud backup
+  - Prosjekt: `together-4188b`; samlinger: `posts` (innlegg, inkl. `replyCount`), `posts/{id}/replies` (svar-tråder), `reports` (moderasjonsrapporter), `backups/{uid}` (skybackup)
+  - Anonym auth overlever IKKE avinstallering+reinstallering på iOS (ny UID hver gang) — cloud backup er derfor et sikkerhetsnett mens appen er installert, ikke en løsning for reinstallering. Manuell backup/restore (Profile → Your data) er den ekte reinstalleringsveien.
+  - Firestore rules bruker `hasOnly([...])`-allowlist på update-feltene — nye felt (f.eks. `replyCount`) må legges til i allowlisten der, ellers feiler writes stille med `permission-denied`.
 - `IS_PRO` variabel styrer Pro-funksjoner
 - `FREE_EXERCISE_IDS = new Set(['breath', 'ground'])` — gratis øvelser
 
 ## Nøkkelfunksjoner
 
 - **Community**: Firestore sanntid, anonym. 5 poster gratis, resten Pro (paginering 6/side).
-  - **UGC-moderasjon (Apple 1.2)**: guidelines-gate må godtas før visning/posting; `OBJECTIONABLE_PATTERNS`-filter blokkerer ved posting; «⋯ More» → Report/Block/Hide; innlegg med ≥3 rapporter auto-skjules (`REPORT_HIDE_THRESHOLD`); `SUPPORT_EMAIL`-konstant styrer kontakt-e-post overalt
+  - **UGC-moderasjon (Apple 1.2)**: guidelines-gate må godtas før visning/posting; `OBJECTIONABLE_PATTERNS`-filter blokkerer ved posting (gjelder både innlegg og svar); «⋯ More» → Report/Block/Hide; innlegg/svar med ≥3 rapporter auto-skjules (`REPORT_HIDE_THRESHOLD`); `SUPPORT_EMAIL`-konstant styrer kontakt-e-post overalt
+  - **Svar-tråder**: `renderReplyThread`, `submitReply`, `reportReply`/`submitReplyReport`; egen `hiddenReplies`-liste i state. Egen post-eier varsles IKKE med ekte push — `checkNewReplies()` sjekker `replyCount` mot `state.seenReplyCounts` og viser en in-app toast neste gang appen åpnes (ingen native push-infrastruktur).
   - Age rating i App Store Connect: **18+** (krav for anonymt UGC)
 - **Translate**: MyMemory API, `langpair=en|{lang}` (kildespråk `en`, `auto` støttes ikke)
-- **Abonnement**: KUN Together Pro Monthly (`com.kricliff.together.pro.monthly`, $4.99). Yearly/Lifetime er fjernet fra RevenueCat-offering (de fantes ikke i ASC og knakk getOfferings → avvisning 2.1(b))
-- **Notifications**: `@capacitor/local-notifications` — 45 dager planlagt fram; av-knapp kansellerer; Android-kanal `daily-reminder` opprettes før planlegging
+- **Abonnement**: KUN Together Pro Monthly (`com.kricliff.together.pro.monthly`, $4.99), med 3 dagers gratis prøveperiode for nye abonnenter. Yearly/Lifetime er fjernet fra RevenueCat-offering (de fantes ikke i ASC og knakk getOfferings → avvisning 2.1(b)). Prøveperioden er konfigurert i App Store Connect → Subscriptions → Introductory Offers (IKKE i kode); paywallen viser trial-vilkår automatisk når `pkg.product.introPrice` finnes på RevenueCat-pakken.
+- **Notifications**: `@capacitor/local-notifications` — daglig påminnelse 45 dager planlagt fram; ukentlig refleksjonspåminnelse (id-range 4000-4099, neste 10 søndager); av-knapp kansellerer begge; Android-kanal `daily-reminder` opprettes før planlegging
+- **Coach-kontaktskjema**: kun synlig når `L() === "no"` (norsk språkinnstilling, uavhengig av App Store-locale); oversettelsesnøkler (`coach_contact_*`) finnes derfor kun i `no:`-ordboken; mailer til together@cliffordcoaching.no
 
 ## App Store
 
@@ -68,6 +76,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - **TARGETED_DEVICE_FAMILY = "1"**: iPhone-only (ikke iPad)
 - Avvisningshistorikk: 2.1(b) + 3.1.2(c) (RC-offering + pris — fikset), 1.2 UGC (moderasjon — fikset)
 - Review Notes-mal: ingen innlogging kreves; paywall via Profile → Go Pro; Community-test via gate → «⋯ More»
+- **Versjonsstatus**: 1.0.2 er sist godkjente/live versjon. 1.0.3 (`MARKETING_VERSION`) er under arbeid med et større feature-batch (se `review-notes-1.0.3.md`) — ikke sendt inn til review ennå da dette ble skrevet.
 
 ## Codemagic
 

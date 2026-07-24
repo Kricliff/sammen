@@ -1,0 +1,82 @@
+NORSK APP STORE-LOKALISERING (Bokmål)
+Klar til å limes inn neste gang en ny versjon opprettes i App Store Connect
+(App Information-siden er låst til app-navn kan endres til du oppretter ny versjon).
+
+=== APP NAME (29 tegn, maks 30) ===
+Together: Menns mentale helse
+
+=== SUBTITLE (23 tegn, maks 30) ===
+Mental trening for menn
+
+=== PROMOTIONAL TEXT (116 tegn, maks 170) ===
+Mental helse laget for menn. Praktiske verktøy, ekte fellesskap, og støtte som faktisk passer hvordan menn tenker.
+
+=== KEYWORDS (88 tegn, maks 100) ===
+mental helse,menn,mindfulness,pust,stress,angst,coaching,selvutvikling,dagbok,fellesskap
+
+=== DESCRIPTION (2140 tegn, maks 4000) ===
+De fleste mental helse-apper er ikke laget for menn. Together er det.
+
+Ingen dagbok-øvelser som føles som terapi-lekser. Ingen passive meditasjons-streaks. Bare praktiske verktøy, ekte fellesskap, og den typen rett-frem støtte som faktisk passer hvordan menn tenker.
+
+Tilgjengelig på norsk og engelsk, med full støtte for mørk modus.
+
+HVA TOGETHER TILBYR
+
+— Daglig innsjekk
+Logg humøret ditt på sekunder. Se mønstre over tid. Ingen press, ingen dømming.
+
+— Guidede øvelser
+Korte, effektive mentale treningsøvelser: pusteteknikker, forankringsøvelser og refleksjoner laget for å passe inn i en travel hverdag.
+
+— Treningsprogram
+Strukturerte 7–30 dagers program om selvtillit, farskap, livsoverganger, sinne, og mer. Start ett. Eller flere.
+
+— Fellesskap
+Et anonymt rom for å dele det som faktisk skjer. Svar på innlegg, les hva andre menn bærer på, og få varsel når noen svarer deg. Du er ikke den eneste.
+
+— Lær
+Forskningsbaserte artikler om menns mentale helse: ensomhet, utbrenthet, identitet, relasjoner, skrevet uten fluff.
+
+— Dagbok og ukentlig gjennomgang
+Privat rom for å tenke på papir, med historikken rett der når du vil se tilbake. En strukturert ukentlig refleksjon, med en valgfri påminnelse for å avslutte uken med retning.
+
+— Book en samtale
+Ønsker du mer personlig oppfølging? Book en uforpliktende samtale direkte med coachen bak appen, fra Profil-fanen.
+
+TOGETHER PRO
+
+Prøv Pro gratis i 3 dager. Lås deretter opp hele appen med et månedlig abonnement:
+• Alle treningsprogram
+• Humørgraf over 30 dager
+• Ubegrenset dagbok
+• Søvn- og energilogg
+• Ukentlig strukturert gjennomgang
+• Nytt innhold hver måned
+
+OM UTVIKLEREN
+
+Together er bygget av Kristian Clifford, sertifisert coach og mental trener med utdanning innen prestasjonspsykologi og mental trening. Denne appen er et verktøy, ikke en erstatning for profesjonell hjelp. Hvis du er i krise, ta kontakt med en fagperson eller ring din lokale krisetelefon.
+
+PERSONVERN
+
+All personlig data, humør, dagbokinnlegg, logger, lagres kun på enheten din. Vi samler ikke inn noe. Du kan lage en manuell sikkerhetskopi fra appen (Innstillinger > Dine data) og bruke den til å gjenopprette dataene dine hvis du sletter eller installerer appen på nytt, eller bytter enhet. I tillegg lages det automatisk en sikkerhetskopi i bakgrunnen mens appen er installert, som en ekstra beskyttelse. Se hele personvernerklæringen på cliffordcoaching.no/privacy.
+
+Bruksvilkår: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+
+=== WHAT'S NEW ===
+- Nytt: Svar på innlegg i Fellesskap, og få varsel når noen svarer deg.
+- Nytt: Book en samtale direkte med coachen bak appen, fra Profil-fanen.
+- Fikset en feil der daglige påminnelser ikke alltid ble planlagt riktig.
+- Lagt til en valgfri påminnelse for ukentlig refleksjon.
+- Dagbok og ukentlig gjennomgang ligger nå i Profil-fanen, med hele historikken din synlig på ett sted.
+- Nye ikoner for daglig humørsjekk.
+- Fjernet tidsestimater på øvelser for en renere Trening-fane.
+- "Siste fra Fellesskap" på Hjem viser nå faktiske innlegg fra Fellesskap.
+- 3 dager gratis prøveperiode for nye Pro-abonnenter.
+- Automatisk sikkerhetskopi i bakgrunnen, som ekstra beskyttelse for dataene dine.
+- Litt mer haptisk tilbakemelding i appen.
+
+=== HUSK OGSÅ ===
+Skjermbilder: kan gjenbruke de eksisterende engelske skjermbildene (appstore-screenshots.html),
+Apple krever ikke oversatte bilder.
