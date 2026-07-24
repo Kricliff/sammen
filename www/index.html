@@ -125,6 +125,10 @@
   .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 6px; }
   .chips button { border: 1px solid var(--border); background: var(--card); border-radius: 999px; padding: 7px 14px; font-size: 0.82rem; font-family: inherit; cursor: pointer; white-space: nowrap; color: var(--text-soft); }
   .chips button.active { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
+  .profileSeg { display: flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 4px 0 14px; }
+  .profileSeg button { flex: 1; border: none; background: var(--card); padding: 9px 6px; font-size: 0.82rem; font-family: inherit; cursor: pointer; color: var(--text-soft); border-right: 1px solid var(--border); }
+  .profileSeg button:last-child { border-right: none; }
+  .profileSeg button.active { background: var(--teal); color: #fff; font-weight: 600; }
   .post .head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--teal-light); color: var(--teal-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
   .post .head .who b { font-size: 0.9rem; display: block; }
@@ -241,7 +245,7 @@ const defaultState = {
   activePrograms: [],
   posts: [],
   reactions: {},
-  settings: { notifications: true, notifTime: "09:00", crisisContact: "", icloudPromptDismissed: false },
+  settings: { notifications: true, notifTime: "09:00", weeklyReflection: false, weeklyReflectionTime: "18:00", crisisContact: "", icloudPromptDismissed: false },
   dismissedNudges: {},
   reflections: {},
   journal: [],
@@ -339,6 +343,9 @@ const T = {
     nav_home: "Home", nav_training: "Training", nav_community: "Community", nav_learn: "Learn", nav_profile: "Profile",
     crisis_support: "Crisis support",
     settings: "Settings", language: "Language", username: "Username", daily_reminder: "Daily reminder", reminder_time: "Reminder time",
+    weekly_reminder: "Weekly reflection reminder", weekly_reminder_time: "Weekly reminder time", weekly_reminder_body: "Time to close the week. A few minutes with your weekly reflection.",
+    profile_tab_overview: "Overview", profile_tab_journal: "Journal", profile_tab_weekly: "Weekly",
+    journal_history_empty: "No journal entries yet.", weekly_history_empty: "No weekly reflections yet.",
     crisis_contact: "Personal crisis contact (optional)", crisis_contact_ph: "Name / phone number of someone you trust",
     your_data: "Your data", backup_my_data: "Back up my data", restore_from_backup: "Restore from backup",
     data_note: "Your data lives only on this phone. Back it up to keep it if you delete or reinstall the app.",
@@ -572,6 +579,9 @@ const T = {
     nav_home: "Hjem", nav_training: "Trening", nav_community: "Fellesskap", nav_learn: "Lær", nav_profile: "Profil",
     crisis_support: "Krisehjelp",
     settings: "Innstillinger", language: "Språk", username: "Brukernavn", daily_reminder: "Daglig påminnelse", reminder_time: "Påminnelsestidspunkt",
+    weekly_reminder: "Ukentlig refleksjon-påminnelse", weekly_reminder_time: "Ukentlig påminnelsestidspunkt", weekly_reminder_body: "Tid for å avslutte uken. Noen minutter med din ukentlige refleksjon.",
+    profile_tab_overview: "Oversikt", profile_tab_journal: "Dagbok", profile_tab_weekly: "Ukentlig",
+    journal_history_empty: "Ingen dagboknotater ennå.", weekly_history_empty: "Ingen ukentlige refleksjoner ennå.",
     crisis_contact: "Personlig krisekontakt (valgfritt)", crisis_contact_ph: "Navn / telefonnummer til en du stoler på",
     your_data: "Dine data", backup_my_data: "Sikkerhetskopier data", restore_from_backup: "Gjenopprett fra kopi",
     data_note: "Dataene dine finnes bare på denne telefonen. Ta en sikkerhetskopi for å beholde dem hvis du sletter eller installerer appen på nytt.",
@@ -1476,7 +1486,7 @@ function renderHome() {
   // Journal (Pro)
   html += `<h2>${t("journal")}</h2>`;
   html += IS_PRO
-    ? `<div class="card" onclick="openJournal()" style="cursor:pointer">
+    ? `<div class="card" onclick="goProfileSubtab('journal')" style="cursor:pointer">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <b style="font-size:0.95rem">${t("my_notes")}</b>
           <span class="btn small secondary" style="pointer-events:none">${t("open_arrow")}</span>
@@ -1488,7 +1498,7 @@ function renderHome() {
   // Weekly review (Pro)
   html += `<h2>${t("weekly_review")}</h2>`;
   html += IS_PRO
-    ? `<div class="card" onclick="openWeeklyReview()" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
+    ? `<div class="card" onclick="goProfileSubtab('weekly')" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
         <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:8px">${t("weekly_reflection_label")}</div>
         <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px">${t("weekly_reflection_text")}</div>
         ${ws ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">${t("completed_on")} ${ws.date}</div>`
@@ -1526,32 +1536,6 @@ function nudgeAction(key, i) { const n = computeNudges().find(x => x.key === key
 function dismissNudge(key) { state.dismissedNudges[key] = todayStr(); save(); render(); }
 
 /* ---------- Journal ---------- */
-function openJournal() {
-  const entries = [...(state.journal || [])].reverse().slice(0, 12);
-  openModal(`
-    <h3>${t("journal_title")}</h3>
-    <textarea id="journalText" rows="6" placeholder="${t("journal_ph")}"></textarea>
-    <button class="btn" style="width:100%;margin-top:10px" onclick="saveJournal()">${t("save")}</button>
-    ${entries.length ? `<div style="margin-top:20px">
-      <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.07em;color:var(--text-soft);margin-bottom:10px">${t("previous_entries")}</div>
-      ${entries.map(e => `<div style="padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="font-size:0.72rem;color:var(--text-soft);margin-bottom:4px">${e.date}</div>
-        <div style="font-size:0.88rem;line-height:1.5;white-space:pre-wrap">${esc(e.text.slice(0, 140))}${e.text.length > 140 ? '…' : ''}</div>
-      </div>`).join('')}
-    </div>` : ''}
-  `);
-}
-function saveJournal() {
-  const ta = document.getElementById('journalText');
-  if (!ta || !ta.value.trim()) return;
-  if (!state.journal) state.journal = [];
-  state.journal.push({ id: Date.now().toString(), date: todayStr(), text: ta.value });
-  haptic();
-  save(); closeModal();
-  toast(t("saved_to_journal"));
-  render();
-}
-
 /* ---------- Sleep and energy ---------- */
 let _selEnergy = null;
 function openSleepLog() {
@@ -1591,32 +1575,6 @@ function saveSleepLog() {
   render();
 }
 
-/* ---------- Weekly review ---------- */
-function openWeeklyReview() {
-  const wk = weekKey();
-  const saved = (state.weeklySummary || {})[wk] || {};
-  openModal(`
-    <h3>${t("weekly_title")}</h3>
-    <div class="sub" style="margin-bottom:18px">${t("weekly_sub")}</div>
-    <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:6px">${t("weekly_q1")}</label>
-    <textarea id="ws1" rows="3" placeholder="${t("weekly_ph1")}">${esc(saved.hard || '')}</textarea>
-    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">${t("weekly_q2")}</label>
-    <textarea id="ws2" rows="3" placeholder="${t("weekly_ph2")}">${esc(saved.proud || '')}</textarea>
-    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">${t("weekly_q3")}</label>
-    <textarea id="ws3" rows="3" placeholder="${t("weekly_ph3")}">${esc(saved.next || '')}</textarea>
-    <button class="btn" style="width:100%;margin-top:14px" onclick="saveWeeklyReview('${wk}')">${t("save")}</button>
-  `);
-}
-function saveWeeklyReview(wk) {
-  const w1 = document.getElementById('ws1'), w2 = document.getElementById('ws2'), w3 = document.getElementById('ws3');
-  if (!w1) return;
-  if (!state.weeklySummary) state.weeklySummary = {};
-  state.weeklySummary[wk] = { hard: w1.value, proud: w2.value, next: w3.value, date: todayStr() };
-  hapticSuccess();
-  save(); closeModal();
-  toast(t("review_saved"));
-  render();
-}
 
 function renderTraining() {
   let html = `<h1>${t("training_title")}</h1><div class="sub">${t("training_sub")}</div>`;
@@ -2241,37 +2199,10 @@ function openArticle(id) {
   `);
 }
 
-function renderProfile() {
-  if (currentSubView === "my-posts") { renderMyPosts(); return; }
+function renderProfileOverview() {
   const dates = lastNDates(14);
   const labels = [new Date(dates[0]), new Date(dates[13])].map(d => d.getDate() + "/" + (d.getMonth() + 1));
-  const completedCount = state.completedExercises.length;
-  const st = streak();
-
-  let html = `<h1>Profile</h1><div class="sub">Completely private. Nothing here is visible to others.</div>`;
-  html += `<div class="statRow" style="margin-bottom:12px">
-    <div class="card"><div class="num">${st}</div><div class="lbl">day streak</div></div>
-    <div class="card"><div class="num">${completedCount}</div><div class="lbl">exercises done</div></div>
-    <div class="card"><div class="num">${communityPosts.filter(p => p.mine).length}</div><div class="lbl">posts shared</div></div>
-  </div>`;
-  const activeProgs = state.activePrograms || [];
-  if (activeProgs.length > 0) {
-    html += `<h2>Active programmes</h2>`;
-    html += activeProgs.map(ap => {
-      const p = PROGRAMS.find(x => x.id === ap.id);
-      if (!p) return '';
-      const day = Math.min(p.days, Math.floor((new Date() - new Date(ap.startDate)) / 86400000) + 1);
-      const pct = Math.round((day / p.days) * 100);
-      return `<div class="card" style="margin-bottom:8px;cursor:pointer" onclick="goTab('training')">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:0.92rem;font-weight:600">${p.icon} ${p.title}</span>
-          <span style="font-size:0.8rem;color:var(--teal-dark);font-weight:500">Day ${day} of ${p.days}</span>
-        </div>
-        <div class="progBar"><div style="width:${pct}%"></div></div>
-      </div>`;
-    }).join("");
-  }
-  html += `<div class="card"><b style="font-size:0.95rem">Mood trend &mdash; last 14 days</b>
+  let html = `<div class="card"><b style="font-size:0.95rem">Mood trend &mdash; last 14 days</b>
     <div class="barChart">${dates.map(d => {
       const l = moodOn(d);
       return l === null
@@ -2300,6 +2231,111 @@ function renderProfile() {
       </div>`;
     }).join("");
   }
+  return html;
+}
+function renderProfileJournal() {
+  const entries = [...(state.journal || [])].reverse().slice(0, 20);
+  let html = `<div class="card">
+    <textarea id="profileJournalText" rows="5" placeholder="${t("journal_ph")}"></textarea>
+    <button class="btn" style="width:100%;margin-top:10px" onclick="saveProfileJournal()">${t("save")}</button>
+  </div>`;
+  if (entries.length === 0) {
+    html += `<div class="card"><div class="empty">${t("journal_history_empty")}</div></div>`;
+  } else {
+    html += `<div style="font-size:0.72rem;font-weight:600;letter-spacing:0.07em;color:var(--text-soft);margin:14px 2px 8px">${t("previous_entries")}</div>`;
+    html += entries.map(e => `<div class="card" style="margin-bottom:8px">
+      <div style="font-size:0.78rem;color:var(--text-soft);margin-bottom:6px">${e.date}</div>
+      <div style="font-size:0.88rem;line-height:1.5;white-space:pre-wrap">${esc(e.text)}</div>
+    </div>`).join("");
+  }
+  return html;
+}
+function saveProfileJournal() {
+  const ta = document.getElementById("profileJournalText");
+  if (!ta || !ta.value.trim()) return;
+  if (!state.journal) state.journal = [];
+  state.journal.push({ id: Date.now().toString(), date: todayStr(), text: ta.value });
+  haptic();
+  save();
+  toast(t("saved_to_journal"));
+  render();
+}
+function renderProfileWeekly() {
+  const wk = weekKey();
+  const saved = (state.weeklySummary || {})[wk] || {};
+  let html = `<div class="card">
+    <div class="sub" style="margin-bottom:14px">${t("weekly_sub")}</div>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:6px">${t("weekly_q1")}</label>
+    <textarea id="profileWs1" rows="3" placeholder="${t("weekly_ph1")}">${esc(saved.hard || "")}</textarea>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">${t("weekly_q2")}</label>
+    <textarea id="profileWs2" rows="3" placeholder="${t("weekly_ph2")}">${esc(saved.proud || "")}</textarea>
+    <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">${t("weekly_q3")}</label>
+    <textarea id="profileWs3" rows="3" placeholder="${t("weekly_ph3")}">${esc(saved.next || "")}</textarea>
+    <button class="btn" style="width:100%;margin-top:14px" onclick="saveProfileWeekly('${wk}')">${t("save")}</button>
+  </div>`;
+  const history = Object.entries(state.weeklySummary || {}).filter(([k]) => k !== wk).sort((a, b) => (b[1].date || "").localeCompare(a[1].date || "")).slice(0, 10);
+  if (history.length === 0) {
+    html += `<div class="card"><div class="empty">${t("weekly_history_empty")}</div></div>`;
+  } else {
+    html += `<div style="font-size:0.72rem;font-weight:600;letter-spacing:0.07em;color:var(--text-soft);margin:14px 2px 8px">${t("previous_entries")}</div>`;
+    html += history.map(([k, w]) => `<div class="card" style="margin-bottom:8px">
+      <div style="font-size:0.78rem;color:var(--text-soft);margin-bottom:8px">${w.date || k}</div>
+      ${w.hard ? `<div style="margin-bottom:8px"><b style="font-size:0.8rem">${t("weekly_q1")}</b><p style="font-size:0.86rem;margin-top:2px">${esc(w.hard)}</p></div>` : ""}
+      ${w.proud ? `<div style="margin-bottom:8px"><b style="font-size:0.8rem">${t("weekly_q2")}</b><p style="font-size:0.86rem;margin-top:2px">${esc(w.proud)}</p></div>` : ""}
+      ${w.next ? `<div><b style="font-size:0.8rem">${t("weekly_q3")}</b><p style="font-size:0.86rem;margin-top:2px">${esc(w.next)}</p></div>` : ""}
+    </div>`).join("");
+  }
+  return html;
+}
+function saveProfileWeekly(wk) {
+  const w1 = document.getElementById("profileWs1"), w2 = document.getElementById("profileWs2"), w3 = document.getElementById("profileWs3");
+  if (!w1) return;
+  if (!state.weeklySummary) state.weeklySummary = {};
+  state.weeklySummary[wk] = { hard: w1.value, proud: w2.value, next: w3.value, date: todayStr() };
+  hapticSuccess();
+  save();
+  toast(t("review_saved"));
+  render();
+}
+function setProfileTab(tab) { haptic(); window._profileTab = tab; render(); }
+function goProfileSubtab(tab) { window._profileTab = tab; goTab("profile"); }
+
+function renderProfile() {
+  if (currentSubView === "my-posts") { renderMyPosts(); return; }
+  window._profileTab = window._profileTab || "overview";
+  const completedCount = state.completedExercises.length;
+  const st = streak();
+
+  let html = `<h1>Profile</h1><div class="sub">Completely private. Nothing here is visible to others.</div>`;
+  html += `<div class="statRow" style="margin-bottom:12px">
+    <div class="card"><div class="num">${st}</div><div class="lbl">day streak</div></div>
+    <div class="card"><div class="num">${completedCount}</div><div class="lbl">exercises done</div></div>
+    <div class="card"><div class="num">${communityPosts.filter(p => p.mine).length}</div><div class="lbl">posts shared</div></div>
+  </div>`;
+  const activeProgs = state.activePrograms || [];
+  if (activeProgs.length > 0) {
+    html += `<h2>Active programmes</h2>`;
+    html += activeProgs.map(ap => {
+      const p = PROGRAMS.find(x => x.id === ap.id);
+      if (!p) return '';
+      const day = Math.min(p.days, Math.floor((new Date() - new Date(ap.startDate)) / 86400000) + 1);
+      const pct = Math.round((day / p.days) * 100);
+      return `<div class="card" style="margin-bottom:8px;cursor:pointer" onclick="goTab('training')">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:0.92rem;font-weight:600">${p.icon} ${p.title}</span>
+          <span style="font-size:0.8rem;color:var(--teal-dark);font-weight:500">Day ${day} of ${p.days}</span>
+        </div>
+        <div class="progBar"><div style="width:${pct}%"></div></div>
+      </div>`;
+    }).join("");
+  }
+
+  const segBtn2 = (id, label) => `<button class="${window._profileTab === id ? "active" : ""}" onclick="setProfileTab('${id}')">${label}</button>`;
+  html += `<div class="profileSeg">${segBtn2("overview", t("profile_tab_overview"))}${segBtn2("journal", t("profile_tab_journal"))}${segBtn2("weekly", t("profile_tab_weekly"))}</div>`;
+
+  if (window._profileTab === "journal") html += IS_PRO ? renderProfileJournal() : lockedCard(t("journal"), t("journal_locked_desc"), "📓");
+  else if (window._profileTab === "weekly") html += IS_PRO ? renderProfileWeekly() : lockedCard(t("weekly_review"), t("weekly_reflection_text"), "📅");
+  else html += renderProfileOverview();
 
   html += `<div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px">
     <h2 style="margin:0">My posts</h2>
@@ -2335,6 +2371,10 @@ function renderProfile() {
       <label class="switch"><input type="checkbox" ${state.settings.notifications ? "checked" : ""} onchange="toggleNotif(this.checked)"><span class="sl"></span></label></div>
     ${state.settings.notifications ? `<div class="setRow"><span style="color:var(--text-soft);font-size:0.88rem">${t("reminder_time")}</span>
       <input type="time" value="${state.settings.notifTime || "09:00"}" onchange="saveNotifTime(this.value)" style="border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-family:inherit;font-size:0.88rem;color:var(--text);background:var(--bg)"></div>` : ""}
+    <div class="setRow"><span>${t("weekly_reminder")}</span>
+      <label class="switch"><input type="checkbox" ${state.settings.weeklyReflection ? "checked" : ""} onchange="toggleWeeklyReflectionNotif(this.checked)"><span class="sl"></span></label></div>
+    ${state.settings.weeklyReflection ? `<div class="setRow"><span style="color:var(--text-soft);font-size:0.88rem">${t("weekly_reminder_time")}</span>
+      <input type="time" value="${state.settings.weeklyReflectionTime || "18:00"}" onchange="saveWeeklyReflectionTime(this.value)" style="border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-family:inherit;font-size:0.88rem;color:var(--text);background:var(--bg)"></div>` : ""}
     <div class="setRow" style="flex-direction:column;align-items:stretch;gap:8px">
       <span>${t("crisis_contact")}</span>
       <input type="tel" id="crisisContact" placeholder="${t("crisis_contact_ph")}" value="${esc(state.settings.crisisContact)}" onchange="saveCrisisContact(this.value)">
@@ -2473,6 +2513,57 @@ async function setupDailyNotifications(force) {
     Notification.requestPermission();
   }
 }
+function toggleWeeklyReflectionNotif(on) {
+  haptic();
+  state.settings.weeklyReflection = on; save();
+  if (on) setupWeeklyReflectionNotif(true);
+  else cancelWeeklyReflectionNotif();
+}
+async function cancelWeeklyReflectionNotif() {
+  if (!window.Capacitor?.isNativePlatform?.()) return;
+  const LN = window.Capacitor?.Plugins?.LocalNotifications;
+  if (!LN) return;
+  try {
+    const { notifications: pending } = await LN.getPending();
+    const old = pending.filter(n => n.id >= 4000 && n.id < 4100);
+    if (old.length) await LN.cancel({ notifications: old });
+  } catch (e) { console.log("Weekly reflection cancel failed:", e); }
+}
+function saveWeeklyReflectionTime(t) {
+  state.settings.weeklyReflectionTime = t; save();
+  if (state.settings.weeklyReflection) setupWeeklyReflectionNotif(true);
+}
+async function setupWeeklyReflectionNotif(force) {
+  if (!state.settings.weeklyReflection) return;
+  const [hour, min] = (state.settings.weeklyReflectionTime || "18:00").split(":").map(Number);
+  if (!window.Capacitor?.isNativePlatform?.()) return;
+  const LN = window.Capacitor?.Plugins?.LocalNotifications;
+  if (!LN) return;
+  try {
+    const { display } = await LN.requestPermissions();
+    if (display !== "granted") return;
+    try {
+      await LN.createChannel({ id: "daily-reminder", name: "Daily reminder",
+        description: "Your daily check-in reminder", importance: 4, visibility: 1 });
+    } catch (e) { /* not supported on iOS; ignore */ }
+    const { notifications: pending } = await LN.getPending();
+    const old = pending.filter(n => n.id >= 4000 && n.id < 4100);
+    if (!force && old.length > 2) return;
+    if (old.length) await LN.cancel({ notifications: old });
+    // Always schedule from next Sunday onward, never today, since a
+    // week's reflection isn't due yet partway through the current week.
+    const first = new Date();
+    first.setDate(first.getDate() + ((7 - first.getDay()) % 7 || 7));
+    const toSchedule = [];
+    for (let i = 0; i < 10; i++) {
+      const at = new Date(first);
+      at.setDate(first.getDate() + i * 7);
+      at.setHours(hour, min, 0, 0);
+      toSchedule.push({ id: 4000 + i, title: "Together", body: t("weekly_reminder_body"), schedule: { at }, channelId: "daily-reminder" });
+    }
+    await LN.schedule({ notifications: toSchedule });
+  } catch (e) { console.log("Weekly reflection setup failed:", e); }
+}
 function saveCrisisContact(v) { state.settings.crisisContact = v; save(); toast(t("saved")); }
 function openBackup() {
   const data = JSON.stringify(state);
@@ -2605,6 +2696,7 @@ render();
   const sp = document.getElementById("splash");
   if (sp) setTimeout(() => sp.remove(), 2850);
   if (state.settings.notifications) setTimeout(setupDailyNotifications, 3000);
+  if (state.settings.weeklyReflection) setTimeout(setupWeeklyReflectionNotif, 3200);
   initRevenueCat();
   initFirebase();
   setTimeout(checkICloudRestore, 1200);
