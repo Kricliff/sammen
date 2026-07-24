@@ -1234,7 +1234,7 @@ function renderNav() {
   const sos = document.getElementById("sosBtn");
   if (sos) sos.innerHTML = "&#10084;&#65039; " + t("crisis_support");
 }
-function goTab(id) { currentTab = id; currentSubView = null; render(); main.scrollTop = 0; }
+function goTab(id) { haptic(); currentTab = id; currentSubView = null; render(); main.scrollTop = 0; }
 
 function render() {
   renderNav();
