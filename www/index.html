@@ -256,6 +256,7 @@ const defaultState = {
   blocked: [],
   hiddenPosts: [],
   hiddenReplies: [],
+  seenReplyCounts: {},
 };
 
 let state = loadState();
@@ -504,6 +505,7 @@ const T = {
     replies_word: "Replies", hide_replies: "Hide replies", reply_ph: "Write a reply…", reply_send: "Reply",
     reply_empty: "No replies yet. Be the first to respond.", reply_posted_toast: "Reply posted.",
     reply_report_btn: "🚩 Report", report_reply_title: "Report reply",
+    new_reply_one: "new reply on your post", new_reply_many: "new replies on your posts",
     more_post_word: "more post", in_this_feed: "in this feed",
     upgrade_pro_feed: "Upgrade to Pro to read the full community feed.", go_pro_btn: "Go Pro",
     prev_btn: "← Previous", next_page_btn: "Next →", of_page: "of",
@@ -568,6 +570,7 @@ const T = {
     available_appstore_version: "Available in the App Store version.", no_sub_available: "No subscription available right now.",
     yearly_lbl: "Yearly", monthly_lbl: "Monthly", auto_renews_year: "year", auto_renews_month: "month",
     auto_renews_pre: "Auto-renews every", cancel_anytime: "Cancel anytime.",
+    free_trial_pre: "3 days free, then", free_trial_then_year: "/year", free_trial_then_month: "/month", free_trial_badge: "3 days free",
     subscribe_btn: "Subscribe", purchases_not_available: "Purchases not available here.", opening_btn: "Opening…",
     welcome_pro_toast: "Welcome to Pro!", purchase_failed_pre: "Purchase failed (", purchase_failed_post: "). Please try again.",
     pro_access_restored: "Pro access restored.", no_active_sub: "No active subscription found.", could_not_restore: "Could not restore. Please try again.",
@@ -744,6 +747,7 @@ const T = {
     replies_word: "Svar", hide_replies: "Skjul svar", reply_ph: "Skriv et svar…", reply_send: "Svar",
     reply_empty: "Ingen svar ennå. Bli den første til å svare.", reply_posted_toast: "Svar publisert.",
     reply_report_btn: "🚩 Rapporter", report_reply_title: "Rapporter svar",
+    new_reply_one: "nytt svar på innlegget ditt", new_reply_many: "nye svar på innleggene dine",
     more_post_word: "flere innlegg", in_this_feed: "i denne feeden",
     upgrade_pro_feed: "Oppgrader til Pro for å lese hele fellesskapsfeeden.", go_pro_btn: "Bli Pro",
     prev_btn: "← Forrige", next_page_btn: "Neste →", of_page: "av",
@@ -808,6 +812,7 @@ const T = {
     available_appstore_version: "Tilgjengelig i App Store-versjonen.", no_sub_available: "Ingen abonnement tilgjengelig akkurat nå.",
     yearly_lbl: "Årlig", monthly_lbl: "Månedlig", auto_renews_year: "år", auto_renews_month: "måned",
     auto_renews_pre: "Fornyes automatisk hver", cancel_anytime: "Avbryt når som helst.",
+    free_trial_pre: "3 dager gratis, deretter", free_trial_then_year: "/år", free_trial_then_month: "/måned", free_trial_badge: "3 dager gratis",
     subscribe_btn: "Abonner", purchases_not_available: "Kjøp er ikke tilgjengelig her.", opening_btn: "Åpner…",
     welcome_pro_toast: "Velkommen til Pro!", purchase_failed_pre: "Kjøp mislyktes (", purchase_failed_post: "). Prøv igjen.",
     pro_access_restored: "Pro-tilgang gjenopprettet.", no_active_sub: "Ingen aktivt abonnement funnet.", could_not_restore: "Kunne ikke gjenopprette. Prøv igjen.",
@@ -901,18 +906,19 @@ function setupCommunityListener() {
         const d = doc.data();
         return { id: doc.id, who: d.who, userId: d.userId, channel: d.channel, text: d.text,
           prompt: d.prompt || null, support: d.support || 0, beenThere: d.beenThere || 0,
-          reports: d.reports || 0, age: formatAge(d.createdAt), mine: d.userId === fbUser?.uid };
+          reports: d.reports || 0, replyCount: d.replyCount || 0, age: formatAge(d.createdAt), mine: d.userId === fbUser?.uid };
       }).filter(p => p.reports < REPORT_HIDE_THRESHOLD || p.mine);
       communityLoaded = true;
+      checkNewReplies();
       if (currentTab === 'community') render();
     }, () => { communityLoaded = true; if (currentTab === 'community') render(); });
 }
 
 const MOODS = [
-  { level: 1, emoji: "\u{1F4A7}", key: "mood_heavy" },
-  { level: 2, emoji: "\u{1F32B}️", key: "mood_low" },
-  { level: 3, emoji: "\u{1F324}️", key: "mood_okay" },
-  { level: 4, emoji: "☀️", key: "mood_good" },
+  { level: 1, emoji: "😔", key: "mood_heavy" },
+  { level: 2, emoji: "😕", key: "mood_low" },
+  { level: 3, emoji: "😐", key: "mood_okay" },
+  { level: 4, emoji: "😄", key: "mood_good" },
 ];
 
 const EXERCISES = [
@@ -1316,9 +1322,14 @@ async function showProModal() {
       const isAnnual = pkg.packageType === 'ANNUAL';
       const period = isAnnual ? t("auto_renews_year") : t("auto_renews_month");
       const label = isAnnual ? t("yearly_lbl") : t("monthly_lbl");
+      const intro = pkg.product.introPrice;
+      const hasFreeTrial = intro && intro.price === 0;
+      const sub = hasFreeTrial
+        ? `${t("free_trial_pre")} ${price}${isAnnual ? t("free_trial_then_year") : t("free_trial_then_month")}`
+        : `${t("auto_renews_pre")} ${period}. ${t("cancel_anytime")}`;
       return `<div onclick="selectProPkg(${i})" id="pkg-${i}" style="cursor:pointer;border:1.5px solid ${i===0?'var(--teal)':'var(--border)'};border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
-        <div><b style="font-size:0.95rem">${label}</b><div style="font-size:0.78rem;color:var(--text-soft)">${t("auto_renews_pre")} ${period}. ${t("cancel_anytime")}</div></div>
-        <b style="color:var(--teal)">${price}</b>
+        <div><b style="font-size:0.95rem">${label}</b><div style="font-size:0.78rem;color:var(--text-soft)">${sub}</div></div>
+        <b style="color:var(--teal)">${hasFreeTrial ? t("free_trial_badge") : price}</b>
       </div>`;
     }).join('');
     if (btn) { btn.textContent = t("subscribe_btn"); btn.disabled = false; }
@@ -2009,6 +2020,24 @@ async function submitReplyReport(postId, replyId, reason) {
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     } catch (e) { /* report stored locally via hiddenReplies; silent on network error */ }
+  }
+}
+
+// Runs whenever the posts listener updates (including right at app boot),
+// so it surfaces new replies to the user's own posts as soon as they open
+// the app, without needing real push notifications.
+function checkNewReplies() {
+  if (!state.seenReplyCounts) state.seenReplyCounts = {};
+  let newCount = 0;
+  communityPosts.filter(p => p.mine).forEach(p => {
+    const seen = state.seenReplyCounts[p.id] || 0;
+    if (p.replyCount > seen) newCount += p.replyCount - seen;
+    state.seenReplyCounts[p.id] = p.replyCount;
+  });
+  if (newCount > 0) {
+    save();
+    hapticSuccess();
+    toast(`${newCount} ${newCount === 1 ? t("new_reply_one") : t("new_reply_many")}`);
   }
 }
 
