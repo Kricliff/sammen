@@ -9,6 +9,8 @@
 
 Sjekk alltid hvilken mappe du står i før redigering. Codemagic bygger fra GitHub `origin/main` — endringer må committes OG pushes fra `Projects\sammen` for å nå CI.
 
+**Bekreftet fellepunkt**: `preview_start` med `{name: "app"}` (Claude Browser-verktøyet) har resolvet `.claude/launch.json`/`serve.ps1` mot OneDrive-kopien i stedet for `Projects\sammen`, og servert utdatert innhold uten feilmelding. Sjekk `preview_logs` for linjen "Serving ..." og bekreft at stien er `Projects\sammen` — hvis ikke, stopp den serveren og start `serve.ps1` manuelt via PowerShell-verktøyet med `Set-Location "C:\Users\KristianClifford\Projects\sammen"` først, og pek nettleser-fanen til den porten med `navigate`/`{url:...}` i stedet.
+
 ## Prosjektoversikt
 
 Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. Appen heter **Together: Men's Mental Health** og er en Capacitor-app (iOS + Android) med vanilla JS og localStorage.

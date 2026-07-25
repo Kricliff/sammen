@@ -342,11 +342,18 @@ function t(k) { const d = T[L()]; return (d && d[k] != null) ? d[k] : (T.en[k] !
 function setLang(l) { state.settings.lang = l; save(); render(); }
 const T = {
   en: {
-    nav_home: "Home", nav_training: "Training", nav_community: "Community", nav_learn: "Learn", nav_profile: "Profile",
+    nav_home: "Home", nav_training: "Training", nav_community: "Community", nav_progress: "Progress", nav_profile: "Profile",
     crisis_support: "Crisis support",
     settings: "Settings", language: "Language", username: "Username", daily_reminder: "Daily reminder", reminder_time: "Reminder time",
     weekly_reminder: "Weekly reflection reminder", weekly_reminder_time: "Weekly reminder time", weekly_reminder_body: "Time to close the week. A few minutes with your weekly reflection.",
     profile_tab_overview: "Overview", profile_tab_journal: "Journal", profile_tab_weekly: "Weekly",
+    progress_title: "Progress", progress_sub: "Your patterns, your data, all in one place.",
+    day_streak_lbl: "day streak", exercises_done_lbl: "exercises done", posts_shared_lbl: "posts shared",
+    see_all_lbl: "See all", more_posts_suffix: "more posts",
+    back_to_progress: "← Back to progress",
+    safety_community_h2: "Safety & community", community_guidelines_lbl: "Community guidelines",
+    blocked_users_lbl: "Blocked users", report_inappropriate_lbl: "Report inappropriate activity",
+    profile_title: "Profile", profile_sub: "Completely private. Nothing here is visible to others.",
     journal_history_empty: "No journal entries yet.", weekly_history_empty: "No weekly reflections yet.",
     crisis_contact: "Personal crisis contact (optional)", crisis_contact_ph: "Name / phone number of someone you trust",
     your_data: "Your data", backup_my_data: "Back up my data", restore_from_backup: "Restore from backup",
@@ -358,12 +365,14 @@ const T = {
     restore_ph: "Paste your backup here", restore_replace: "Restore and replace", cancel: "Cancel",
     saved: "Saved", backup_copied: "Backup copied. Save it somewhere safe.", data_restored: "Data restored.",
     paste_first: "Paste a backup first.", invalid_backup: "That doesn't look like a valid backup.", not_together_backup: "That doesn't look like a Together backup.",
-    mood_heavy: "Heavy", mood_low: "Low", mood_okay: "Okay", mood_good: "Good",
+    mood_heavy: "Heavy", mood_low: "Low", mood_okay: "Okay", mood_good: "Good", mood_great: "Great",
     greeting_morning: "Good morning", greeting_afternoon: "Good afternoon", greeting_evening: "Good evening",
     home_sub: "How are you doing today, really?",
     todays_message: "Today's message", todays_mood: "Today's mood",
     mood_note_ph: "A few words about the day? Optional, completely private.", save_note: "Save note",
     mood_chart: "Mood chart", last_30_days: "last 30 days", days_ago_30: "30 days ago", today_lbl: "Today",
+    mood_trend_h2: "Mood trend", last_14_days: "last 14 days", mood_diary_h2: "Mood diary",
+    no_mood_entries: "No mood entries yet. Log your first mood on the Home tab.", yesterday_lbl: "Yesterday",
     mood_chart_locked_desc: "See the pattern in your mood over 30 days.",
     sleep_energy: "Sleep and energy", logged: "Logged", log: "Log",
     sleep_energy_locked_desc: "Log sleep and energy daily. Spot the patterns over time.",
@@ -400,16 +409,18 @@ const T = {
     weekly_q1: "What was hardest this week?", weekly_ph1: "Write freely...",
     weekly_q2: "What are you proud of?", weekly_ph2: "Big or small...",
     weekly_q3: "What do you carry into next week?", weekly_ph3: "An intention, a change, a person...",
+    weekly_stats_mood: "mood logged", weekly_stats_sleep: "sleep logged", weekly_stats_exercises: "exercises this week",
     review_saved: "Review saved.",
     note_private: "Note saved. Only visible to you",
     training_title: "Training", training_sub: "Short tools. No pressure, just a little at a time.",
     active_programmes: "Active programmes", day_lbl: "Day", of_lbl: "of",
+    training_tab_exercises: "Exercises", training_tab_programs: "Programmes", training_tab_learn: "Learn",
     todays_content: "Today's content", end_btn: "End",
     micro_exercises: "Micro-exercises",
     reflection_h2: "Reflection", todays_question: "TODAY'S QUESTION",
     answered_on: "✓ Answered", tap_update: ". Tap to read or update",
     write_arrow: "Write →",
-    programmes_h2: "Programmes", days_suffix: "DAYS", unlock_pro: "🔒 Unlock with Pro", active_tag: "✓ Active",
+    programmes_h2: "Programmes", days_suffix: "DAYS", unlock_pro: "🔒 Unlock with Pro", active_tag: "✓ Active", days_range_lbl: "7–30 days",
     program_started: "Programme started. One day at a time.",
     day_comma: ", day", short_content_line: "Short content + exercise + reflection",
     todays_focus_lbl: "Today's focus:", exercise_lbl: "Exercise:",
@@ -448,7 +459,6 @@ const T = {
     refl_r10_title: "What actually matters to you?", refl_r10_prompt: "Strip away the job, the titles, the status, the things you're supposed to care about. What's left that genuinely matters, and are you living by it?",
     refl_r11_title: "What have you never forgiven yourself for?", refl_r11_prompt: "We all carry something. A mistake, a decision, something you didn't do when you should have. What is it, and what would it mean to let it go?",
     refl_r12_title: "Who do you allow yourself to need something from?", refl_r12_prompt: "Who in your life sees you when you're struggling, and do they know it? What does it do to you to need something from someone, and who is it safe to show that to?",
-    learn_title: "Learn", learn_sub: "Short reads. No fluff.",
     articles_h2: "Articles", more_btn: "↺ More", research_h2: "Research", next_btn2: "↺ Next",
     finding_lbl: "📊 Finding", read_source: "Read source ↗",
     myths_h2: "Myths vs. facts", new_btn: "↺ New", myth_tag: "MYTH", fact_tag: "FACT",
@@ -551,7 +561,7 @@ const T = {
     emergency_services: "Emergency services", call_local_emergency: "Call your local emergency number",
     samaritans_sub: "Free · available 24/7 · UK & Ireland", crisis_lifeline_sub: "Call or text · US",
     publish_my_post: "Publish my post", posted_toast: "Posted. You're not alone in this.", could_not_post: "Could not post. Check your connection.",
-    back_to_profile: "← Back to profile", my_posts_title: "My posts", post_word: "post", shared_word: "shared",
+    my_posts_title: "My posts", post_word: "post", shared_word: "shared",
     havent_shared: "You haven't shared anything yet. That's completely fine.",
     delete_post_title: "Delete this post?", delete_post_sub: "This can't be undone. The post will be removed from the community.",
     yes_delete: "Yes, delete it", post_deleted_toast: "Post deleted.", delete_post_emoji_btn: "🗑 Delete post",
@@ -580,11 +590,18 @@ const T = {
     backup_restored_toast: "Data restored from backup."
   },
   no: {
-    nav_home: "Hjem", nav_training: "Trening", nav_community: "Fellesskap", nav_learn: "Lær", nav_profile: "Profil",
+    nav_home: "Hjem", nav_training: "Trening", nav_community: "Fellesskap", nav_progress: "Fremgang", nav_profile: "Profil",
     crisis_support: "Krisehjelp",
     settings: "Innstillinger", language: "Språk", username: "Brukernavn", daily_reminder: "Daglig påminnelse", reminder_time: "Påminnelsestidspunkt",
     weekly_reminder: "Ukentlig refleksjon-påminnelse", weekly_reminder_time: "Ukentlig påminnelsestidspunkt", weekly_reminder_body: "Tid for å avslutte uken. Noen minutter med din ukentlige refleksjon.",
     profile_tab_overview: "Oversikt", profile_tab_journal: "Dagbok", profile_tab_weekly: "Ukentlig",
+    progress_title: "Fremgang", progress_sub: "Mønstrene dine og dataene dine, samlet på ett sted.",
+    day_streak_lbl: "dager i strekk", exercises_done_lbl: "øvelser fullført", posts_shared_lbl: "innlegg delt",
+    see_all_lbl: "Se alle", more_posts_suffix: "flere innlegg",
+    back_to_progress: "← Tilbake til fremgang",
+    safety_community_h2: "Sikkerhet og fellesskap", community_guidelines_lbl: "Fellesskapsregler",
+    blocked_users_lbl: "Blokkerte brukere", report_inappropriate_lbl: "Rapporter upassende aktivitet",
+    profile_title: "Profil", profile_sub: "Helt privat. Ingenting her er synlig for andre.",
     journal_history_empty: "Ingen dagboknotater ennå.", weekly_history_empty: "Ingen ukentlige refleksjoner ennå.",
     crisis_contact: "Personlig krisekontakt (valgfritt)", crisis_contact_ph: "Navn / telefonnummer til en du stoler på",
     coach_contact_title: "Avtal en samtale med meg", coach_contact_desc: "Ønsker du å ta en prat med meg som coach? Fyll ut skjemaet, så tar jeg kontakt.",
@@ -600,12 +617,14 @@ const T = {
     restore_ph: "Lim inn sikkerhetskopien her", restore_replace: "Gjenopprett og erstatt", cancel: "Avbryt",
     saved: "Lagret", backup_copied: "Sikkerhetskopi kopiert. Oppbevar den trygt.", data_restored: "Data gjenopprettet.",
     paste_first: "Lim inn en sikkerhetskopi først.", invalid_backup: "Dette ser ikke ut som en gyldig sikkerhetskopi.", not_together_backup: "Dette ser ikke ut som en Together-sikkerhetskopi.",
-    mood_heavy: "Tungt", mood_low: "Lavt", mood_okay: "Greit", mood_good: "Bra",
+    mood_heavy: "Tungt", mood_low: "Lavt", mood_okay: "Greit", mood_good: "Bra", mood_great: "Topp",
     greeting_morning: "God morgen", greeting_afternoon: "God ettermiddag", greeting_evening: "God kveld",
     home_sub: "Hvordan har du det i dag, egentlig?",
     todays_message: "Dagens melding", todays_mood: "Dagens humør",
     mood_note_ph: "Noen ord om dagen? Valgfritt, helt privat.", save_note: "Lagre notat",
     mood_chart: "Humørkurve", last_30_days: "siste 30 dager", days_ago_30: "30 dager siden", today_lbl: "I dag",
+    mood_trend_h2: "Humørtrend", last_14_days: "siste 14 dager", mood_diary_h2: "Humørdagbok",
+    no_mood_entries: "Ingen humørregistreringer ennå. Registrer det første på Hjem-fanen.", yesterday_lbl: "I går",
     mood_chart_locked_desc: "Se mønsteret i humøret ditt over 30 dager.",
     sleep_energy: "Søvn og energi", logged: "Registrert", log: "Registrer",
     sleep_energy_locked_desc: "Registrer søvn og energi daglig. Se mønstrene over tid.",
@@ -642,16 +661,18 @@ const T = {
     weekly_q1: "Hva var vanskeligst denne uken?", weekly_ph1: "Skriv fritt...",
     weekly_q2: "Hva er du stolt av?", weekly_ph2: "Stort eller smått...",
     weekly_q3: "Hva tar du med deg inn i neste uke?", weekly_ph3: "En intensjon, en endring, en person...",
+    weekly_stats_mood: "humør registrert", weekly_stats_sleep: "søvn registrert", weekly_stats_exercises: "øvelser denne uken",
     review_saved: "Gjennomgang lagret.",
     note_private: "Notat lagret. Kun synlig for deg",
     training_title: "Trening", training_sub: "Korte verktøy. Ingen press, bare litt om gangen.",
     active_programmes: "Aktive programmer", day_lbl: "Dag", of_lbl: "av",
+    training_tab_exercises: "Øvelser", training_tab_programs: "Program", training_tab_learn: "Lær",
     todays_content: "Dagens innhold", end_btn: "Avslutt",
     micro_exercises: "Mikroøvelser",
     reflection_h2: "Refleksjon", todays_question: "DAGENS SPØRSMÅL",
     answered_on: "✓ Besvart", tap_update: ". Trykk for å lese eller endre",
     write_arrow: "Skriv →",
-    programmes_h2: "Programmer", days_suffix: "DAGER", unlock_pro: "🔒 Lås opp med Pro", active_tag: "✓ Aktiv",
+    programmes_h2: "Programmer", days_suffix: "DAGER", unlock_pro: "🔒 Lås opp med Pro", active_tag: "✓ Aktiv", days_range_lbl: "7–30 dager",
     program_started: "Programmet er startet. Én dag om gangen.",
     day_comma: ", dag", short_content_line: "Kort innhold + øvelse + refleksjon",
     todays_focus_lbl: "Dagens fokus:", exercise_lbl: "Øvelse:",
@@ -690,7 +711,6 @@ const T = {
     refl_r10_title: "Hva betyr faktisk noe for deg?", refl_r10_prompt: "Fjern jobben, titlene, statusen, alt du skal bry deg om. Hva er igjen som virkelig betyr noe, og lever du etter det?",
     refl_r11_title: "Hva har du aldri tilgitt deg selv for?", refl_r11_prompt: "Vi bærer alle på noe. En feil, en avgjørelse, noe du ikke gjorde da du burde. Hva er det, og hva ville det betydd å legge det fra deg?",
     refl_r12_title: "Hvem tillater du deg selv å trenge noe fra?", refl_r12_prompt: "Hvem i livet ditt ser deg når du strever, og vet de det? Hva gjør det med deg å trenge noe fra noen, og hvem er det trygt å vise det til?",
-    learn_title: "Lær", learn_sub: "Korte lesestykker. Ingen fyllstoff.",
     articles_h2: "Artikler", more_btn: "↺ Flere", research_h2: "Forskning", next_btn2: "↺ Neste",
     finding_lbl: "📊 Funn", read_source: "Les kilden ↗",
     myths_h2: "Myter vs. fakta", new_btn: "↺ Nye", myth_tag: "MYTE", fact_tag: "FAKTA",
@@ -793,7 +813,7 @@ const T = {
     emergency_services: "Nødetater", call_local_emergency: "Ring ditt lokale nødnummer",
     samaritans_sub: "Gratis · tilgjengelig 24/7 · Storbritannia og Irland", crisis_lifeline_sub: "Ring eller tekst · USA",
     publish_my_post: "Publiser innlegget mitt", posted_toast: "Publisert. Du er ikke alene om dette.", could_not_post: "Kunne ikke publisere. Sjekk tilkoblingen din.",
-    back_to_profile: "← Tilbake til profil", my_posts_title: "Mine innlegg", post_word: "innlegg", shared_word: "delt",
+    my_posts_title: "Mine innlegg", post_word: "innlegg", shared_word: "delt",
     havent_shared: "Du har ikke delt noe ennå. Det er helt greit.",
     delete_post_title: "Slette dette innlegget?", delete_post_sub: "Dette kan ikke angres. Innlegget fjernes fra fellesskapet.",
     yes_delete: "Ja, slett det", post_deleted_toast: "Innlegg slettet.", delete_post_emoji_btn: "🗑 Slett innlegg",
@@ -918,7 +938,8 @@ const MOODS = [
   { level: 1, emoji: "😔", key: "mood_heavy" },
   { level: 2, emoji: "😕", key: "mood_low" },
   { level: 3, emoji: "😐", key: "mood_okay" },
-  { level: 4, emoji: "😄", key: "mood_good" },
+  { level: 4, emoji: "🙂", key: "mood_good" },
+  { level: 5, emoji: "😄", key: "mood_great" },
 ];
 
 const EXERCISES = [
@@ -1245,12 +1266,12 @@ const TABS = [
   { id: "home", label: "Home", ico: "\u{1F3E0}" },
   { id: "training", label: "Training", ico: "\u{1F9D8}" },
   { id: "community", label: "Community", ico: "\u{1F4AC}" },
-  { id: "learn", label: "Learn", ico: "\u{1F4D6}" },
+  { id: "progress", label: "Progress", ico: "\u{1F4C8}" },
   { id: "profile", label: "Profile", ico: "\u{1F464}" },
 ];
 
 function renderNav() {
-  const nl = { home: t("nav_home"), training: t("nav_training"), community: t("nav_community"), learn: t("nav_learn"), profile: t("nav_profile") };
+  const nl = { home: t("nav_home"), training: t("nav_training"), community: t("nav_community"), progress: t("nav_progress"), profile: t("nav_profile") };
   document.getElementById("nav").innerHTML = TABS.map(tb =>
     `<button class="${tb.id === currentTab ? "active" : ""}" onclick="goTab('${tb.id}')">
        <span class="ico">${tb.ico}</span>${nl[tb.id]}</button>`).join("");
@@ -1264,7 +1285,7 @@ function render() {
   if (currentTab === "home") renderHome();
   else if (currentTab === "training") renderTraining();
   else if (currentTab === "community") renderCommunity();
-  else if (currentTab === "learn") renderLearn();
+  else if (currentTab === "progress") renderProgress();
   else if (currentTab === "profile") renderProfile();
 }
 
@@ -1417,12 +1438,12 @@ function toggleSocialGoal(wk) {
 }
 function renderMoodChart() {
   const days = 30, bw = 7, gap = 2, h = 68;
-  const colors = ['var(--border)', '#e8a090', '#c9d4b8', '#7dc4c4', 'var(--teal)'];
+  const colors = ['var(--border)', '#e8806a', '#e8a090', '#c9d4b8', '#7dc4c4', 'var(--teal)'];
   const today = new Date();
   const bars = Array.from({ length: days }, (_, i) => {
     const d = new Date(today); d.setDate(d.getDate() - (days - 1 - i));
     const lvl = (state.moods[d.toISOString().slice(0, 10)] || {}).level || 0;
-    const bh = lvl ? Math.round((lvl / 4) * h) : 3;
+    const bh = lvl ? Math.round((lvl / 5) * h) : 3;
     return `<rect x="${i * (bw + gap)}" y="${h - bh}" width="${bw}" height="${bh}" rx="2" fill="${colors[lvl]}"/>`;
   }).join('');
   const tw = days * (bw + gap) - gap;
@@ -1486,7 +1507,7 @@ function renderHome() {
           <b style="font-size:0.95rem">${t("sleep_energy")}</b>
           ${todaySleep ? `<span style="font-size:0.82rem;color:var(--teal);font-weight:500">✓ ${t("logged")}</span>` : `<span class="btn small secondary" style="pointer-events:none">${t("log")}</span>`}
         </div>
-        ${todaySleep ? `<div style="font-size:0.88rem;color:var(--text-soft);margin-top:6px">${todaySleep.hours}h · ${'😴😕😐🙂⚡'.split('')[todaySleep.energy - 1] || ''}</div>` : ''}
+        ${todaySleep ? `<div style="font-size:0.88rem;color:var(--text-soft);margin-top:6px">${todaySleep.hours}h · ${['😴','😕','😐','🙂','⚡'][todaySleep.energy - 1] || ''}</div>` : ''}
       </div>`
     : lockedCard(t("sleep_energy"), t("sleep_energy_locked_desc"), '💤');
 
@@ -1511,7 +1532,7 @@ function renderHome() {
   // Journal (Pro)
   html += `<h2>${t("journal")}</h2>`;
   html += IS_PRO
-    ? `<div class="card" onclick="goProfileSubtab('journal')" style="cursor:pointer">
+    ? `<div class="card" onclick="goProgressSubtab('journal')" style="cursor:pointer">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <b style="font-size:0.95rem">${t("my_notes")}</b>
           <span class="btn small secondary" style="pointer-events:none">${t("open_arrow")}</span>
@@ -1523,7 +1544,7 @@ function renderHome() {
   // Weekly review (Pro)
   html += `<h2>${t("weekly_review")}</h2>`;
   html += IS_PRO
-    ? `<div class="card" onclick="goProfileSubtab('weekly')" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
+    ? `<div class="card" onclick="goProgressSubtab('weekly')" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
         <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:8px">${t("weekly_reflection_label")}</div>
         <div style="font-size:0.92rem;line-height:1.55;margin-bottom:14px">${t("weekly_reflection_text")}</div>
         ${ws ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">${t("completed_on")} ${ws.date}</div>`
@@ -1604,7 +1625,10 @@ function saveSleepLog() {
 }
 
 
+function trainingSegTab(tab) { haptic(); window._trainingTab = tab; render(); }
+
 function renderTraining() {
+  window._trainingTab = window._trainingTab || "exercises";
   let html = `<h1>${t("training_title")}</h1><div class="sub">${t("training_sub")}</div>`;
   const activePrograms = state.activePrograms || [];
   if (activePrograms.length > 0) {
@@ -1627,7 +1651,19 @@ function renderTraining() {
       </div>`;
     }).join("");
   }
-  html += `<h2>${t("micro_exercises")}</h2>`;
+
+  const segBtn = (id, label) => `<button class="${window._trainingTab === id ? "active" : ""}" onclick="trainingSegTab('${id}')">${label}</button>`;
+  html += `<div class="profileSeg">${segBtn("exercises", t("training_tab_exercises"))}${segBtn("programs", t("training_tab_programs"))}${segBtn("learn", t("training_tab_learn"))}</div>`;
+
+  if (window._trainingTab === "programs") html += renderProgramsBody();
+  else if (window._trainingTab === "learn") html += renderLearnBody();
+  else html += renderExercisesBody();
+
+  main.innerHTML = html;
+}
+
+function renderExercisesBody() {
+  let html = `<h2>${t("micro_exercises")}</h2>`;
   html += EXERCISES.map(e => {
     const locked = !IS_PRO && !FREE_EXERCISE_IDS.has(e.id);
     return locked
@@ -1651,8 +1687,11 @@ function renderTraining() {
       ? `<div style="font-size:0.82rem;color:var(--teal);font-weight:500">${t("answered_on")} ${srSaved.date}${t("tap_update")}</div>`
       : `<div style="display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:7px 18px;font-size:0.88rem;font-weight:500">${t("write_arrow")}</div>`}
   </div>`;
+  return html;
+}
 
-  html += `<h2>${t("programmes_h2")} <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">7&ndash;30 days</span></h2>`;
+function renderProgramsBody() {
+  let html = `<h2>${t("programmes_h2")} <span style="font-weight:400;color:var(--text-soft);font-size:0.8rem">${t("days_range_lbl")}</span></h2>`;
   html += PROGRAMS.map(p => {
     if (!IS_PRO) return `<div class="card" onclick="showProModal()" style="cursor:pointer;opacity:0.72">
       <div class="exCard" style="cursor:default">
@@ -1677,7 +1716,7 @@ function renderTraining() {
       </div>
     </div>`;
   }).join("");
-  main.innerHTML = html;
+  return html;
 }
 
 function startProgram(id) {
@@ -2287,8 +2326,8 @@ function shuffleMyths() { mythOffset = (mythOffset + 2) % MYTHS.length; render()
 function shuffleArticles() { articleOffset = (articleOffset + 3) % ARTICLES.length; render(); }
 function shuffleResearch() { researchOffset = (researchOffset + 1) % RESEARCH.length; render(); }
 
-function renderLearn() {
-  let html = `<h1>${t("learn_title")}</h1><div class="sub">${t("learn_sub")}</div>`;
+function renderLearnBody() {
+  let html = "";
 
   const arts = [0,1,2].map(i => ARTICLES[(articleOffset + i) % ARTICLES.length]);
   html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
@@ -2328,7 +2367,7 @@ function renderLearn() {
       <div style="margin-top:10px"><span class="tag">${t("fact_tag")}</span> <span style="font-size:0.92rem">${t('myth_' + (i + 1) + '_fact')}</span></div>
     </div>`).join("");
 
-  main.innerHTML = html;
+  return html;
 }
 
 function openArticle(id) {
@@ -2340,33 +2379,33 @@ function openArticle(id) {
     <div class="sub">${t('art_' + id + '_cat')} &middot; ${a.min} ${t("min_read")}</div>
     <div class="articleBody">${body.map(p => `<p>${p}</p>`).join("")}</div>
     ${prog ? `<div class="card nudge" style="margin-top:14px"><p>${t("want_deeper")} <b>${t('prog_' + prog.id + '_title')}</b> ${t("days_step")}${prog.days} ${t("days_takes")}</p>
-      <div class="actions"><button class="btn small" onclick="closeModal(); startProgram('${prog.id}'); goTab('training')">${t("start_programme_btn")}</button></div></div>` : ""}
+      <div class="actions"><button class="btn small" onclick="closeModal(); startProgram('${prog.id}'); window._trainingTab='programs'; goTab('training')">${t("start_programme_btn")}</button></div></div>` : ""}
   `);
 }
 
-function renderProfileOverview() {
+function renderProgressOverview() {
   const dates = lastNDates(14);
   const labels = [new Date(dates[0]), new Date(dates[13])].map(d => d.getDate() + "/" + (d.getMonth() + 1));
-  let html = `<div class="card"><b style="font-size:0.95rem">Mood trend &mdash; last 14 days</b>
+  let html = `<div class="card"><b style="font-size:0.95rem">${t("mood_trend_h2")} &mdash; ${t("last_14_days")}</b>
     <div class="barChart">${dates.map(d => {
       const l = moodOn(d);
       return l === null
         ? `<div class="bar empty" style="height:4px" title="${d}: not logged"></div>`
-        : `<div class="bar" style="height:${l * 25}%" title="${d}: ${t(MOODS[l - 1].key)}"></div>`;
+        : `<div class="bar" style="height:${l * 20}%" title="${d}: ${t(MOODS[l - 1].key)}"></div>`;
     }).join("")}</div>
-    <div class="chartLabels"><span>${labels[0]}</span><span>today</span></div>
+    <div class="chartLabels"><span>${labels[0]}</span><span>${t("today_lbl")}</span></div>
   </div>`;
 
-  html += `<h2>Mood diary</h2>`;
+  html += `<h2>${t("mood_diary_h2")}</h2>`;
   const moodDays = lastNDates(30).reverse().filter(d => state.moods[d]).slice(0, 10);
   if (moodDays.length === 0) {
-    html += `<div class="card"><div class="empty">No mood entries yet. Log your first mood on the Home tab.</div></div>`;
+    html += `<div class="card"><div class="empty">${t("no_mood_entries")}</div></div>`;
   } else {
     html += moodDays.map(d => {
       const m = state.moods[d];
       const mood = MOODS.find(x => x.level === m.level);
       const today = todayStr(), yday = daysAgo(1);
-      const dateLabel = d === today ? "Today" : d === yday ? "Yesterday" : new Date(d + "T12:00:00").toLocaleDateString("en", { weekday: "long", month: "short", day: "numeric" });
+      const dateLabel = d === today ? t("today_lbl") : d === yday ? t("yesterday_lbl") : new Date(d + "T12:00:00").toLocaleDateString(L() === "no" ? "nb-NO" : "en", { weekday: "long", month: "short", day: "numeric" });
       return `<div class="card" style="margin-bottom:8px">
         <div style="display:flex;align-items:center;justify-content:space-between">
           <span style="font-size:0.8rem;color:var(--text-soft)">${dateLabel}</span>
@@ -2378,11 +2417,11 @@ function renderProfileOverview() {
   }
   return html;
 }
-function renderProfileJournal() {
+function renderProgressJournal() {
   const entries = [...(state.journal || [])].reverse().slice(0, 20);
   let html = `<div class="card">
     <textarea id="profileJournalText" rows="5" placeholder="${t("journal_ph")}"></textarea>
-    <button class="btn" style="width:100%;margin-top:10px" onclick="saveProfileJournal()">${t("save")}</button>
+    <button class="btn" style="width:100%;margin-top:10px" onclick="saveProgressJournal()">${t("save")}</button>
   </div>`;
   if (entries.length === 0) {
     html += `<div class="card"><div class="empty">${t("journal_history_empty")}</div></div>`;
@@ -2395,7 +2434,7 @@ function renderProfileJournal() {
   }
   return html;
 }
-function saveProfileJournal() {
+function saveProgressJournal() {
   const ta = document.getElementById("profileJournalText");
   if (!ta || !ta.value.trim()) return;
   if (!state.journal) state.journal = [];
@@ -2405,10 +2444,25 @@ function saveProfileJournal() {
   toast(t("saved_to_journal"));
   render();
 }
-function renderProfileWeekly() {
+function renderWeekStats() {
+  const days7 = lastNDates(7);
+  const moodDays = days7.filter(d => state.moods[d]);
+  const avgMood = moodDays.length ? moodDays.reduce((s, d) => s + state.moods[d].level, 0) / moodDays.length : null;
+  const moodEmoji = avgMood ? (MOODS.find(m => m.level === Math.round(avgMood)) || {}).emoji || "–" : "–";
+  const sleepDays = days7.filter(d => (state.sleep || {})[d]);
+  const avgHours = sleepDays.length ? sleepDays.reduce((s, d) => s + state.sleep[d].hours, 0) / sleepDays.length : null;
+  const exCount = (state.completedExercises || []).filter(e => days7.includes(e.date)).length;
+  return `<div class="statRow" style="margin-bottom:12px">
+    <div class="card"><div class="num">${moodEmoji}</div><div class="lbl">${moodDays.length}/7 ${t("weekly_stats_mood")}</div></div>
+    <div class="card"><div class="num">${avgHours ? avgHours.toFixed(1) + "h" : "–"}</div><div class="lbl">${sleepDays.length}/7 ${t("weekly_stats_sleep")}</div></div>
+    <div class="card"><div class="num">${exCount}</div><div class="lbl">${t("weekly_stats_exercises")}</div></div>
+  </div>`;
+}
+function renderProgressWeekly() {
   const wk = weekKey();
   const saved = (state.weeklySummary || {})[wk] || {};
-  let html = `<div class="card">
+  let html = renderWeekStats();
+  html += `<div class="card">
     <div class="sub" style="margin-bottom:14px">${t("weekly_sub")}</div>
     <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:6px">${t("weekly_q1")}</label>
     <textarea id="profileWs1" rows="3" placeholder="${t("weekly_ph1")}">${esc(saved.hard || "")}</textarea>
@@ -2416,7 +2470,7 @@ function renderProfileWeekly() {
     <textarea id="profileWs2" rows="3" placeholder="${t("weekly_ph2")}">${esc(saved.proud || "")}</textarea>
     <label style="font-size:0.88rem;font-weight:600;display:block;margin:14px 0 6px">${t("weekly_q3")}</label>
     <textarea id="profileWs3" rows="3" placeholder="${t("weekly_ph3")}">${esc(saved.next || "")}</textarea>
-    <button class="btn" style="width:100%;margin-top:14px" onclick="saveProfileWeekly('${wk}')">${t("save")}</button>
+    <button class="btn" style="width:100%;margin-top:14px" onclick="saveProgressWeekly('${wk}')">${t("save")}</button>
   </div>`;
   const history = Object.entries(state.weeklySummary || {}).filter(([k]) => k !== wk).sort((a, b) => (b[1].date || "").localeCompare(a[1].date || "")).slice(0, 10);
   if (history.length === 0) {
@@ -2432,7 +2486,7 @@ function renderProfileWeekly() {
   }
   return html;
 }
-function saveProfileWeekly(wk) {
+function saveProgressWeekly(wk) {
   const w1 = document.getElementById("profileWs1"), w2 = document.getElementById("profileWs2"), w3 = document.getElementById("profileWs3");
   if (!w1) return;
   if (!state.weeklySummary) state.weeklySummary = {};
@@ -2442,52 +2496,35 @@ function saveProfileWeekly(wk) {
   toast(t("review_saved"));
   render();
 }
-function setProfileTab(tab) { haptic(); window._profileTab = tab; render(); }
-function goProfileSubtab(tab) { window._profileTab = tab; goTab("profile"); }
+function setProgressTab(tab) { haptic(); window._progressTab = tab; render(); }
+function goProgressSubtab(tab) { window._progressTab = tab; goTab("progress"); }
 
-function renderProfile() {
+function renderProgress() {
   if (currentSubView === "my-posts") { renderMyPosts(); return; }
-  window._profileTab = window._profileTab || "overview";
+  window._progressTab = window._progressTab || "overview";
   const completedCount = state.completedExercises.length;
   const st = streak();
 
-  let html = `<h1>Profile</h1><div class="sub">Completely private. Nothing here is visible to others.</div>`;
+  let html = `<h1>${t("progress_title")}</h1><div class="sub">${t("progress_sub")}</div>`;
   html += `<div class="statRow" style="margin-bottom:12px">
-    <div class="card"><div class="num">${st}</div><div class="lbl">day streak</div></div>
-    <div class="card"><div class="num">${completedCount}</div><div class="lbl">exercises done</div></div>
-    <div class="card"><div class="num">${communityPosts.filter(p => p.mine).length}</div><div class="lbl">posts shared</div></div>
+    <div class="card"><div class="num">${st}</div><div class="lbl">${t("day_streak_lbl")}</div></div>
+    <div class="card"><div class="num">${completedCount}</div><div class="lbl">${t("exercises_done_lbl")}</div></div>
+    <div class="card"><div class="num">${communityPosts.filter(p => p.mine).length}</div><div class="lbl">${t("posts_shared_lbl")}</div></div>
   </div>`;
-  const activeProgs = state.activePrograms || [];
-  if (activeProgs.length > 0) {
-    html += `<h2>Active programmes</h2>`;
-    html += activeProgs.map(ap => {
-      const p = PROGRAMS.find(x => x.id === ap.id);
-      if (!p) return '';
-      const day = Math.min(p.days, Math.floor((new Date() - new Date(ap.startDate)) / 86400000) + 1);
-      const pct = Math.round((day / p.days) * 100);
-      return `<div class="card" style="margin-bottom:8px;cursor:pointer" onclick="goTab('training')">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:0.92rem;font-weight:600">${p.icon} ${p.title}</span>
-          <span style="font-size:0.8rem;color:var(--teal-dark);font-weight:500">Day ${day} of ${p.days}</span>
-        </div>
-        <div class="progBar"><div style="width:${pct}%"></div></div>
-      </div>`;
-    }).join("");
-  }
 
-  const segBtn2 = (id, label) => `<button class="${window._profileTab === id ? "active" : ""}" onclick="setProfileTab('${id}')">${label}</button>`;
+  const segBtn2 = (id, label) => `<button class="${window._progressTab === id ? "active" : ""}" onclick="setProgressTab('${id}')">${label}</button>`;
   html += `<div class="profileSeg">${segBtn2("overview", t("profile_tab_overview"))}${segBtn2("journal", t("profile_tab_journal"))}${segBtn2("weekly", t("profile_tab_weekly"))}</div>`;
 
-  if (window._profileTab === "journal") html += IS_PRO ? renderProfileJournal() : lockedCard(t("journal"), t("journal_locked_desc"), "📓");
-  else if (window._profileTab === "weekly") html += IS_PRO ? renderProfileWeekly() : lockedCard(t("weekly_review"), t("weekly_reflection_text"), "📅");
-  else html += renderProfileOverview();
+  if (window._progressTab === "journal") html += IS_PRO ? renderProgressJournal() : lockedCard(t("journal"), t("journal_locked_desc"), "📓");
+  else if (window._progressTab === "weekly") html += IS_PRO ? renderProgressWeekly() : lockedCard(t("weekly_review"), t("weekly_reflection_text"), "📅");
+  else html += renderProgressOverview();
 
   html += `<div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px">
-    <h2 style="margin:0">My posts</h2>
-    ${state.posts.length > 0 ? `<button class="btn small secondary" onclick="openMyPosts()">See all ${state.posts.length} →</button>` : ""}
+    <h2 style="margin:0">${t("my_posts_title")}</h2>
+    ${state.posts.length > 0 ? `<button class="btn small secondary" onclick="openMyPosts()">${t("see_all_lbl")} ${state.posts.length} →</button>` : ""}
   </div>`;
   if (state.posts.length === 0) {
-    html += `<div class="card"><div class="empty">You haven't shared anything yet. That's completely fine. Read and recognise yourself at your own pace.</div></div>`;
+    html += `<div class="card"><div class="empty">${t("havent_shared")}</div></div>`;
   } else {
     html += state.posts.slice(0, 2).map(p => `<div class="card" style="margin-bottom:8px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
@@ -2497,13 +2534,19 @@ function renderProfile() {
       ${p.prompt ? `<div style="background:var(--teal-light);border-left:3px solid var(--teal);border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:0.78rem;color:var(--teal-dark)"><span style="font-weight:700;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:2px">Today's prompt</span>${esc(p.prompt)}</div>` : ""}
       <div style="font-size:0.88rem;color:var(--text)">${esc(p.text.length > 120 ? p.text.slice(0, 120) + "…" : p.text)}</div>
     </div>`).join("");
-    if (state.posts.length > 2) html += `<div style="text-align:center;margin-bottom:12px"><button class="btn small secondary" onclick="openMyPosts()">+ ${state.posts.length - 2} more posts</button></div>`;
+    if (state.posts.length > 2) html += `<div style="text-align:center;margin-bottom:12px"><button class="btn small secondary" onclick="openMyPosts()">+ ${state.posts.length - 2} ${t("more_posts_suffix")}</button></div>`;
   }
 
-  html += `<h2>Safety &amp; community</h2><div class="card">
-    <div class="setRow" onclick="showGuidelines()" style="cursor:pointer"><span>Community guidelines</span><span style="color:var(--text-soft)">›</span></div>
-    <div class="setRow" onclick="openBlockedUsers()" style="cursor:pointer"><span>Blocked users</span><span style="color:var(--text-soft)">${(state.blocked || []).length} ›</span></div>
-    <div class="setRow" onclick="openContact()" style="cursor:pointer"><span>Report inappropriate activity</span><span style="color:var(--text-soft)">›</span></div>
+  main.innerHTML = html;
+}
+
+function renderProfile() {
+  let html = `<h1>${t("profile_title")}</h1><div class="sub">${t("profile_sub")}</div>`;
+
+  html += `<h2>${t("safety_community_h2")}</h2><div class="card">
+    <div class="setRow" onclick="showGuidelines()" style="cursor:pointer"><span>${t("community_guidelines_lbl")}</span><span style="color:var(--text-soft)">›</span></div>
+    <div class="setRow" onclick="openBlockedUsers()" style="cursor:pointer"><span>${t("blocked_users_lbl")}</span><span style="color:var(--text-soft)">${(state.blocked || []).length} ›</span></div>
+    <div class="setRow" onclick="openContact()" style="cursor:pointer"><span>${t("report_inappropriate_lbl")}</span><span style="color:var(--text-soft)">›</span></div>
   </div>`;
 
   const segBtn = (code, label) => `<button onclick="setLang('${code}')" style="border:none;padding:5px 12px;font-family:inherit;font-size:0.82rem;cursor:pointer;background:${L() === code ? "var(--teal)" : "transparent"};color:${L() === code ? "#fff" : "var(--text-soft)"}">${label}</button>`;
@@ -2557,7 +2600,7 @@ function openMyPosts() { currentSubView = "my-posts"; render(); main.scrollTop =
 function closeSubView() { currentSubView = null; render(); main.scrollTop = 0; }
 function renderMyPosts() {
   const myPosts = communityPosts.filter(p => p.mine);
-  let html = `<button onclick="closeSubView()" style="background:none;border:none;font-family:inherit;font-size:0.92rem;color:var(--teal-dark);cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:6px">${t("back_to_profile")}</button>
+  let html = `<button onclick="closeSubView()" style="background:none;border:none;font-family:inherit;font-size:0.92rem;color:var(--teal-dark);cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:6px">${t("back_to_progress")}</button>
     <h1>${t("my_posts_title")}</h1><div class="sub">${myPosts.length} ${t("post_word")}${(L() === "en" && myPosts.length !== 1) ? "s" : ""} ${t("shared_word")}</div>`;
   if (myPosts.length === 0) {
     html += `<div class="card"><div class="empty">${t("havent_shared")}</div></div>`;
