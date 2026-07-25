@@ -572,7 +572,7 @@ const T = {
     your_personal_contact: "Your personal contact", call_word: "Call",
     support_tool_disclaimer: "This app is a support tool and is not a replacement for professional care.",
     together_pro_title: "Together Pro", loading_pricing: "Loading pricing…",
-    feat_1: "All exercises and audio guides", feat_2: "All 30-day programmes", feat_3: "Mood chart — 30 days",
+    feat_1: "All exercises", feat_2: "All 30-day programmes", feat_3: "Mood chart — 30 days",
     feat_4: "Unlimited journal", feat_5: "Sleep and energy log", feat_6: "Weekly structured review", feat_7: "New content every month",
     loading_btn: "Loading…", restore_purchase_btn: "Restore previous purchase",
     payment_disclaimer: "Payment charged to your Apple ID. Renews automatically. Cancel anytime in Settings → Apple ID → Subscriptions.",
@@ -824,7 +824,7 @@ const T = {
     your_personal_contact: "Din personlige kontakt", call_word: "Ring",
     support_tool_disclaimer: "Denne appen er et støtteverktøy og erstatter ikke profesjonell hjelp.",
     together_pro_title: "Together Pro", loading_pricing: "Laster priser…",
-    feat_1: "Alle øvelser og lydguider", feat_2: "Alle 30-dagers programmer", feat_3: "Humørkurve, 30 dager",
+    feat_1: "Alle øvelser", feat_2: "Alle 30-dagers programmer", feat_3: "Humørkurve, 30 dager",
     feat_4: "Ubegrenset dagbok", feat_5: "Søvn- og energilogg", feat_6: "Ukentlig strukturert gjennomgang", feat_7: "Nytt innhold hver måned",
     loading_btn: "Laster…", restore_purchase_btn: "Gjenopprett tidligere kjøp",
     payment_disclaimer: "Betaling belastes din Apple-ID. Fornyes automatisk. Avbryt når som helst i Innstillinger → Apple-ID → Abonnementer.",
@@ -1374,7 +1374,11 @@ const REVENUECAT_KEYS = {
 };
 async function initRevenueCat() {
   const RC = window.Capacitor?.Plugins?.Purchases;
-  if (!RC) return;
+  if (!RC) {
+    // No native Capacitor runtime at all (e.g. a plain browser tab, like the GitHub Pages copy of this file) — unlock Pro so it can be tested. Real app builds always have window.Capacitor, so this never fires there.
+    if (!window.Capacitor) { IS_PRO = true; render(); }
+    return;
+  }
   const platform = window.Capacitor?.getPlatform?.() || 'ios';
   const apiKey = REVENUECAT_KEYS[platform];
   if (!apiKey || apiKey.includes('REPLACE')) return;
