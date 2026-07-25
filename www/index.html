@@ -1347,11 +1347,18 @@ function selectProPkg(i) {
     el.style.borderColor = idx === i ? 'var(--teal)' : 'var(--border)';
   });
 }
+const REVENUECAT_KEYS = {
+  ios: 'appl_auVgsOXBeUaIwvhcbTfYDOVANXB',
+  android: 'goog_REPLACE_WITH_ANDROID_KEY' // TODO: paste the Play Store app's public API key from RevenueCat once created
+};
 async function initRevenueCat() {
   const RC = window.Capacitor?.Plugins?.Purchases;
   if (!RC) return;
+  const platform = window.Capacitor?.getPlatform?.() || 'ios';
+  const apiKey = REVENUECAT_KEYS[platform];
+  if (!apiKey || apiKey.includes('REPLACE')) return;
   try {
-    await RC.configure({ apiKey: 'appl_auVgsOXBeUaIwvhcbTfYDOVANXB' });
+    await RC.configure({ apiKey });
     const { customerInfo } = await RC.getCustomerInfo();
     IS_PRO = !!customerInfo.entitlements.active['pro'];
     if (IS_PRO) render();

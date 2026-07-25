@@ -87,7 +87,9 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 ## Android (under oppsett)
 
 - `@capacitor/android` installert, android-mappe generert
-- Mangler: Google Play Console-konto (krever adressedokumentasjon), keystore i Codemagic, service account
+- **Klart i kode**: ekte app-ikon + splash (generert med `npx @capacitor/assets generate --android` fra `assets/icon*.png`, kilder laget av `assets/make-android-icons.ps1` — kjør på nytt hvis merkevarefargene endres), `signingConfigs.release` i `android/app/build.gradle` som leser Codemagic sine env-variabler (`CM_KEYSTORE_PATH` m.fl.) når `together_keystore`-integrasjonen er satt opp, `versionName` synket med iOS, platform-bevisst RevenueCat-nøkkel i `REVENUECAT_KEYS` (www/index.html, rundt `initRevenueCat()`)
+- **Mangler fortsatt**: Google Play Console-konto er under identitetsverifisering (status per 2026-07-25). Deretter: opprette appen i konsollen, keystore lastet opp i Codemagic som `together_keystore`, `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` service-account, RevenueCat Android-app + goog_-nøkkel limt inn i `REVENUECAT_KEYS.android` (er en placeholder nå), Play Store feature graphic (1024x500) + Android-tilpassede skjermbilder
+- Butikktekst klar til innliming: `playstore-listing-en.txt`, `playstore-listing-no.txt`; Data Safety-skjema forhåndsutfylt i `playstore-data-safety.md`
 
 ## Markedsføring
 

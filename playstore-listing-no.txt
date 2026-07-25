@@ -1,0 +1,49 @@
+GOOGLE PLAY STORE-OPPFØRING (Norsk)
+Klar til å limes inn når appen er opprettet i Play Console.
+
+=== APP NAME (maks 30 tegn) ===
+Together for menn
+
+=== KORT BESKRIVELSE (maks 80 tegn) ===
+Praktiske verktøy for menns mentale helse. Prøv Pro gratis i 3 dager.
+
+=== FULL BESKRIVELSE (maks 4000 tegn) ===
+De fleste mental helse-apper er ikke laget for menn. Together er det.
+
+Praktiske verktøy, ekte fellesskap, og rett-frem støtte som faktisk passer hvordan menn tenker. Ingen terapi-lekser, ingen streaks å holde gående.
+
+DETTE FÅR DU
+
+- Daglig humørsjekk som tar sekunder
+- Guidede pusteøvelser, forankring og refleksjoner
+- Strukturerte treningsprogram om selvtillit, farskap, sinne og mer
+- Et anonymt Fellesskap for å dele det som faktisk skjer, med svar og støtte
+- Dagbok og ukentlig gjennomgang, med hele historikken din på ett sted
+- Forskningsbaserte artikler om menns mentale helse
+
+Tilgjengelig på norsk og engelsk, med full støtte for mørk modus.
+
+PRØV TOGETHER PRO GRATIS I 3 DAGER
+
+Lås opp alle treningsprogram, ubegrenset dagbok, humørgraf, søvn- og energilogg, og nytt innhold hver måned. Avbryt når som helst.
+
+Bygget av Kristian Clifford, sertifisert coach og mental trener. Together er et verktøy, ikke en erstatning for profesjonell hjelp. Hvis du er i krise, ta kontakt med en fagperson eller ring din lokale krisetelefon.
+
+Dataene dine lagres kun på enheten din. Vi samler ikke inn noe. Automatisk og manuell sikkerhetskopi holder dem trygge. Full personvernerklæring: cliffordcoaching.no/privacy
+
+Bruksvilkår: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+
+=== KATEGORI ===
+Helse og trening (eller Livsstil, avhengig av hva som fungerer best)
+
+=== KONTAKT-E-POST ===
+together@cliffordcoaching.no
+
+=== PERSONVERN-URL ===
+https://kricliff.github.io/sammen/privacy.html
+
+=== BUTIKKMATERIELL SOM MANGLER ===
+- App-ikon 512x512 (32-bit PNG, uten alpha) - kan eksporteres fra assets/icon.png
+- Feature graphic 1024x500
+- Skjermbilder for telefon, minst 2 - eksisterende appstore-screenshots-no.html
+  er laget for iOS-formatet, trenger en Android-tilpasset runde
