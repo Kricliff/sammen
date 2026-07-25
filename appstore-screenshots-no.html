@@ -164,10 +164,36 @@ setup("f2", win => {
   setTimeout(() => win.stopBreathCycle(), 4300);
 });
 
-setup("f3", win => {
-  win.eval(`state.guidelinesAccepted = true; currentTab = "community";`);
+const NO_SEED_POSTS = [
+  { id: "no1", who: "NorthernOak74", channel: "Work", age: "2t",
+    text: "Ble omorganisert ut av teamet jeg bygde opp. Sitter igjen med en rolle jeg ikke kjenner meg igjen i. Noen andre som har vært gjennom noe lignende?",
+    support: 14, beenThere: 9, comments: 4 },
+  { id: "no2", who: "Stillwater88", channel: "Fatherhood", age: "5t",
+    text: "Buste ut mot den yngste i dag over noe som egentlig handlet om min egen stress. Han klemte meg da jeg sa unnskyld. Barn er sjenerøse.",
+    support: 31, beenThere: 18, comments: 7 },
+  { id: "no3", who: "WestCoastN", channel: "Relationships", age: "i går",
+    text: "Kveldene er vanskeligst etter bruddet. Har begynt å gå en tur i stedet for å scrolle. Hjelper litt. Ikke mye, men litt.",
+    support: 22, beenThere: 15, comments: 5 },
+];
+function forceCommunityPosts(win) {
+  // Ekte Firestore-data kan komme inn asynkront og overskrive det vi setter
+  // her (og kan inneholde ekte, tilfeldig-språklige innlegg), så tving faste
+  // norske innlegg og fortsett å sette dem på nytt noen sekunder for å vinne
+  // kappløpet mot den live lytteren, og koble den så fra.
+  win.eval(`
+    state.guidelinesAccepted = true;
+    communityLoaded = true;
+    communityPosts = ${JSON.stringify(NO_SEED_POSTS)};
+    if (typeof communityUnsubscribe !== "undefined" && communityUnsubscribe) { communityUnsubscribe(); communityUnsubscribe = null; }
+    currentTab = "community";
+  `);
   win.render();
   resetScroll(win);
+}
+setup("f3", win => {
+  forceCommunityPosts(win);
+  const iv = setInterval(() => forceCommunityPosts(win), 400);
+  setTimeout(() => clearInterval(iv), 5000);
 });
 
 setup("f4", win => {

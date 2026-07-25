@@ -164,10 +164,25 @@ setup("f2", win => {
   setTimeout(() => win.stopBreathCycle(), 4300);
 });
 
-setup("f3", win => {
-  win.eval(`state.guidelinesAccepted = true; currentTab = "community";`);
+function forceCommunityPosts(win) {
+  // Real Firestore data can arrive asynchronously and overwrite whatever we
+  // set here (and might contain live Norwegian posts even on the English
+  // shot), so force fixed English posts and keep re-asserting for a few
+  // seconds to win the race against the live listener, then unsubscribe it.
+  win.eval(`
+    state.guidelinesAccepted = true;
+    communityLoaded = true;
+    communityPosts = SEED_POSTS.slice(0, 3);
+    if (typeof communityUnsubscribe !== "undefined" && communityUnsubscribe) { communityUnsubscribe(); communityUnsubscribe = null; }
+    currentTab = "community";
+  `);
   win.render();
   resetScroll(win);
+}
+setup("f3", win => {
+  forceCommunityPosts(win);
+  const iv = setInterval(() => forceCommunityPosts(win), 400);
+  setTimeout(() => clearInterval(iv), 5000);
 });
 
 setup("f4", win => {
