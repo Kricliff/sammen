@@ -43,6 +43,7 @@ Bruksvilkår: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 === WHAT'S NEW ===
 - Nytt: Fremgang-fane, humør, dagbok, ukentlig refleksjon og dine egne innlegg, samlet på ett sted.
 - Trening og Lær er nå én fane, med Øvelser, Program og Lær som raske underfaner.
+- Nye ikoner i bunnmenyen.
 - Humørregistrering har nå 5 nivåer i stedet for 4.
 - Ukentlig gjennomgang viser nå også søvn og øvelser denne uken, ikke bare humør.
 - Nytt: Svar på innlegg i Fellesskap, og få varsel når noen svarer deg.

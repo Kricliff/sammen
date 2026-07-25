@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Together — App Store screenshot generator</title>
+<title>Together — App Store skjermbilde-generator (norsk)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -70,61 +70,61 @@
 <body>
 
 <div class="controls" style="width:100%">
-  Export width in pixels: <input type="number" id="targetW" value="1290"> (height scales automatically to match each frame's aspect ratio. Apple's current required sizes are shown in App Store Connect's Media Manager when you upload — adjust this number if it doesn't match.)
+  Eksportbredde i piksler: <input type="number" id="targetW" value="1290"> (høyden skaleres automatisk til å matche hver ramme sitt sideforhold. Apples gjeldende krav vises i App Store Connects Media Manager når du laster opp, juster tallet om det ikke stemmer.)
 </div>
 
 <div class="shotWrap">
   <div class="canvas bg-light" id="shot1">
-    <div class="headline">A quiet place to check in with yourself.</div>
+    <div class="headline">Et rolig sted å sjekke inn med deg selv.</div>
     <div class="frame"><iframe id="f1" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot1','together-1-home')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot1','together-no-1-hjem')">Last ned PNG</button>
 </div>
 
 <div class="shotWrap">
   <div class="canvas bg-teal" id="shot2">
-    <div class="headline">Breathe through the moment.</div>
+    <div class="headline">Pust gjennom øyeblikket.</div>
     <div class="frame"><iframe id="f2" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot2','together-2-breathing')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot2','together-no-2-pust')">Last ned PNG</button>
 </div>
 
 <div class="shotWrap">
   <div class="canvas bg-coral" id="shot3">
-    <div class="headline">You're not alone in this.</div>
+    <div class="headline">Du er ikke alene om dette.</div>
     <div class="frame"><iframe id="f3" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot3','together-3-community')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot3','together-no-3-fellesskap')">Last ned PNG</button>
 </div>
 
 <div class="shotWrap">
   <div class="canvas bg-teal" id="shot4">
-    <div class="headline">Track your progress, completely private.</div>
+    <div class="headline">Følg fremgangen din, helt privat.</div>
     <div class="frame"><iframe id="f4" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot4','together-4-profile')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot4','together-no-4-profil')">Last ned PNG</button>
 </div>
 
 <div class="shotWrap">
   <div class="canvas bg-dark" id="shot5">
-    <div class="headline">Beautiful in the dark, too.</div>
+    <div class="headline">Vakker også i mørk modus.</div>
     <div class="frame"><iframe id="f5" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot5','together-5-dark')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot5','together-no-5-dark')">Last ned PNG</button>
 </div>
 
 <div class="shotWrap">
   <div class="canvas bg-coral" id="shot6">
-    <div class="headline">Everything to grow, in one place.</div>
+    <div class="headline">Alt du trenger for å vokse, på ett sted.</div>
     <div class="frame"><iframe id="f6" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot6','together-6-training')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot6','together-no-6-trening')">Last ned PNG</button>
 </div>
 
 <script>
-// `let state` / `let currentTab` in the app don't attach to window (only
-// function declarations do), so they're reached here via contentWindow.eval,
-// which runs in the same global lexical scope as the app's own inline script.
+// `let state` / `let currentTab` i appen henger ikke på window (kun
+// function-deklarasjoner gjør det), så de nås her via contentWindow.eval,
+// som kjører i samme globale scope som appens eget inline-script.
 function seedMoods(win) {
   const levels = [3, 3, 4, 2, 3, 4, 5, 3, 4, 5, 3, 4, 5, 5];
   const sets = levels.map((lvl, idx) => `state.moods[daysAgo(${13 - idx})] = {level:${lvl}, note:""};`).join(" ");
@@ -154,7 +154,7 @@ function setup(id, fn) {
   const f = document.getElementById(id);
   f.addEventListener("load", () => { try { win_ready(f.contentWindow, fn); } catch (e) { console.error(id, e); } });
 }
-function win_ready(win, fn) { win.setLang("en"); hideScrollbar(win); fn(win); }
+function win_ready(win, fn) { win.setLang("no"); hideScrollbar(win); fn(win); }
 
 setup("f1", win => { seedMoods(win); win.render(); resetScroll(win); });
 
@@ -198,12 +198,12 @@ setup("f5", win => {
   resetScroll(win);
 });
 
-// html2canvas can't reach across a nested browsing context (an <iframe> is
-// a separate document from the outside), so a direct capture of the whole
-// composition renders the phone screen as blank/black. Fix: snapshot the
-// iframe's own document directly (that works, since there's no boundary to
-// cross from inside), swap it in as a plain <img>, then capture the outer
-// composition normally.
+// html2canvas kan ikke nå inn i en nested browsing context (et <iframe> er et
+// eget dokument sett utenfra), så en direkte capture av hele komposisjonen
+// gir en svart/blank telefonskjerm. Fiks: ta et bilde av iframe-ens eget
+// dokument direkte (det fungerer, siden det ikke er noen grense å krysse
+// innenfra), bytt det inn som et vanlig <img>, og ta så bilde av hele
+// komposisjonen normalt.
 async function capture(canvasId, filename) {
   const el = document.getElementById(canvasId);
   const iframe = el.querySelector("iframe");
