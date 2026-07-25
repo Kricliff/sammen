@@ -84,7 +84,7 @@
   #sosBtn { background: var(--coral-light); color: #b9503c; border: 1px solid #f2c4b8; border-radius: 999px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit; }
   nav { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; padding: 6px 4px calc(8px + env(safe-area-inset-bottom)); }
   nav button { flex: 1; background: none; border: none; font-family: inherit; font-size: 0.68rem; color: var(--text-soft); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; }
-  nav button .ico { font-size: 1.25rem; line-height: 1; border-radius: 8px; padding: 4px 12px; transition: background 0.18s; }
+  nav button .ico { display: flex; align-items: center; justify-content: center; line-height: 1; border-radius: 8px; padding: 4px 12px; transition: background 0.18s; }
   nav button.active { color: var(--teal-dark); font-weight: 700; }
   nav button.active .ico { background: var(--teal-light); }
   .moodRow { display: flex; gap: 10px; justify-content: space-between; margin: 12px 0 4px; }
@@ -1262,12 +1262,13 @@ let communityPage = 0;
 let focusNote = false;
 const main = document.getElementById("main");
 
+const ICO_SVG = (inner) => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 const TABS = [
-  { id: "home", label: "Home", ico: "\u{1F3E0}" },
-  { id: "training", label: "Training", ico: "\u{1F9D8}" },
-  { id: "community", label: "Community", ico: "\u{1F4AC}" },
-  { id: "progress", label: "Progress", ico: "\u{1F4C8}" },
-  { id: "profile", label: "Profile", ico: "\u{1F464}" },
+  { id: "home", label: "Home", ico: ICO_SVG(`<path d="M4 11 L12 4 L20 11"/><path d="M6 10 V20 H18 V10"/><path d="M10 20 V14 H14 V20"/>`) },
+  { id: "training", label: "Training", ico: ICO_SVG(`<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>`) },
+  { id: "community", label: "Community", ico: ICO_SVG(`<path d="M12 4 C7 4 3 7.4 3 11.5 C3 14 4.5 16.2 7 17.6 L6.3 21 L10.3 18.8 C10.9 18.9 11.4 19 12 19 C17 19 21 15.6 21 11.5 C21 7.4 17 4 12 4 Z"/>`) },
+  { id: "progress", label: "Progress", ico: ICO_SVG(`<path d="M4 20 V14 M10 20 V9 M16 20 V12 M4 20 H20"/><path d="M14 6 L20 6 L20 12"/><path d="M4 14 L10 9 L14 12 L20 6"/>`) },
+  { id: "profile", label: "Profile", ico: ICO_SVG(`<circle cx="12" cy="8" r="4"/><path d="M4 20 C4 15.5 7.5 13 12 13 C16.5 13 20 15.5 20 20"/>`) },
 ];
 
 function renderNav() {

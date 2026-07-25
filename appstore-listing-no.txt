@@ -41,15 +41,15 @@ Dataene dine lagres kun på enheten din. Vi samler ikke inn noe. Automatisk og m
 Bruksvilkår: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
 === WHAT'S NEW ===
+- Nytt: Fremgang-fane, humør, dagbok, ukentlig refleksjon og dine egne innlegg, samlet på ett sted.
+- Trening og Lær er nå én fane, med Øvelser, Program og Lær som raske underfaner.
+- Humørregistrering har nå 5 nivåer i stedet for 4.
+- Ukentlig gjennomgang viser nå også søvn og øvelser denne uken, ikke bare humør.
 - Nytt: Svar på innlegg i Fellesskap, og få varsel når noen svarer deg.
 - Nytt: Book en samtale direkte med coachen bak appen, fra Profil-fanen.
-- Fikset en feil der daglige påminnelser ikke alltid ble planlagt riktig.
-- Lagt til en valgfri påminnelse for ukentlig refleksjon.
-- Dagbok og ukentlig gjennomgang ligger nå i Profil-fanen, med hele historikken din synlig på ett sted.
-- Nye ikoner for daglig humørsjekk.
-- Fjernet tidsestimater på øvelser for en renere Trening-fane.
-- "Siste fra Fellesskap" på Hjem viser nå faktiske innlegg fra Fellesskap.
 - 3 dager gratis prøveperiode for nye Pro-abonnenter.
+- Lagt til en valgfri påminnelse for ukentlig refleksjon.
+- Fikset en feil der daglige påminnelser ikke alltid ble planlagt riktig.
 - Automatisk sikkerhetskopi i bakgrunnen, som ekstra beskyttelse for dataene dine.
 - Litt mer haptisk tilbakemelding i appen.
 

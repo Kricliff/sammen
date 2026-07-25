@@ -7,16 +7,24 @@ not required".
 
 === WHAT'S NEW IN THIS VERSION ===
 
-This update adds reply threads to Community posts (covered by the same
+This update reorganizes navigation: Training and Learn are now one tab
+(Exercises / Programmes / Learn sub-sections), and a new Progress tab
+holds mood history, journal, weekly reflection, and the user's own
+Community post history, all previously scattered across Home and
+Profile. Profile itself is now settings-only (account, notifications,
+subscription, safety, data backup). Mood check-in now has 5 levels
+instead of 4, and weekly review also shows sleep and exercise activity
+logged that week, not just mood.
+
+It also adds reply threads to Community posts (covered by the same
 content filter and Report/Block/Hide moderation as top-level posts,
 plus an in-app notification when someone replies to your post), a
 Norwegian-language contact form for booking a call with the app's
-coach, an optional weekly reflection reminder, a reorganized Profile
-tab (Journal and Weekly review are now sub-tabs with full history), a
-background safety-net data backup, and a fix to daily reminder
-scheduling. It also updates the paywall to display free-trial terms
-when a trial is configured. No changes to account handling or the
-core subscription product are included in this update.
+coach, an optional weekly reflection reminder, a background
+safety-net data backup, and a fix to daily reminder scheduling. It
+also updates the paywall to display free-trial terms when a trial is
+configured. No changes to account handling or the core subscription
+product are included in this update.
 
 === COMMUNITY / USER-GENERATED CONTENT ===
 
