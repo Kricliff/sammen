@@ -240,9 +240,13 @@ async function capture(canvasId, filename) {
   img.remove();
   iframe.style.display = "";
 
+  // App Store Connect rejects images with an alpha channel. Nothing here is
+  // actually transparent, but html2canvas always exports PNG as RGBA
+  // regardless of canvas alpha settings, so export as JPEG instead — the
+  // format itself cannot carry transparency.
   const link = document.createElement("a");
-  link.download = filename + ".png";
-  link.href = canvas.toDataURL("image/png");
+  link.download = filename + ".jpg";
+  link.href = canvas.toDataURL("image/jpeg", 0.95);
   link.click();
 }
 </script>
