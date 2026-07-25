@@ -1375,11 +1375,7 @@ const REVENUECAT_KEYS = {
 };
 async function initRevenueCat() {
   const RC = window.Capacitor?.Plugins?.Purchases;
-  if (!RC) {
-    // No native Capacitor runtime at all (e.g. a plain browser tab, like the GitHub Pages copy of this file) — unlock Pro so it can be tested. Real app builds always have window.Capacitor, so this never fires there.
-    if (!window.Capacitor) { IS_PRO = true; render(); }
-    return;
-  }
+  if (!RC) return;
   const platform = window.Capacitor?.getPlatform?.() || 'ios';
   const apiKey = REVENUECAT_KEYS[platform];
   if (!apiKey || apiKey.includes('REPLACE')) return;
