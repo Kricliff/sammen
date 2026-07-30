@@ -236,14 +236,20 @@
 "use strict";
 
 const LS_KEY = "together_state_v1";
-const todayStr = () => new Date().toISOString().slice(0, 10);
+const localDateStr = (d) => {
+  const dt = d || new Date();
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, "0");
+  const day = String(dt.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+};
+const todayStr = () => localDateStr();
 
 const defaultState = {
   pseudonym: "Stillwater" + Math.floor(100 + Math.random() * 900),
   moods: {},
   completedExercises: [],
   activePrograms: [],
-  posts: [],
   reactions: {},
   settings: { notifications: true, notifTime: "09:00", weeklyReflection: false, weeklyReflectionTime: "18:00", crisisContact: "", icloudPromptDismissed: false },
   dismissedNudges: {},
@@ -255,6 +261,7 @@ const defaultState = {
   guidelinesAccepted: false,
   blocked: [],
   hiddenPosts: [],
+  reportedPosts: [],
   hiddenReplies: [],
   seenReplyCounts: {},
 };
@@ -291,8 +298,7 @@ function scheduleICloudPush() {
 function stateLooksFresh() {
   return Object.keys(state.moods).length === 0
     && state.completedExercises.length === 0
-    && (state.journal || []).length === 0
-    && (state.posts || []).length === 0;
+    && (state.journal || []).length === 0;
 }
 async function checkICloudRestore() {
   const ic = window.Capacitor?.Plugins?.ICloudSync;
@@ -847,7 +853,7 @@ const T = {
 let communityPosts = [];
 let communityLoaded = false;
 let communityUnsubscribe = null;
-let fbAuth = null, fbDb = null, fbUser = null;
+let fbAuth = null, fbDb = null, fbUser = null, firebaseReadyPromise = null;
 let openReplyThreads = {};
 let repliesCache = {};
 
@@ -975,7 +981,7 @@ const REFLECTIONS = [
   { id: "r11", title: "What have you never forgiven yourself for?", prompt: "We all carry something. A mistake, a decision, something you didn't do when you should have. What is it, and what would it mean to let it go?" },
   { id: "r12", title: "Who do you allow yourself to need something from?", prompt: "Who in your life sees you when you're struggling, and do they know it? What does it do to you to need something from someone, and who is it safe to show that to?" },
 ];
-const SESSION_REFLECTION_IDX = Math.floor(Math.random() * REFLECTIONS.length);
+function todaysReflectionIdx() { return Math.floor(new Date() / 86400000) % REFLECTIONS.length; }
 
 let IS_PRO = false;
 const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
@@ -1178,14 +1184,14 @@ const RESEARCH = [
   { title: "8 weeks of mindfulness reduces stress hormones", body: "An 8-week mindfulness programme produced measurable reductions in cortisol (the body's primary stress hormone) and self-reported stress in working men. The most effective approach: short daily practice rather than longer weekly sessions.", source: "Psychiatry Research, 2011", url: null },
 ];
 
-const CRISIS_PATTERNS = /suicide|take my (own )?life|don't want to (be|live|exist)|can't go on|end it all|end my life|hurt myself|self.harm|not worth living|want to die/i;
+const CRISIS_PATTERNS = /suicide|take my (own )?life|don't want to (be|live|exist)|can't go on|end it all|end my life|hurt myself|self[-\s]?harm|not worth living|want to die/i;
 // Automated objectionable-content filter (hate speech, slurs, sexual solicitation, targeted harassment).
 // Note: this deliberately does NOT block a person's own distress (handled separately by CRISIS_PATTERNS with support resources).
 const OBJECTIONABLE_PATTERNS = /\b(n[i1]gg(er|a)|f[a4]gg?ots?|r[e3]tard(ed)?|k[i1]kes?|sp[i1]cs?|ch[i1]nks?|tr[a4]nn(y|ie)s?|c[u\*]nts?|wh[o0]res?|dyke)\b|\bkys\b|\bkill (yo)?urself\b|\bgo (and )?die\b|\byou should die\b|\bhang yourself\b/i;
 const REPORT_HIDE_THRESHOLD = 3; // a post reported this many times is auto-hidden from every user's feed
 const SUPPORT_EMAIL = "together@cliffordcoaching.no";
 
-function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return localDateStr(d); }
 function moodOn(dateStr) { return state.moods[dateStr] ? state.moods[dateStr].level : null; }
 function lastNDates(n) { const out = []; for (let i = n - 1; i >= 0; i--) out.push(daysAgo(i)); return out; }
 function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
@@ -1381,6 +1387,14 @@ async function initRevenueCat() {
   if (!apiKey || apiKey.includes('REPLACE')) return;
   try {
     await RC.configure({ apiKey });
+    // Keeps IS_PRO in sync if the entitlement changes during a live session
+    // (renewal failure, refund, external cancellation) - configure() alone
+    // only reflects entitlement state at the moment it resolves.
+    RC.addCustomerInfoUpdateListener?.(({ customerInfo }) => {
+      const wasPro = IS_PRO;
+      IS_PRO = !!customerInfo?.entitlements?.active?.['pro'];
+      if (IS_PRO !== wasPro) render();
+    });
     const { customerInfo } = await RC.getCustomerInfo();
     IS_PRO = !!customerInfo.entitlements.active['pro'];
     if (IS_PRO) render();
@@ -1443,7 +1457,7 @@ function renderMoodChart() {
   const today = new Date();
   const bars = Array.from({ length: days }, (_, i) => {
     const d = new Date(today); d.setDate(d.getDate() - (days - 1 - i));
-    const lvl = (state.moods[d.toISOString().slice(0, 10)] || {}).level || 0;
+    const lvl = (state.moods[localDateStr(d)] || {}).level || 0;
     const bh = lvl ? Math.round((lvl / 5) * h) : 3;
     return `<rect x="${i * (bw + gap)}" y="${h - bh}" width="${bw}" height="${bh}" rx="2" fill="${colors[lvl]}"/>`;
   }).join('');
@@ -1677,7 +1691,7 @@ function renderExercisesBody() {
           <div class="meta"><b>${t('ex_' + e.id + '_title')}</b><span>${t('ex_' + e.id + '_desc')}</span></div>
         </div>`;
   }).join("");
-  const sr = REFLECTIONS[SESSION_REFLECTION_IDX];
+  const sr = REFLECTIONS[todaysReflectionIdx()];
   const srSaved = state.reflections[sr.id];
   html += `<h2>${t("reflection_h2")}</h2>`;
   html += `<div class="card" onclick="openReflection('${sr.id}')" style="cursor:pointer;border-left:3px solid var(--teal);padding-left:18px">
@@ -2155,11 +2169,18 @@ async function submitReport(postId, reason) {
   const post = findPost(postId);
   // Immediately hide from this user's feed
   if (!state.hiddenPosts.includes(postId)) state.hiddenPosts.push(postId);
+  // One report per (post, device) - avoids a single user incrementing the
+  // shared report counter multiple times and crossing REPORT_HIDE_THRESHOLD alone.
+  const alreadyReported = state.reportedPosts.includes(postId);
+  if (!alreadyReported) state.reportedPosts.push(postId);
   save(); closeModal(); render();
   toast(t("reported_hidden_toast"));
+  if (alreadyReported) return;
   if (fbDb && fbUser) {
     try {
-      await fbDb.collection('reports').add({
+      // Deterministic doc id (postId_reporterUid) so a retry overwrites the
+      // same report instead of creating a duplicate.
+      await fbDb.collection('reports').doc(postId + '_' + fbUser.uid).set({
         postId, reason, reporter: fbUser.uid,
         who: post ? post.who : null, text: post ? post.text : null,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -2300,6 +2321,7 @@ let pendingPost = null;
 function finalizePost() { if (pendingPost) { doPublish(pendingPost.text, pendingPost.channel, pendingPost.prompt); pendingPost = null; } }
 async function doPublish(text, channel, prompt) {
   closeModal();
+  if (firebaseReadyPromise) { try { await firebaseReadyPromise; } catch (e) {} }
   if (fbDb && fbUser) {
     try {
       await fbDb.collection('posts').add({
@@ -2520,14 +2542,15 @@ function renderProgress() {
   else if (window._progressTab === "weekly") html += IS_PRO ? renderProgressWeekly() : lockedCard(t("weekly_review"), t("weekly_reflection_text"), "📅");
   else html += renderProgressOverview();
 
+  const myPostsPreview = communityPosts.filter(p => p.mine);
   html += `<div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px">
     <h2 style="margin:0">${t("my_posts_title")}</h2>
-    ${state.posts.length > 0 ? `<button class="btn small secondary" onclick="openMyPosts()">${t("see_all_lbl")} ${state.posts.length} →</button>` : ""}
+    ${myPostsPreview.length > 0 ? `<button class="btn small secondary" onclick="openMyPosts()">${t("see_all_lbl")} ${myPostsPreview.length} →</button>` : ""}
   </div>`;
-  if (state.posts.length === 0) {
+  if (myPostsPreview.length === 0) {
     html += `<div class="card"><div class="empty">${t("havent_shared")}</div></div>`;
   } else {
-    html += state.posts.slice(0, 2).map(p => `<div class="card" style="margin-bottom:8px">
+    html += myPostsPreview.slice(0, 2).map(p => `<div class="card" style="margin-bottom:8px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <span class="tag">${esc(p.channel)}</span>
         <span style="font-size:0.78rem;color:var(--text-soft)">${p.age || "now"}</span>
@@ -2535,7 +2558,7 @@ function renderProgress() {
       ${p.prompt ? `<div style="background:var(--teal-light);border-left:3px solid var(--teal);border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:0.78rem;color:var(--teal-dark)"><span style="font-weight:700;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:2px">Today's prompt</span>${esc(p.prompt)}</div>` : ""}
       <div style="font-size:0.88rem;color:var(--text)">${esc(p.text.length > 120 ? p.text.slice(0, 120) + "…" : p.text)}</div>
     </div>`).join("");
-    if (state.posts.length > 2) html += `<div style="text-align:center;margin-bottom:12px"><button class="btn small secondary" onclick="openMyPosts()">+ ${state.posts.length - 2} ${t("more_posts_suffix")}</button></div>`;
+    if (myPostsPreview.length > 2) html += `<div style="text-align:center;margin-bottom:12px"><button class="btn small secondary" onclick="openMyPosts()">+ ${myPostsPreview.length - 2} ${t("more_posts_suffix")}</button></div>`;
   }
 
   main.innerHTML = html;
@@ -2924,7 +2947,7 @@ render();
   if (state.settings.notifications) setTimeout(setupDailyNotifications, 3000);
   if (state.settings.weeklyReflection) setTimeout(setupWeeklyReflectionNotif, 3200);
   initRevenueCat();
-  initFirebase();
+  firebaseReadyPromise = initFirebase();
   setTimeout(checkICloudRestore, 1200);
 })();
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
