@@ -78,7 +78,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - **TARGETED_DEVICE_FAMILY = "1"**: iPhone-only (ikke iPad)
 - Avvisningshistorikk: 2.1(b) + 3.1.2(c) (RC-offering + pris — fikset), 1.2 UGC (moderasjon — fikset)
 - Review Notes-mal: ingen innlogging kreves; paywall via Profile → Go Pro; Community-test via gate → «⋯ More»
-- **Versjonsstatus**: 1.0.2 er sist godkjente/live versjon. 1.0.3 (`MARKETING_VERSION`) er under arbeid med et større feature-batch (se `review-notes-1.0.3.md`) — ikke sendt inn til review ennå da dette ble skrevet.
+- **Versjonsstatus**: 1.0.2 er sist godkjente/live versjon. 1.0.3 (`MARKETING_VERSION`) med et større feature-batch (se `review-notes-1.0.3.md`) ble sendt inn til Apple-review 2026-07-25, venter på svar.
 
 ## Codemagic
 
@@ -103,3 +103,13 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - Ingen em-streker (—) i brukervendt tekst
 - All app-tekst på engelsk; norsk kun i Claude-samtaler og interne kommentarer
 - Git-identitet er satt globalt (Kristian Clifford / kricliff@gmail.com)
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

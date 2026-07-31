@@ -1,0 +1,147 @@
+{
+  ".claude/launch.json": {
+    "mtime": 1781521744.1249516,
+    "ast_hash": "37c1dc5ec7c80a87402cfd016323ec31",
+    "semantic_hash": "37c1dc5ec7c80a87402cfd016323ec31"
+  },
+  ".claude/settings.json": {
+    "mtime": 1785482693.2244756,
+    "ast_hash": "93a0df6a3bb1cb681b8b7a986c0d1447",
+    "semantic_hash": "93a0df6a3bb1cb681b8b7a986c0d1447"
+  },
+  "android/app/build.gradle": {
+    "mtime": 1784978860.9015152,
+    "ast_hash": "837519171f1021630ceb5b0b68bc03a5",
+    "semantic_hash": "837519171f1021630ceb5b0b68bc03a5"
+  },
+  "android/app/capacitor.build.gradle": {
+    "mtime": 1781718708.7475457,
+    "ast_hash": "f7fd733e9f2f66ac7061ba2cbed1a691",
+    "semantic_hash": "f7fd733e9f2f66ac7061ba2cbed1a691"
+  },
+  "android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java": {
+    "mtime": 1781718708.7475457,
+    "ast_hash": "c777a4127ae7213f7da22c4105bdfeab",
+    "semantic_hash": "c777a4127ae7213f7da22c4105bdfeab"
+  },
+  "android/app/src/main/java/com/kricliff/together/MainActivity.java": {
+    "mtime": 1781718708.7475457,
+    "ast_hash": "5cb5f4dfc328bd6ee2cc110e3309bf66",
+    "semantic_hash": "5cb5f4dfc328bd6ee2cc110e3309bf66"
+  },
+  "android/app/src/test/java/com/getcapacitor/myapp/ExampleUnitTest.java": {
+    "mtime": 1781718708.773945,
+    "ast_hash": "3f8a2768101e4de10f606ea4516fd339",
+    "semantic_hash": "3f8a2768101e4de10f606ea4516fd339"
+  },
+  "android/build.gradle": {
+    "mtime": 1781718708.773945,
+    "ast_hash": "ca5f0fa0ea4c3997363777d8a2b6467b",
+    "semantic_hash": "ca5f0fa0ea4c3997363777d8a2b6467b"
+  },
+  "android/capacitor.settings.gradle": {
+    "mtime": 1781718708.7759511,
+    "ast_hash": "95c8ebeb0089ac644725b865c893c950",
+    "semantic_hash": "95c8ebeb0089ac644725b865c893c950"
+  },
+  "android/gradlew": {
+    "mtime": 1781718708.777957,
+    "ast_hash": "f2d3d383787f61a4a99710ee8d780434",
+    "semantic_hash": "f2d3d383787f61a4a99710ee8d780434"
+  },
+  "android/settings.gradle": {
+    "mtime": 1781718708.777957,
+    "ast_hash": "c609df618dbeec637255380c9f707ccf",
+    "semantic_hash": "c609df618dbeec637255380c9f707ccf"
+  },
+  "android/variables.gradle": {
+    "mtime": 1781718708.777957,
+    "ast_hash": "32293aeff620cc10298866858c22ddc9",
+    "semantic_hash": "32293aeff620cc10298866858c22ddc9"
+  },
+  "assets/make-android-icons.ps1": {
+    "mtime": 1784978714.0475085,
+    "ast_hash": "1413b33910eab6ad0d99c1c3afb6ee20",
+    "semantic_hash": "1413b33910eab6ad0d99c1c3afb6ee20"
+  },
+  "assets/make-icons.ps1": {
+    "mtime": 1781521744.126952,
+    "ast_hash": "23fdbbc14724334c9bdc7ae9d7b2faad",
+    "semantic_hash": "23fdbbc14724334c9bdc7ae9d7b2faad"
+  },
+  "capacitor.config.json": {
+    "mtime": 1781521969.9808767,
+    "ast_hash": "e66f5f034d224405d4add1abf84e698a",
+    "semantic_hash": "e66f5f034d224405d4add1abf84e698a"
+  },
+  "ios/App/App/AppDelegate.swift": {
+    "mtime": 1780415704.0,
+    "ast_hash": "b2865a48d0e54c1613fa58272418bf98",
+    "semantic_hash": "b2865a48d0e54c1613fa58272418bf98"
+  },
+  "ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json": {
+    "mtime": 1780415704.0,
+    "ast_hash": "7453c3002126811a57c38b2740f990cf",
+    "semantic_hash": "7453c3002126811a57c38b2740f990cf"
+  },
+  "ios/App/App/Assets.xcassets/Contents.json": {
+    "mtime": 1780415704.0,
+    "ast_hash": "31cc68f34934a99c0b0c1bebde56309c",
+    "semantic_hash": "31cc68f34934a99c0b0c1bebde56309c"
+  },
+  "ios/App/App/Assets.xcassets/Splash.imageset/Contents.json": {
+    "mtime": 1780415704.0,
+    "ast_hash": "1162e1cddd7ea769bcacdd1aa7b4ac72",
+    "semantic_hash": "1162e1cddd7ea769bcacdd1aa7b4ac72"
+  },
+  "ios/App/App/ICloudSyncPlugin.swift": {
+    "mtime": 1784321106.7386768,
+    "ast_hash": "9638dfa585aa0d2323ad3cb3c97b9d25",
+    "semantic_hash": "9638dfa585aa0d2323ad3cb3c97b9d25"
+  },
+  "ios/App/CapApp-SPM/Package.swift": {
+    "mtime": 1781522017.038517,
+    "ast_hash": "1907cb00c0779dee24bffee0ee187eac",
+    "semantic_hash": "1907cb00c0779dee24bffee0ee187eac"
+  },
+  "ios/App/CapApp-SPM/Sources/CapApp-SPM/CapApp-SPM.swift": {
+    "mtime": 1780415704.0,
+    "ast_hash": "0d92cb44a62bc3f2d73464a2e4f9a890",
+    "semantic_hash": "0d92cb44a62bc3f2d73464a2e4f9a890"
+  },
+  "package.json": {
+    "mtime": 1784321106.7386768,
+    "ast_hash": "a7a566af465be30c51ece33684cf5ce2",
+    "semantic_hash": "a7a566af465be30c51ece33684cf5ce2"
+  },
+  "serve.js": {
+    "mtime": 1784322170.1149993,
+    "ast_hash": "d7f802cfb5690eeb3ef1228b962ea8cc",
+    "semantic_hash": "d7f802cfb5690eeb3ef1228b962ea8cc"
+  },
+  "serve.ps1": {
+    "mtime": 1783414704.7008176,
+    "ast_hash": "185da06acb5d6e8b46f7c63a0bde4b27",
+    "semantic_hash": "185da06acb5d6e8b46f7c63a0bde4b27"
+  },
+  "start-test.ps1": {
+    "mtime": 1781521744.1313527,
+    "ast_hash": "d41cb70e19f92444c49c3d87d69c568d",
+    "semantic_hash": "d41cb70e19f92444c49c3d87d69c568d"
+  },
+  "sw.js": {
+    "mtime": 1781521744.1313527,
+    "ast_hash": "4eab94d44ad2d5829933f39e8487a3c6",
+    "semantic_hash": "4eab94d44ad2d5829933f39e8487a3c6"
+  },
+  "www/assets/make-icons.ps1": {
+    "mtime": 1781521744.126952,
+    "ast_hash": "23fdbbc14724334c9bdc7ae9d7b2faad",
+    "semantic_hash": "23fdbbc14724334c9bdc7ae9d7b2faad"
+  },
+  "www/sw.js": {
+    "mtime": 1781521744.1313527,
+    "ast_hash": "4eab94d44ad2d5829933f39e8487a3c6",
+    "semantic_hash": "4eab94d44ad2d5829933f39e8487a3c6"
+  }
+}
