@@ -1,15 +1,14 @@
 # Together: Men's Mental Health — Claude Code Context
 
-## ⚠️ KRITISK: To lokale kopier av dette repoet
+## Lokal utviklingsmappe
 
 | Mappe | Rolle |
 |---|---|
-| `C:\Users\KristianClifford\Projects\sammen` | **AKTIV — all utvikling skjer her.** Har node_modules. |
-| `C:\Users\KristianClifford\OneDrive - Great People\Dokumenter\App` | Stale klon (samme remote). **Ikke rediger her.** Mangler node_modules. Preview-panelet kan servere denne — sjekk `pwd` før du stoler på preview. |
+| `~/Projects/sammen` (Mac) | **AKTIV — all utvikling skjer her.** |
 
-Sjekk alltid hvilken mappe du står i før redigering. Codemagic bygger fra GitHub `origin/main` — endringer må committes OG pushes fra `Projects\sammen` for å nå CI.
+Prosjektet flyttet fra en Windows-PC til Mac. Sjekk alltid hvilken mappe du står i før redigering (`pwd`). Codemagic bygger fra GitHub `origin/main` — endringer må committes OG pushes fra `~/Projects/sammen` for å nå CI.
 
-**Bekreftet fellepunkt**: `preview_start` med `{name: "app"}` (Claude Browser-verktøyet) har resolvet `.claude/launch.json`/`serve.ps1` mot OneDrive-kopien i stedet for `Projects\sammen`, og servert utdatert innhold uten feilmelding. Sjekk `preview_logs` for linjen "Serving ..." og bekreft at stien er `Projects\sammen` — hvis ikke, stopp den serveren og start `serve.ps1` manuelt via PowerShell-verktøyet med `Set-Location "C:\Users\KristianClifford\Projects\sammen"` først, og pek nettleser-fanen til den porten med `navigate`/`{url:...}` i stedet.
+Hvis `preview_start` serverer utdatert innhold, sjekk `preview_logs` for linjen "Serving ..." og bekreft at stien er `~/Projects/sammen` — hvis ikke, stopp serveren og start `serve.js` manuelt (`node serve.js`) fra riktig mappe, og pek nettleser-fanen til den porten med `navigate`/`{url:...}` i stedet.
 
 ## Prosjektoversikt
 
@@ -34,7 +33,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 | `codemagic.yaml` | CI/CD — ios-workflow og android-workflow |
 | `capacitor.config.json` | App ID: `com.kricliff.together`, webDir: `www` |
 | `support.html` | Support-side for App Store Connects påkrevde Support URL per locale |
-| `serve.js` | Avhengighetsfri statisk server (`node serve.js`) — brukes for live testing i browser, unngår at `npx` blokkeres av PowerShell execution policy |
+| `serve.js` | Avhengighetsfri statisk server (`node serve.js`) — brukes for live testing i browser |
 
 ## Build-lærdommer (dyrekjøpte — ikke gjenta feilene)
 
@@ -45,7 +44,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - **Alltid `git pull --rebase --autostash` før push** — CI/andre kilder oppdaterer remote; push uten fetch ble avvist 17 ganger i én økt.
 - **Valider codemagic.yaml lokalt før push** — 4 schema-feil gikk gjennom full CI-runde unødvendig.
 - `npm install --legacy-peer-deps` (påkrevd pga RevenueCat v9 + Capacitor v8).
-- **Node v24 / npm 11 ER installert lokalt** (`C:\Program Files\nodejs`) — npx-kommandoer fungerer i `Projects\sammen`.
+- Sørg for at Node/npm er installert lokalt på Mac-en (f.eks. via nvm eller Homebrew) — npx-kommandoer skal kjøre problemfritt i `~/Projects/sammen`.
 - **`@capacitor/local-notifications` API er `LN.getPending()`, IKKE `getPendingNotifications()`** — sistnevnte finnes ikke og feiler stille inn i try/catch. Denne bugen lot daglige påminnelser aldri trigges i en hel økt før den ble oppdaget ved å sammenligne med Keelstone.
 - Én gang en App Store-versjon er "Ready for Distribution", er dens pre-release train stengt (feil 90062/90186) — krever å bumpe `MARKETING_VERSION` til neste versjon og opprette en ny versjonsoppføring i ASC for å laste opp nye builds. App Information-feltene (navn/subtitle) er også låst til ny versjon opprettes.
 
