@@ -1,0 +1,104 @@
+rules_version = '2';
+
+// Together (com.kricliff.together) — Firestore security rules for the
+// Community feature and cloud backup. Not deployed automatically from this
+// repo (no firebase.json/Firebase CLI wiring here) — paste this into
+// Firebase Console → Firestore Database → Rules, or wire up `firebase
+// deploy --only firestore:rules` if CLI access is added later.
+//
+// Written after a 2026-08-03 security review found that the app's own UI
+// only *hides* actions it doesn't want a user to take (e.g. only showing
+// the delete button on the user's own posts) — that's cosmetic. Any client
+// holding the (necessarily public) Firebase Web API key can call the
+// Firestore SDK directly, bypassing the app UI entirely. These rules are
+// the actual enforcement boundary.
+
+function isSignedIn() {
+  return request.auth != null;
+}
+
+// Firestore auto-generated IDs (collection.add()) are always exactly 20
+// characters from this alphabet. Rejecting anything else at write time
+// closes the stored-XSS vector where a client bypasses the app and creates
+// a document with a hand-crafted ID (e.g. containing a quote character)
+// that later gets interpolated into another user's rendered page.
+function isAutoId(id) {
+  return id.matches('^[A-Za-z0-9]{20}$');
+}
+
+function onlyChangedFields(fields) {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+}
+
+function incrementedByExactlyOne(field) {
+  return request.resource.data[field] == resource.data[field] + 1;
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /posts/{postId} {
+      allow read: if true;
+
+      allow create: if isSignedIn()
+        && isAutoId(postId)
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.who is string && request.resource.data.who.size() <= 24
+        && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 2000
+        && request.resource.data.channel is string
+        && request.resource.data.reports == 0
+        && request.resource.data.replyCount == 0
+        && request.resource.data.support == 0
+        && request.resource.data.beenThere == 0;
+
+      // Each update may touch exactly ONE of these counters, and only by +1.
+      // Blocks a client from setting reports to an arbitrary number to
+      // instantly censor a post (REPORT_HIDE_THRESHOLD = 3 in the app), or
+      // from inflating support/beenThere/replyCount counts.
+      allow update: if isSignedIn() && (
+        (onlyChangedFields(['reports']) && incrementedByExactlyOne('reports')) ||
+        (onlyChangedFields(['replyCount']) && incrementedByExactlyOne('replyCount')) ||
+        (onlyChangedFields(['support']) && (
+          incrementedByExactlyOne('support') ||
+          request.resource.data.support == resource.data.support - 1
+        )) ||
+        (onlyChangedFields(['beenThere']) && (
+          incrementedByExactlyOne('beenThere') ||
+          request.resource.data.beenThere == resource.data.beenThere - 1
+        ))
+      );
+
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+
+      match /replies/{replyId} {
+        allow read: if true;
+
+        allow create: if isSignedIn()
+          && isAutoId(replyId)
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.who is string && request.resource.data.who.size() <= 24
+          && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 2000;
+
+        // The app never edits or deletes a reply once posted.
+        allow update, delete: if false;
+      }
+    }
+
+    // Write-only from the client's perspective: reports must never be
+    // readable by other end users (would leak who reported what), and are
+    // never updated/deleted by the client once filed. Deterministic doc ID
+    // (postId_uid) means the create rule doubles as "one report per user
+    // per post" enforcement.
+    match /reports/{reportId} {
+      allow read, update, delete: if false;
+      allow create: if isSignedIn()
+        && reportId == request.resource.data.postId + '_' + request.auth.uid
+        && request.resource.data.reporter == request.auth.uid;
+    }
+
+    // Cloud backup: strictly own-UID only, both ways.
+    match /backups/{uid} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+  }
+}

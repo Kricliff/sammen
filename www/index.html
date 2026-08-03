@@ -599,9 +599,9 @@ const T = {
     nav_home: "Hjem", nav_training: "Trening", nav_community: "Fellesskap", nav_progress: "Fremgang", nav_profile: "Profil",
     crisis_support: "Krisehjelp",
     settings: "Innstillinger", language: "Språk", username: "Brukernavn", daily_reminder: "Daglig påminnelse", reminder_time: "Påminnelsestidspunkt",
-    weekly_reminder: "Ukentlig refleksjon-påminnelse", weekly_reminder_time: "Ukentlig påminnelsestidspunkt", weekly_reminder_body: "Tid for å avslutte uken. Noen minutter med din ukentlige refleksjon.",
+    weekly_reminder: "Ukentlig refleksjonspåminnelse", weekly_reminder_time: "Ukentlig påminnelsestidspunkt", weekly_reminder_body: "Tid for å runde av uken. Bruk noen minutter på din ukentlige refleksjon.",
     profile_tab_overview: "Oversikt", profile_tab_journal: "Dagbok", profile_tab_weekly: "Ukentlig",
-    progress_title: "Fremgang", progress_sub: "Mønstrene dine og dataene dine, samlet på ett sted.",
+    progress_title: "Fremgang", progress_sub: "Mønstrene og dataene dine, samlet på ett sted.",
     day_streak_lbl: "dager i strekk", exercises_done_lbl: "øvelser fullført", posts_shared_lbl: "innlegg delt",
     see_all_lbl: "Se alle", more_posts_suffix: "flere innlegg",
     back_to_progress: "← Tilbake til fremgang",
@@ -623,15 +623,15 @@ const T = {
     restore_ph: "Lim inn sikkerhetskopien her", restore_replace: "Gjenopprett og erstatt", cancel: "Avbryt",
     saved: "Lagret", backup_copied: "Sikkerhetskopi kopiert. Oppbevar den trygt.", data_restored: "Data gjenopprettet.",
     paste_first: "Lim inn en sikkerhetskopi først.", invalid_backup: "Dette ser ikke ut som en gyldig sikkerhetskopi.", not_together_backup: "Dette ser ikke ut som en Together-sikkerhetskopi.",
-    mood_heavy: "Tungt", mood_low: "Lavt", mood_okay: "Greit", mood_good: "Bra", mood_great: "Topp",
-    greeting_morning: "God morgen", greeting_afternoon: "God ettermiddag", greeting_evening: "God kveld",
+    mood_heavy: "Tungt", mood_low: "Nedfor", mood_okay: "Greit", mood_good: "Bra", mood_great: "Topp",
+    greeting_morning: "God morgen", greeting_afternoon: "God dag", greeting_evening: "God kveld",
     home_sub: "Hvordan har du det i dag, egentlig?",
-    todays_message: "Dagens melding", todays_mood: "Dagens humør",
+    todays_message: "Dagens tanke", todays_mood: "Dagens humør",
     mood_note_ph: "Noen ord om dagen? Valgfritt, helt privat.", save_note: "Lagre notat",
     mood_chart: "Humørkurve", last_30_days: "siste 30 dager", days_ago_30: "30 dager siden", today_lbl: "I dag",
     mood_trend_h2: "Humørtrend", last_14_days: "siste 14 dager", mood_diary_h2: "Humørdagbok",
     no_mood_entries: "Ingen humørregistreringer ennå. Registrer det første på Hjem-fanen.", yesterday_lbl: "I går",
-    mood_chart_locked_desc: "Se mønsteret i humøret ditt over 30 dager.",
+    mood_chart_locked_desc: "Se hvordan humøret ditt har vært de siste 30 dagene.",
     sleep_energy: "Søvn og energi", logged: "Registrert", log: "Registrer",
     sleep_energy_locked_desc: "Registrer søvn og energi daglig. Se mønstrene over tid.",
     social_goal_label: "UKENS SOSIALE MÅL", mark_done: "Merk som gjort", done_this_week: "✓ Gjort denne uken",
@@ -661,7 +661,7 @@ const T = {
     ex_visual_title: "Trygt sted", ex_visual_desc: "Visualisering for ro",
     journal_title: "📓 Dagbok", journal_ph: "Hva tenker du på i dag?", save: "Lagre",
     previous_entries: "TIDLIGERE NOTATER", saved_to_journal: "Lagret i dagboken din.",
-    sleep_title: "💤 Søvn og energi", hours_slept: "Timer søvn i natt", energy_today: "Energinivå i dag",
+    sleep_title: "💤 Søvn og energi", hours_slept: "Timer sovet i natt", energy_today: "Energinivå i dag",
     sleep_saved: "Søvn og energi lagret.",
     weekly_title: "📅 Ukentlig gjennomgang", weekly_sub: "Bruk 5 minutter på å se tilbake på uken.",
     weekly_q1: "Hva var vanskeligst denne uken?", weekly_ph1: "Skriv fritt...",
@@ -720,10 +720,10 @@ const T = {
     articles_h2: "Artikler", more_btn: "↺ Flere", research_h2: "Forskning", next_btn2: "↺ Neste",
     finding_lbl: "📊 Funn", read_source: "Les kilden ↗",
     myths_h2: "Myter vs. fakta", new_btn: "↺ Nye", myth_tag: "MYTE", fact_tag: "FAKTA",
-    min_read: "min lesing", want_deeper: "Vil du gå dypere? Programmet", days_step: "(", days_takes: "dager) tar deg gjennom det steg for steg.",
+    min_read: "min lesetid", want_deeper: "Vil du gå dypere? Programmet", days_step: "(", days_takes: "dager) tar deg gjennom det steg for steg.",
     start_programme_btn: "Start programmet",
     art_a1_title: "Prestasjonsangst når kravene tar overhånd", art_a1_cat: "Prestasjon",
-    art_a1_body: ["Prestasjonsangst kommer sjelden fra selve oppgaven. Den kommer fra hva du tror det sier om deg hvis noe går galt.", "Kroppens alarmrespons, rask puls, uro, racende tanker, er den samme enten trusselen er en bjørn eller en presentasjon. Hjernen din prøver å beskytte deg. Den er bare litt for ivrig.", "Det som hjelper: senk det mentale innsatsnivået («dette er ett møte, ikke en dom»), pust lenger ut enn inn, og øv på situasjonen i små doser i stedet for å unngå den.", "Unngåelse gir lettelse i dag og mer angst i morgen. Gradvis eksponering gjør det motsatte."],
+    art_a1_body: ["Prestasjonsangst kommer sjelden fra selve oppgaven. Den kommer fra hva du tror det sier om deg hvis noe går galt.", "Kroppens alarmrespons, rask puls, uro, tankekjør, er den samme enten trusselen er en bjørn eller en presentasjon. Hjernen din prøver å beskytte deg. Den er bare litt for ivrig.", "Det som hjelper: senk det mentale innsatsnivået («dette er ett møte, ikke en dom»), pust lenger ut enn inn, og øv på situasjonen i små doser i stedet for å unngå den.", "Unngåelse gir lettelse i dag og mer angst i morgen. Gradvis eksponering gjør det motsatte."],
     art_a2_title: "Sinne er ofte noe annet", art_a2_cat: "Sinne",
     art_a2_body: ["For mange menn er sinne den eneste følelsen som virker «tillatt». Under ligger ofte noe annet: bekymring, skam, hjelpeløshet, sårhet.", "Neste gang du kjenner det stige: prøv å sette ord på hva som skjedde et sekund før. Følte du deg overkjørt? Ikke hørt? Redd for å mislykkes?", "Sinne er ikke farlig i seg selv. Det er informasjon. Spørsmålet er hva du gjør med det, og om folk rundt deg må bære kostnaden.", "En praktisk regel: pause før du svarer når pulsen er høy. Du kan alltid komme tilbake til samtalen. Det du sier i fullt sinne kan du sjelden ta tilbake."],
     art_a3_title: "Ensomhet blant menn", art_a3_cat: "Ensomhet",
@@ -733,7 +733,7 @@ const T = {
     art_a5_title: "Førstegangsfar", art_a5_cat: "Farskap",
     art_a5_body: ["Mange fedre kjenner en blanding av kjærlighet, avstand og utilstrekkelighet de første månedene. Det er vanlig, og nesten ingen snakker om det.", "Tilknytning kommer ikke alltid som et lynnedslag. For mange bygges den gradvis, gjennom bleieskift, bæring og søvnløse netter. Det teller like mye.", "Du trenger ikke være perfekt. Forskningen er tydelig: «godt nok» og å rette opp etter feil er det som bygger trygge barn.", "Og: ta vare på forholdet. De første årene med små barn er en av de tyngste periodene for et par. Korte, ærlige innsjekker med partneren din er undervurdert."],
     art_a6_title: "Utbrenthet: hvordan kjenne det igjen før det er for sent", art_a6_cat: "Utbrenthet",
-    art_a6_body: ["Utbrenthet varsler ikke sin ankomst. Den sniker seg inn som redusert motivasjon, kortere tålmodighet, og en voksende følelsesløshet overfor ting som pleide å bety noe.", "De tre kjernetegnene: emosjonell utmattelse (ingenting igjen å gi), depersonalisering (føle seg avkoblet, gå gjennom bevegelsene), og en redusert følelse av mestring.", "Menn maskerer ofte utbrenthet med mer jobb, alkohol, eller tilbaketrekning. Instinktet om å presse seg gjennom er forståelig, men det akselererer prosessen.", "Restitusjon tar tid. Det første steget er som regel det vanskeligste: å innrømme for deg selv at noe er galt."],
+    art_a6_body: ["Utbrenthet varsler ikke sin ankomst. Den sniker seg inn som redusert motivasjon, kortere tålmodighet, og en voksende følelsesløshet overfor ting som pleide å bety noe.", "De tre kjernetegnene: emosjonell utmattelse (ingenting igjen å gi), depersonalisering (føle seg avkoblet, bare gjøre det som forventes, uten å være til stede), og en redusert følelse av mestring.", "Menn maskerer ofte utbrenthet med mer jobb, alkohol, eller tilbaketrekning. Instinktet om å presse seg gjennom er forståelig, men det akselererer prosessen.", "Restitusjon tar tid. Det første steget er som regel det vanskeligste: å innrømme for deg selv at noe er galt."],
     art_a7_title: "Hvordan menn sørger, og hvorfor det ser annerledes ut", art_a7_cat: "Sorg",
     art_a7_body: ["Menn sørger. De gjør det bare ofte ikke slik vi forventer at sorg skal se ut.", "Der kvinner oftere bearbeider tap gjennom å snakke, sørger menn oftere gjennom handling: å holde seg opptatt, ta seg av praktiske ting, trene, eller trekke seg tilbake midlertidig.", "Ingen av delene er bedre. Begge er gyldige. Faren for menn er når midlertidig tilbaketrekning blir permanent unngåelse.", "Hvis du har mistet noen: du trenger ikke snakke om det. Men legg merke til når følelsesløsheten slutter å være en fase og begynner å bli en mur."],
     art_a8_title: "Når stress viser seg i kroppen", art_a8_cat: "Stress",
@@ -764,9 +764,9 @@ const T = {
     res_10_title: "8 uker med mindfulness reduserer stresshormoner", res_10_body: "Et 8-ukers mindfulness-program ga målbar reduksjon i kortisol (kroppens viktigste stresshormon) og selvrapportert stress hos yrkesaktive menn. Den mest effektive tilnærmingen: kort daglig praksis fremfor lengre ukentlige økter.",
     community_title: "Fellesskap", community_sub: "Anonymt. Åpent. Menn som forstår.",
     loading_feed: "Laster fellesskapsfeed…",
-    todays_prompt_tag: "DAGENS PROMPT", reply_anon: "Svar anonymt", new_post_chip: "+ Nytt innlegg",
+    todays_prompt_tag: "DAGENS SPØRSMÅL", reply_anon: "Svar anonymt", new_post_chip: "+ Nytt innlegg",
     no_posts_yet: "Ingen innlegg i denne kanalen ennå. Vær den første.",
-    you_tag: "(deg)", now_lbl: "nå", todays_prompt_label: "Dagens prompt",
+    you_tag: "(deg)", now_lbl: "nå", todays_prompt_label: "Dagens spørsmål",
     support_lbl: "Støtte", been_there_lbl: "Jeg har vært der",
     delete_btn: "Slett", more_menu_btn: "⋯ Mer", translate_btn: "Oversett", show_original_btn: "Vis original",
     could_not_translate: "Kunne ikke oversette.",
@@ -808,16 +808,16 @@ const T = {
     email_btn_prefix: "E-post til",
     blocked_users_title: "Blokkerte brukere", no_one_blocked: "Du har ikke blokkert noen.", wont_see_posts: "Du vil ikke se innlegg fra disse brukerne.",
     blocked_user_fallback: "Blokkert bruker", unblock_btn: "Fjern blokkering",
-    reply_to_prompt_title: "Svar på prompt", new_post_title: "Nytt innlegg",
+    reply_to_prompt_title: "Svar på dagens spørsmål", new_post_title: "Nytt innlegg",
     posting_as: "Du poster som", never_real_name: "Aldri ditt ekte navn.",
-    replying_to_prompt: "Svarer på dagens prompt",
+    replying_to_prompt: "Svarer på dagens spørsmål",
     share_thoughts_ph: "Del tankene dine om dette...", write_it_ph: "Skriv det som det er. Ingen trenger polerte ord her.",
     post_anon_btn: "Post anonymt",
-    guideline_break_toast: "Dette innlegget inneholder språk som bryter fellesskapsreglene våre og kan ikke publiseres.",
+    guideline_break_toast: "Dette innlegget inneholder ord eller uttrykk som bryter fellesskapsreglene våre og kan ikke publiseres.",
     we_see_you_title: "Vi ser deg 🩵",
-    crisis_post_intro: "Det du skriver høres tungt ut, og vi er glade for at du setter ord på det. Innlegget ditt vil bli publisert. Men først vil vi minne deg på at det finnes folk klare til å snakke med deg akkurat nå, døgnet rundt:",
+    crisis_post_intro: "Det du skriver høres tungt ut, og vi er glade for at du setter ord på det. Innlegget ditt vil bli publisert. Men først vil vi minne deg på at det finnes folk som er klare til å snakke med deg akkurat nå, døgnet rundt:",
     emergency_services: "Nødetater", call_local_emergency: "Ring ditt lokale nødnummer",
-    samaritans_sub: "Gratis · tilgjengelig 24/7 · Storbritannia og Irland", crisis_lifeline_sub: "Ring eller tekst · USA",
+    samaritans_sub: "Gratis · tilgjengelig 24/7 · Storbritannia og Irland", crisis_lifeline_sub: "Ring eller SMS · USA",
     publish_my_post: "Publiser innlegget mitt", posted_toast: "Publisert. Du er ikke alene om dette.", could_not_post: "Kunne ikke publisere. Sjekk tilkoblingen din.",
     my_posts_title: "Mine innlegg", post_word: "innlegg", shared_word: "delt",
     havent_shared: "Du har ikke delt noe ennå. Det er helt greit.",
@@ -826,7 +826,7 @@ const T = {
     could_not_delete: "Kunne ikke slette. Sjekk tilkoblingen din.",
     change_username_title: "Endre brukernavn", change_username_sub: "Dette er navnet andre ser i Fellesskap. Velg noe som ikke kan identifisere deg.",
     crisis_sub: "Du trenger ikke være i krise for å ringe. De er der for å lytte.",
-    not_your_country: "Ikke ditt land?", find_crisis_centre: "Finn et krisesenter nær deg →",
+    not_your_country: "Ikke ditt land?", find_crisis_centre: "Finn en hjelpetelefon nær deg →",
     your_personal_contact: "Din personlige kontakt", call_word: "Ring",
     support_tool_disclaimer: "Denne appen er et støtteverktøy og erstatter ikke profesjonell hjelp.",
     together_pro_title: "Together Pro", loading_pricing: "Laster priser…",
@@ -1195,6 +1195,12 @@ function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return l
 function moodOn(dateStr) { return state.moods[dateStr] ? state.moods[dateStr].level : null; }
 function lastNDates(n) { const out = []; for (let i = n - 1; i >= 0; i--) out.push(daysAgo(i)); return out; }
 function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+// Escapes a value for safe interpolation inside a single-quoted JS string
+// literal that itself sits inside an onclick="..." HTML attribute. Needed
+// anywhere an ID sourced from Firestore (doc.id) is embedded in an inline
+// handler, since a hostile client could write an arbitrary document ID
+// (bypassing this app's UI) and break out of the string/attribute otherwise.
+function escAttr(s) { return String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/</g, "\\x3C"); }
 function toast(msg) {
   const el = document.createElement("div");
   el.className = "toast"; el.textContent = msg;
@@ -1947,13 +1953,13 @@ function renderCommunity() {
       ${p.prompt ? `<div style="background:var(--teal-light);border-left:3px solid var(--teal);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:0.82rem;color:var(--teal-dark);"><span style="font-weight:700;font-size:0.7rem;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:3px">${t("todays_prompt_label")}</span>${esc(p.prompt)}</div>` : ""}
       <div class="body" id="body_${p.id}">${esc(p.text)}</div>
       <div class="foot">
-        <button class="${r.support ? "on" : ""}" onclick="react('${p.id}','support')">&#129309; ${t("support_lbl")} &middot; ${sup}</button>
-        <button class="${r.beenThere ? "on" : ""}" onclick="react('${p.id}','beenThere')">&#129730; ${t("been_there_lbl")} &middot; ${bt}</button>
-        ${p.mine ? `<button class="report" style="color:#b9503c" onclick="deletePost('${p.id}')">${t("delete_btn")}</button>` : `<button class="report" onclick="postMenu('${p.id}')">${t("more_menu_btn")}</button>`}
-        <button id="trbtn_${p.id}" onclick="translatePost('${p.id}')" style="color:var(--teal)">${t("translate_btn")}</button>
+        <button class="${r.support ? "on" : ""}" onclick="react('${escAttr(p.id)}','support')">&#129309; ${t("support_lbl")} &middot; ${sup}</button>
+        <button class="${r.beenThere ? "on" : ""}" onclick="react('${escAttr(p.id)}','beenThere')">&#129730; ${t("been_there_lbl")} &middot; ${bt}</button>
+        ${p.mine ? `<button class="report" style="color:#b9503c" onclick="deletePost('${escAttr(p.id)}')">${t("delete_btn")}</button>` : `<button class="report" onclick="postMenu('${escAttr(p.id)}')">${t("more_menu_btn")}</button>`}
+        <button id="trbtn_${escAttr(p.id)}" onclick="translatePost('${escAttr(p.id)}')" style="color:var(--teal)">${t("translate_btn")}</button>
       </div>
       <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
-        <button onclick="toggleReplies('${p.id}')" style="background:none;border:none;color:var(--teal);font-family:inherit;font-size:0.82rem;cursor:pointer;padding:0">
+        <button onclick="toggleReplies('${escAttr(p.id)}')" style="background:none;border:none;color:var(--teal);font-family:inherit;font-size:0.82rem;cursor:pointer;padding:0">
           &#128172; ${openReplyThreads[p.id] ? t("hide_replies") : `${t("replies_word")} (${p.replyCount || 0})`}
         </button>
         ${openReplyThreads[p.id] ? renderReplyThread(p.id) : ""}
@@ -2017,7 +2023,7 @@ function renderReplyThread(postId) {
     ? replies.map(r => `<div style="padding:8px 0;border-top:1px solid var(--border)">
         <div style="display:flex;justify-content:space-between;align-items:baseline">
           <b style="font-size:0.8rem">${esc(r.who)}</b>
-          <button style="font-size:0.72rem;color:#b9503c;background:none;border:none;cursor:pointer;font-family:inherit" onclick="reportReply('${postId}','${r.id}')">${t("reply_report_btn")}</button>
+          <button style="font-size:0.72rem;color:#b9503c;background:none;border:none;cursor:pointer;font-family:inherit" onclick="reportReply('${escAttr(postId)}','${escAttr(r.id)}')">${t("reply_report_btn")}</button>
         </div>
         <div style="font-size:0.85rem;margin-top:2px">${esc(r.text)}</div>
       </div>`).join("")
@@ -2025,8 +2031,8 @@ function renderReplyThread(postId) {
   return `<div style="margin-top:6px">
     ${list}
     <div style="display:flex;gap:8px;margin-top:8px">
-      <input type="text" id="replyInput_${postId}" placeholder="${t("reply_ph")}" style="flex:1">
-      <button class="btn small" onclick="submitReply('${postId}')">${t("reply_send")}</button>
+      <input type="text" id="replyInput_${escAttr(postId)}" placeholder="${t("reply_ph")}" style="flex:1">
+      <button class="btn small" onclick="submitReply('${escAttr(postId)}')">${t("reply_send")}</button>
     </div>
   </div>`;
 }
@@ -2064,7 +2070,7 @@ function reportReply(postId, replyId) {
     <h3>${t("report_reply_title")}</h3>
     <div class="sub">${t("report_post_sub")}</div>
     ${[t("report_reason_1"), t("report_reason_2"), t("report_reason_3"), t("report_reason_4"), t("report_reason_5")].map(reason =>
-      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="submitReplyReport('${postId}','${replyId}', ${JSON.stringify(reason).replace(/"/g, '&quot;')})">${reason}</button>`).join("")}
+      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="submitReplyReport('${escAttr(postId)}','${escAttr(replyId)}', ${JSON.stringify(reason).replace(/"/g, '&quot;')})">${reason}</button>`).join("")}
     <button class="btn secondary" style="width:100%;margin-top:4px" onclick="closeModal()">${t("cancel")}</button>
   `);
 }
@@ -2150,9 +2156,9 @@ function postMenu(id) {
   openModal(`
     <h3>${t("post_options")}</h3>
     <div class="sub">${t("help_safe")}</div>
-    <button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="reportPost('${id}')">${t("report_this_post")}</button>
-    <button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="blockUser('${id}')">${t("block_this_user")}</button>
-    <button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="hidePost('${id}')">${t("hide_this_post")}</button>
+    <button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="reportPost('${escAttr(id)}')">${t("report_this_post")}</button>
+    <button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="blockUser('${escAttr(id)}')">${t("block_this_user")}</button>
+    <button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="hidePost('${escAttr(id)}')">${t("hide_this_post")}</button>
     <button class="btn secondary" style="width:100%" onclick="closeModal()">${t("cancel")}</button>
   `);
 }
@@ -2161,7 +2167,7 @@ function reportPost(postId) {
     <h3>${t("report_post_title")}</h3>
     <div class="sub">${t("report_post_sub")}</div>
     ${[t("report_reason_1"),t("report_reason_2"),t("report_reason_3"),t("report_reason_4"),t("report_reason_5")].map(reason =>
-      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="submitReport('${postId}', ${JSON.stringify(reason).replace(/"/g, '&quot;')})">${reason}</button>`).join("")}
+      `<button class="btn secondary" style="width:100%;margin-bottom:8px;text-align:left" onclick="submitReport('${escAttr(postId)}', ${JSON.stringify(reason).replace(/"/g, '&quot;')})">${reason}</button>`).join("")}
     <button class="btn secondary" style="width:100%;margin-top:4px" onclick="closeModal()">${t("cancel")}</button>
   `);
 }
@@ -2199,7 +2205,7 @@ function blockUser(id) {
   openModal(`
     <h3>${t("block_confirm_title_prefix")} ${esc(name)}${t("block_confirm_title_suffix")}</h3>
     <div class="sub">${t("block_confirm_sub")}</div>
-    <button class="btn" style="width:100%;background:#b9503c;margin-bottom:8px" onclick="confirmBlock('${id}')">${t("block_user_btn")}</button>
+    <button class="btn" style="width:100%;background:#b9503c;margin-bottom:8px" onclick="confirmBlock('${escAttr(id)}')">${t("block_user_btn")}</button>
     <button class="btn secondary" style="width:100%" onclick="closeModal()">${t("cancel")}</button>
   `);
 }
@@ -2327,7 +2333,7 @@ async function doPublish(text, channel, prompt) {
       await fbDb.collection('posts').add({
         who: state.pseudonym, userId: fbUser.uid,
         channel, text, prompt: prompt || null,
-        support: 0, beenThere: 0,
+        support: 0, beenThere: 0, reports: 0, replyCount: 0,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     } catch(e) {
@@ -2637,7 +2643,7 @@ function renderMyPosts() {
       ${p.prompt ? `<div style="background:var(--teal-light);border-left:3px solid var(--teal);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:0.82rem;color:var(--teal-dark)"><span style="font-weight:700;font-size:0.7rem;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:3px">${t("todays_prompt_label")}</span>${esc(p.prompt)}</div>` : ""}
       <div style="font-size:0.9rem;color:var(--text);line-height:1.5">${esc(p.text)}</div>
       <div style="display:flex;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
-        <button onclick="deletePost('${p.id}')" style="background:none;border:1px solid var(--border);border-radius:999px;padding:5px 13px;font-size:0.78rem;font-family:inherit;cursor:pointer;color:#b9503c">${t("delete_post_emoji_btn")}</button>
+        <button onclick="deletePost('${escAttr(p.id)}')" style="background:none;border:1px solid var(--border);border-radius:999px;padding:5px 13px;font-size:0.78rem;font-family:inherit;cursor:pointer;color:#b9503c">${t("delete_post_emoji_btn")}</button>
       </div>
     </div>`).join("");
   }
@@ -2647,7 +2653,7 @@ function deletePost(id) {
   openModal(`
     <h3>${t("delete_post_title")}</h3>
     <div class="sub">${t("delete_post_sub")}</div>
-    <button class="btn" style="width:100%;background:#b9503c;margin-bottom:8px" onclick="confirmDeletePost('${id}')">${t("yes_delete")}</button>
+    <button class="btn" style="width:100%;background:#b9503c;margin-bottom:8px" onclick="confirmDeletePost('${escAttr(id)}')">${t("yes_delete")}</button>
     <button class="btn secondary" style="width:100%" onclick="closeModal()">${t("cancel")}</button>
   `);
 }
