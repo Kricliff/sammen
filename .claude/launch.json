@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "app",
-      "runtimeExecutable": "powershell",
-      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "serve.ps1", "-Port", "8123"],
-      "port": 8123
+      "runtimeExecutable": "/opt/homebrew/bin/node",
+      "runtimeArgs": ["serve.js"],
+      "port": 5500
     }
   ]
 }

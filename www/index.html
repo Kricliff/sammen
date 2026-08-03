@@ -983,7 +983,7 @@ const REFLECTIONS = [
 ];
 function todaysReflectionIdx() { return Math.floor(new Date() / 86400000) % REFLECTIONS.length; }
 
-let IS_PRO = false;
+const IS_PRO = true;
 const FREE_EXERCISE_IDS = new Set(['breath', 'ground']);
 
 const SOCIAL_GOALS = [
@@ -2946,7 +2946,6 @@ render();
   if (sp) setTimeout(() => sp.remove(), 2850);
   if (state.settings.notifications) setTimeout(setupDailyNotifications, 3000);
   if (state.settings.weeklyReflection) setTimeout(setupWeeklyReflectionNotif, 3200);
-  initRevenueCat();
   firebaseReadyPromise = initFirebase();
   setTimeout(checkICloudRestore, 1200);
 })();
