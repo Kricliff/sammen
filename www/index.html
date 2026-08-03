@@ -153,6 +153,21 @@
   .progBody b { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; opacity: 0.65; margin-bottom: 5px; }
   #programOverlay .controls { width: 100%; max-width: 460px; margin: 0 auto; padding-top: 18px; flex-shrink: 0; }
   #programOverlay .btn { width: 100%; background: #fff; color: var(--teal-dark); }
+  /* ── Article overlay (full-screen, replaces the old bottom-sheet modal) ── */
+  #articleOverlay { position: absolute; inset: 0; background: linear-gradient(170deg, #194d4d, #2a7f7f); z-index: 40; display: flex; flex-direction: column; color: #eaf4f4; padding: calc(20px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)); overflow: hidden; }
+  #articleOverlay .closeRow { width: 100%; display: flex; justify-content: flex-end; z-index: 5; }
+  #articleOverlay .closeRow button { background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
+  .artHead { text-align: center; padding: 4px 0 20px; flex-shrink: 0; }
+  .artIcon { font-size: 2.2rem; }
+  .artTitle { font-size: 1.18rem; font-weight: 700; margin-top: 8px; line-height: 1.35; }
+  .artMeta { font-size: 0.82rem; opacity: 0.7; margin-top: 5px; }
+  .artBody { flex: 1; overflow-y: auto; width: 100%; max-width: 460px; margin: 0 auto; }
+  .artBody p { font-size: 1rem; line-height: 1.65; margin-bottom: 18px; }
+  .artSource { font-size: 0.8rem; opacity: 0.75; margin: -8px 0 20px; }
+  .artSource a { color: #fff; text-decoration: underline; }
+  .artNudge { background: rgba(255,255,255,0.12); border-radius: 14px; padding: 16px; margin: 6px 0 4px; }
+  .artNudge p { margin-bottom: 12px; }
+  .artNudge .btn { width: 100%; background: #fff; color: var(--teal-dark); }
   .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 6px; }
   .chips button { border: 1px solid var(--border); background: var(--card); border-radius: 999px; padding: 7px 14px; font-size: 0.82rem; font-family: inherit; cursor: pointer; white-space: nowrap; color: var(--text-soft); }
   .chips button.active { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
@@ -2549,14 +2564,25 @@ function openArticle(id) {
   const a = ARTICLES.find(x => x.id === id);
   const prog = a.program ? PROGRAMS.find(p => p.id === a.program) : null;
   const body = t('art_' + id + '_body');
-  openModal(`
-    <h3>${a.icon} ${t('art_' + id + '_title')}</h3>
-    <div class="sub">${t('art_' + id + '_cat')} &middot; ${a.min} ${t("min_read")}</div>
-    <div class="articleBody">${body.map(p => `<p>${p}</p>`).join("")}</div>
-    ${prog ? `<div class="card nudge" style="margin-top:14px"><p>${t("want_deeper")} <b>${t('prog_' + prog.id + '_title')}</b> ${t("days_step")}${prog.days} ${t("days_takes")}</p>
-      <div class="actions"><button class="btn small" onclick="closeModal(); startProgram('${prog.id}'); window._trainingTab='programs'; goTab('training')">${t("start_programme_btn")}</button></div></div>` : ""}
-  `);
+  closeArticleOverlay();
+  const ov = document.createElement("div");
+  ov.id = "articleOverlay";
+  ov.innerHTML = `
+    <div class="closeRow"><button onclick="closeArticleOverlay()" aria-label="${t("close")}">&#10005;</button></div>
+    <div class="artHead">
+      <div class="artIcon">${a.icon}</div>
+      <div class="artTitle">${t('art_' + id + '_title')}</div>
+      <div class="artMeta">${t('art_' + id + '_cat')} &middot; ${a.min} ${t("min_read")}</div>
+    </div>
+    <div class="artBody">
+      ${body.map(p => `<p>${p}</p>`).join("")}
+      ${a.url ? `<div class="artSource"><a href="${a.url}" target="_blank" rel="noopener noreferrer">${t("read_source")}</a></div>` : ""}
+      ${prog ? `<div class="artNudge"><p>${t("want_deeper")} <b>${t('prog_' + prog.id + '_title')}</b> ${t("days_step")}${prog.days} ${t("days_takes")}</p>
+        <button class="btn small" onclick="closeArticleOverlay(); startProgram('${prog.id}'); window._trainingTab='programs'; goTab('training')">${t("start_programme_btn")}</button></div>` : ""}
+    </div>`;
+  document.getElementById("app").appendChild(ov);
 }
+function closeArticleOverlay() { const ov = document.getElementById("articleOverlay"); if (ov) ov.remove(); }
 
 function renderProgressOverview() {
   const dates = lastNDates(14);
