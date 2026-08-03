@@ -2,101 +2,113 @@ rules_version = '2';
 
 // Together (com.kricliff.together) — Firestore security rules for the
 // Community feature and cloud backup. Not deployed automatically from this
-// repo (no firebase.json/Firebase CLI wiring here) — paste this into
-// Firebase Console → Firestore Database → Rules, or wire up `firebase
-// deploy --only firestore:rules` if CLI access is added later.
+// repo (no firebase.json/Firebase CLI wiring here) — paste into Firebase
+// Console → Firestore Database → Rules and publish.
 //
-// Written after a 2026-08-03 security review found that the app's own UI
-// only *hides* actions it doesn't want a user to take (e.g. only showing
-// the delete button on the user's own posts) — that's cosmetic. Any client
-// holding the (necessarily public) Firebase Web API key can call the
-// Firestore SDK directly, bypassing the app UI entirely. These rules are
-// the actual enforcement boundary.
-
-function isSignedIn() {
-  return request.auth != null;
-}
-
-// Firestore auto-generated IDs (collection.add()) are always exactly 20
-// characters from this alphabet. Rejecting anything else at write time
-// closes the stored-XSS vector where a client bypasses the app and creates
-// a document with a hand-crafted ID (e.g. containing a quote character)
-// that later gets interpolated into another user's rendered page.
-function isAutoId(id) {
-  return id.matches('^[A-Za-z0-9]{20}$');
-}
-
-function onlyChangedFields(fields) {
-  return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
-}
-
-function incrementedByExactlyOne(field) {
-  return request.resource.data[field] == resource.data[field] + 1;
-}
+// This is the live ruleset (as pasted in by the user) with the gaps found
+// in the 2026-08-03 security review closed:
+//   - `update` previously allowed a signed-in user to set support/
+//     beenThere/reports/replyCount to ANY value, just restricted to those
+//     field names. A client could jump `reports` straight past
+//     REPORT_HIDE_THRESHOLD (3, see www/index.html) to instantly censor
+//     any post. Now every counter change must be exactly +1 (or -1 for the
+//     toggleable support/beenThere reactions) per write.
+//   - `create` on posts/replies didn't validate the document ID shape.
+//     Firestore's own auto-IDs (collection.add()) are always 20
+//     alphanumeric characters; the app's rendering code interpolates that
+//     ID into onclick="..." handlers (now also escaped client-side, but
+//     this is the belt-and-suspenders fix at the source) — rejecting any
+//     other ID shape at write time closes that stored-XSS vector even for
+//     clients that bypass the app UI entirely.
+//   - `create` didn't validate field types/sizes or that counters start
+//     at 0, so a malicious client could publish a post/reply with an
+//     already-inflated reports count, an oversized text blob, etc.
+//   - `reports` create didn't tie the document ID or `reporter` field to
+//     the caller's own uid, so a client could file reports as/about
+//     arbitrary users or spam multiple report docs for the same post
+//     (the app's deterministic `postId_uid` doc ID convention was only a
+//     client-side convention, not enforced).
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Firestore auto-IDs (collection.add()) are always exactly 20 chars
+    // from this alphabet.
+    function isAutoId(id) {
+      return id.matches('^[A-Za-z0-9]{20}$');
+    }
+
+    function onlyChangedFields(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    // +1 only (reports, replyCount: monotonically increasing counters).
+    function isBoundedIncrement(field) {
+      return onlyChangedFields([field])
+        && request.resource.data[field] == resource.data[field] + 1;
+    }
+
+    // +1 or -1 (support, beenThere: user can toggle a reaction on/off).
+    function isBoundedToggle(field) {
+      return onlyChangedFields([field])
+        && (request.resource.data[field] == resource.data[field] + 1
+            || request.resource.data[field] == resource.data[field] - 1);
+    }
+
     match /posts/{postId} {
-      allow read: if true;
+      allow read: if isSignedIn();
 
       allow create: if isSignedIn()
-        && isAutoId(postId)
-        && request.resource.data.userId == request.auth.uid
-        && request.resource.data.who is string && request.resource.data.who.size() <= 24
-        && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 2000
-        && request.resource.data.channel is string
-        && request.resource.data.reports == 0
-        && request.resource.data.replyCount == 0
-        && request.resource.data.support == 0
-        && request.resource.data.beenThere == 0;
+                    && isAutoId(postId)
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.who is string && request.resource.data.who.size() <= 24
+                    && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 2000
+                    && request.resource.data.support == 0
+                    && request.resource.data.beenThere == 0
+                    && request.resource.data.reports == 0
+                    && request.resource.data.replyCount == 0;
 
-      // Each update may touch exactly ONE of these counters, and only by +1.
-      // Blocks a client from setting reports to an arbitrary number to
-      // instantly censor a post (REPORT_HIDE_THRESHOLD = 3 in the app), or
-      // from inflating support/beenThere/replyCount counts.
+      // any signed-in user may bump support / been-there / reports / replyCount counters,
+      // but only ONE of those fields per write, and only by the bounded step above -
+      // text and author can never be edited, and no counter can be set to an
+      // arbitrary value in one write.
       allow update: if isSignedIn() && (
-        (onlyChangedFields(['reports']) && incrementedByExactlyOne('reports')) ||
-        (onlyChangedFields(['replyCount']) && incrementedByExactlyOne('replyCount')) ||
-        (onlyChangedFields(['support']) && (
-          incrementedByExactlyOne('support') ||
-          request.resource.data.support == resource.data.support - 1
-        )) ||
-        (onlyChangedFields(['beenThere']) && (
-          incrementedByExactlyOne('beenThere') ||
-          request.resource.data.beenThere == resource.data.beenThere - 1
-        ))
+        isBoundedToggle('support') ||
+        isBoundedToggle('beenThere') ||
+        isBoundedIncrement('reports') ||
+        isBoundedIncrement('replyCount')
       );
 
-      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      // only the author can delete their own post
+      allow delete: if isSignedIn()
+                    && resource.data.userId == request.auth.uid;
 
       match /replies/{replyId} {
-        allow read: if true;
-
+        allow read: if isSignedIn();
         allow create: if isSignedIn()
-          && isAutoId(replyId)
-          && request.resource.data.userId == request.auth.uid
-          && request.resource.data.who is string && request.resource.data.who.size() <= 24
-          && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 2000;
-
-        // The app never edits or deletes a reply once posted.
+                      && isAutoId(replyId)
+                      && request.resource.data.userId == request.auth.uid
+                      && request.resource.data.who is string && request.resource.data.who.size() <= 24
+                      && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 2000;
         allow update, delete: if false;
       }
     }
 
-    // Write-only from the client's perspective: reports must never be
-    // readable by other end users (would leak who reported what), and are
-    // never updated/deleted by the client once filed. Deterministic doc ID
-    // (postId_uid) means the create rule doubles as "one report per user
-    // per post" enforcement.
     match /reports/{reportId} {
-      allow read, update, delete: if false;
+      // Doc ID must be `${postId}_${reporterUid}` (matches the app's own
+      // convention) and `reporter` must be the caller - ties every report
+      // to exactly one post and one self-attested reporter, and doubles as
+      // "one report per user per post" since the ID is deterministic.
       allow create: if isSignedIn()
-        && reportId == request.resource.data.postId + '_' + request.auth.uid
-        && request.resource.data.reporter == request.auth.uid;
+                    && reportId == request.resource.data.postId + '_' + request.auth.uid
+                    && request.resource.data.reporter == request.auth.uid;
+      allow read, update, delete: if false;
     }
 
-    // Cloud backup: strictly own-UID only, both ways.
     match /backups/{uid} {
       allow read, write: if isSignedIn() && request.auth.uid == uid;
     }
