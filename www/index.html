@@ -139,6 +139,20 @@
   #exerciseOverlay .controls { width: 100%; max-width: 420px; padding-top: 26px; display: flex; gap: 12px; }
   #exerciseOverlay .btn { background: #fff; color: var(--teal-dark); }
   #exerciseOverlay .btn.secondary { background: rgba(255,255,255,0.16); color: #fff; border: 1.5px solid rgba(255,255,255,0.4); }
+  /* ── Program-day overlay (full-screen, replaces the old bottom-sheet
+     modal for a program's daily focus/exercise/reflection) ── */
+  #programOverlay { position: absolute; inset: 0; background: linear-gradient(170deg, #194d4d, #2a7f7f); z-index: 40; display: flex; flex-direction: column; color: #eaf4f4; padding: calc(20px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)); overflow: hidden; }
+  #programOverlay .closeRow { width: 100%; display: flex; justify-content: flex-end; z-index: 5; }
+  #programOverlay .closeRow button { background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
+  .progHead { text-align: center; padding: 4px 0 20px; flex-shrink: 0; }
+  .progIcon { font-size: 2.2rem; }
+  .progTitle { font-size: 1.1rem; font-weight: 700; margin-top: 8px; }
+  .progSub { font-size: 0.82rem; opacity: 0.7; margin-top: 3px; }
+  .progBody { flex: 1; overflow-y: auto; width: 100%; max-width: 460px; margin: 0 auto; }
+  .progBody p { font-size: 1rem; line-height: 1.6; margin-bottom: 20px; }
+  .progBody b { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; opacity: 0.65; margin-bottom: 5px; }
+  #programOverlay .controls { width: 100%; max-width: 460px; margin: 0 auto; padding-top: 18px; flex-shrink: 0; }
+  #programOverlay .btn { width: 100%; background: #fff; color: var(--teal-dark); }
   .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 6px; }
   .chips button { border: 1px solid var(--border); background: var(--card); border-radius: 999px; padding: 7px 14px; font-size: 0.82rem; font-family: inherit; cursor: pointer; white-space: nowrap; color: var(--text-soft); }
   .chips button.active { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
@@ -454,6 +468,22 @@ const T = {
     program_exercise_text: "Do today's breathing exercise (5 min) before bed, or whenever you need a pause.",
     reflection_lbl: "Reflection:",
     program_reflection_text: "What's one small thing that worked today? Write it in your mood note on Home if you like.",
+    program_exercise_sleep: "Do tonight's breathing exercise as part of winding down, ideally away from a screen.",
+    program_reflection_sleep: "What's one thing from today that's still on your mind? Get it out of your head and onto paper before you try to sleep.",
+    program_exercise_transition: "Do today's grounding exercise (5-4-3-2-1) when the uncertainty feels loudest.",
+    program_reflection_transition: "What's one thing that stayed the same today, even while everything else feels like it's shifting?",
+    program_exercise_confidence: "Do today's reframe exercise on the thought that's been holding you back.",
+    program_reflection_confidence: "What's one thing you did today that you'd have avoided a month ago?",
+    program_exercise_father: "Do today's physical reset before you walk through the door, so you arrive a little steadier.",
+    program_reflection_father: "What's one moment today you were actually present for, phone down, fully there?",
+    program_exercise_anger: "Do today's Cool down exercise the next time you feel the heat rising, not after.",
+    program_reflection_anger: "What set you off today, really? Not the surface thing — what was underneath it.",
+    program_exercise_anxiety: "Do today's Panic countdown or breathing exercise the moment you notice anxiety building, before it peaks.",
+    program_reflection_anxiety: "What did you predict would go wrong today? Did it?",
+    program_exercise_loneliness: "Do today's Send one message exercise, to someone specific, not just anyone.",
+    program_reflection_loneliness: "Who did you feel most like yourself around today, even for a minute?",
+    program_exercise_grief: "Do today's Safe place exercise if you need somewhere calm to land.",
+    program_reflection_grief: "What did you let yourself feel today, even briefly, instead of pushing it down?",
     mark_day_complete: "Mark day as complete", exercise_complete_toast: "Well done. That counts.",
     step_lbl: "Step", back_btn: "Back", next_btn: "Next", complete_btn: "Complete",
     reflection_write_ph: "Write for yourself. No one else needs to see this...",
@@ -474,10 +504,18 @@ const T = {
     prog_transition_title: "Handling transitions", prog_transition_desc: "Steady through a job change, breakup, or other major shift.",
     prog_confidence_title: "Confidence and performance", prog_confidence_desc: "Train your confidence at work, in sport, in life.",
     prog_father_title: "Better father and partner", prog_father_desc: "Tools for presence, patience and communication at home.",
+    prog_anger_title: "Anger and emotional control", prog_anger_desc: "Understand what's underneath the anger, and build tools to catch it before it takes over.",
+    prog_anxiety_title: "Anxiety and panic", prog_anxiety_desc: "Learn to work with anxiety and panic instead of being ruled by them.",
+    prog_loneliness_title: "Loneliness and connection", prog_loneliness_desc: "Rebuild real connection, one small step at a time.",
+    prog_grief_title: "Grief and loss", prog_grief_desc: "A steady companion through loss, at your own pace.",
     focus_sleep: ["Map your evening routine as it actually is.", "Screen-free for the last 30 minutes before bed.", "Fixed bedtime, weekends too.", "Bedroom: dark, cool, quiet."],
     focus_transition: ["Name what has actually been lost, and what remains.", "What do you have control over today? Do one of those things.", "Talk to one person about how you're really doing.", "Small routines bring stability when the big things are in flux."],
     focus_confidence: ["Write down three situations you've handled well before.", "Practise taking up space: say one opinion out loud today.", "Replace 'I have to perform' with 'I'm here to contribute'.", "Posture affects how you feel. Test it today."],
     focus_father: ["Ten minutes of undivided attention, phone away.", "Apologise if you get it wrong. It builds trust.", "Notice what triggers your impatience.", "Tell your partner one thing you appreciate about them."],
+    focus_anger: ["Notice the first physical sign anger gives you — hot face, tight jaw, clenched fists. That's your two-second warning.", "Before you respond, ask: is this the actual problem, or is something else adding fuel?", "Practise saying 'I need a minute' instead of saying nothing or saying too much.", "At the end of a hard day, name what actually made you angry, out loud or in writing."],
+    focus_anxiety: ["Notice when you're avoiding something because of anxiety, not because you don't want to do it.", "Anxious thoughts predict disaster. Ask: what's the most likely outcome, not just the worst one?", "Practise sitting with discomfort for two extra minutes before you distract yourself from it.", "Write down what actually happened the last time you felt this anxious. Did the disaster come true?"],
+    focus_loneliness: ["Reach out to one person today, even just to say hello.", "Say yes to one invitation you'd normally decline.", "Notice who you actually feel at ease around, not just who's convenient.", "Ask someone a real question about how they're doing, and actually wait for the answer."],
+    focus_grief: ["There's no timeline. However you're grieving today is the right way.", "Let yourself do something ordinary today. Grief doesn't ask permission to pause.", "If a memory hits hard, let it. It usually passes faster than you brace for.", "Tell one person you trust how you're actually doing, not the short version."],
     refl_r1_title: "What are you really afraid of?", refl_r1_prompt: "Not what you admit in company. The fear you sit with at night, alone, the one you rarely put into words. What is it?",
     refl_r2_title: "Who would you be without others' expectations of you?", refl_r2_prompt: "Imagine all roles and demands fell away tomorrow. No expectations from work, family, or society. Who are you then, and what do you want?",
     refl_r3_title: "What have you never said out loud to anyone?", refl_r3_prompt: "Something you've carried for years without voicing it to another person. What is it? Write it here, just for yourself.",
@@ -515,6 +553,12 @@ const T = {
     art_a9_body: ["Most difficult conversations never happen because neither person knows how to start. The silence grows. The distance increases.", "A simple opener that works: 'I want to talk about something, and I'm not sure how to say it.' It signals honesty, and it buys you a moment to find the words.", "Time it well: not after a conflict, not at bedtime, not in front of others. A walk side by side is often easier than face to face.", "You don't need to resolve everything in one conversation. Starting is enough."],
     art_a10_title: "Sleep and mental health: the link most men underestimate", art_a10_cat: "Sleep",
     art_a10_body: ["Poor sleep is both a symptom and a cause of poor mental health. The relationship runs in both directions.", "After one night of less than 6 hours, emotional reactivity increases by up to 60%. You're more likely to snap, withdraw, catastrophise, or make poor decisions.", "Men consistently underreport sleep problems. The cultural script says power through. The research says that's one of the most expensive things you can do.", "Practical: a consistent wake time (even on weekends) is more effective than early bedtimes. Reduce screens 30 minutes before bed — not for the light, but to let your mind decelerate."],
+    art_a11_title: "Alcohol as a coping tool", art_a11_cat: "Coping",
+    art_a11_body: ["A drink to take the edge off isn't unusual. The problem isn't the first one — it's when it becomes the only tool you reach for.", "Alcohol doesn't remove stress, it postpones it. The nervous system files the tension away for the morning, plus a bit of interest.", "A useful check: are you drinking to enjoy something, or to not feel something? Both happen — but only one of them tends to grow quietly over time.", "If you've noticed you're drinking alone more, or more than you used to, that's worth a closer look — not because you did something wrong, but because it's easier to change early than late."],
+    art_a12_title: "Shame and self-image", art_a12_cat: "Self-worth",
+    art_a12_body: ["Shame says something is wrong with you. Guilt says you did something wrong. Mixing the two up keeps people stuck far longer than the actual mistake deserves.", "The inner voice that criticises you the hardest usually isn't protecting you — it's repeating something you heard once, from someone who didn't know better.", "Shame grows in silence and shrinks the moment it's said out loud to someone who won't use it against you. That's the whole mechanism, not just a metaphor.", "You don't have to like what you did, or feel about yourself, to still decide you're allowed to move forward from it."],
+    art_a13_title: "Signs it might be more than you can handle alone", art_a13_cat: "Awareness",
+    art_a13_body: ["Self-help tools are useful for a lot of things. They're not always enough on their own, and that's not a failure of the tools, or of you.", "Some honest signs worth paying attention to: sleep or appetite that's been off for weeks, losing interest in things you used to care about, feeling like a burden to the people around you, or thoughts about not wanting to be here anymore.", "None of that means something is broken in you. It means it might be time to bring in someone who can actually help carry it — a doctor, a therapist, or one of the numbers under Crisis support in this app.", "If it's ever gone as far as thinking about ending your life, that's not something to push through alone. Reach out right then, to someone you trust or to one of those numbers. That's exactly what they're there for."],
     myth_1_myth: "Real men handle things themselves.", myth_1_fact: "Asking for help takes more confidence than pretending everything's fine. Most of those who've done it only regret waiting so long.",
     myth_2_myth: "Talking about problems makes them bigger.", myth_2_fact: "Research shows the opposite: putting feelings into words reduces activity in the brain's alarm system.",
     myth_3_myth: "Therapy is for people in crisis.", myth_3_fact: "Mental training works like physical training. It's most effective before things become acute.",
@@ -714,6 +758,22 @@ const T = {
     program_exercise_text: "Gjør dagens pusteøvelse (5 min) før leggetid, eller når du trenger en pause.",
     reflection_lbl: "Refleksjon:",
     program_reflection_text: "Hva er én liten ting som fungerte i dag? Skriv det gjerne i humørnotatet ditt på Hjem.",
+    program_exercise_sleep: "Gjør kveldens pusteøvelse som en del av nedtrappingen, gjerne uten skjerm i nærheten.",
+    program_reflection_sleep: "Hva er én ting fra i dag som fortsatt henger igjen i tankene? Få det ut av hodet og ned på papir før du prøver å sove.",
+    program_exercise_transition: "Gjør dagens jordingsøvelse (5-4-3-2-1) når usikkerheten er på sitt sterkeste.",
+    program_reflection_transition: "Hva var én ting som var uendret i dag, selv om alt annet føles i endring?",
+    program_exercise_confidence: "Gjør dagens «Snu tanken»-øvelse på tanken som har holdt deg tilbake.",
+    program_reflection_confidence: "Hva gjorde du i dag som du ville unngått for en måned siden?",
+    program_exercise_father: "Gjør dagens «Fysisk reset» før du går inn døren hjemme, så du kommer inn litt roligere.",
+    program_reflection_father: "Hvilket øyeblikk i dag var du faktisk til stede i, mobilen unna, helt der?",
+    program_exercise_anger: "Gjør dagens «Kjøl ned»-øvelse neste gang du kjenner det stige, ikke etterpå.",
+    program_reflection_anger: "Hva var det som egentlig utløste det i dag? Ikke det ytre, men det som lå under.",
+    program_exercise_anxiety: "Gjør dagens «Panikk-nedtelling» eller pusteøvelse idet du merker angsten bygge seg opp, før den topper seg.",
+    program_reflection_anxiety: "Hva var det du fryktet skulle gå galt i dag? Skjedde det?",
+    program_exercise_loneliness: "Gjør dagens «Send én melding»-øvelse, til en bestemt person, ikke bare til hvem som helst.",
+    program_reflection_loneliness: "Hvem følte du deg mest som deg selv rundt i dag, selv om det bare var et øyeblikk?",
+    program_exercise_grief: "Gjør dagens «Trygt sted»-øvelse hvis du trenger et rolig sted å lande.",
+    program_reflection_grief: "Hva lot du deg selv kjenne på i dag, om så bare kort, i stedet for å skyve det unna?",
     mark_day_complete: "Merk dagen som fullført", exercise_complete_toast: "Bra jobbet. Det teller.",
     step_lbl: "Steg", back_btn: "Tilbake", next_btn: "Neste", complete_btn: "Fullfør",
     reflection_write_ph: "Skriv for deg selv. Ingen andre trenger å se dette...",
@@ -734,10 +794,18 @@ const T = {
     prog_transition_title: "Håndtere overganger", prog_transition_desc: "Stå stødig gjennom jobbskifte, brudd, eller andre store endringer.",
     prog_confidence_title: "Selvtillit og prestasjon", prog_confidence_desc: "Tren selvtilliten din på jobb, i idrett, i livet.",
     prog_father_title: "Bedre far og partner", prog_father_desc: "Verktøy for tilstedeværelse, tålmodighet og kommunikasjon hjemme.",
+    prog_anger_title: "Sinne og følelseskontroll", prog_anger_desc: "Forstå hva som ligger under sinnet, og bygg verktøy for å fange det før det tar overhånd.",
+    prog_anxiety_title: "Angst og panikk", prog_anxiety_desc: "Lær å jobbe med angst og panikk i stedet for å bli styrt av dem.",
+    prog_loneliness_title: "Ensomhet og tilhørighet", prog_loneliness_desc: "Bygg ekte tilhørighet igjen, ett lite steg om gangen.",
+    prog_grief_title: "Sorg og tap", prog_grief_desc: "En rolig følgesvenn gjennom sorgen, i ditt eget tempo.",
     focus_sleep: ["Kartlegg kveldsrutinen din slik den faktisk er.", "Skjermfritt de siste 30 minuttene før leggetid.", "Fast leggetid, også i helgene.", "Soverom: mørkt, kjølig, stille."],
     focus_transition: ["Sett ord på hva som faktisk er tapt, og hva som er igjen.", "Hva har du kontroll over i dag? Gjør én av de tingene.", "Snakk med én person om hvordan det egentlig går.", "Små rutiner gir stabilitet når de store tingene er i endring."],
     focus_confidence: ["Skriv ned tre situasjoner du har håndtert bra tidligere.", "Øv på å ta plass: si én mening høyt i dag.", "Bytt ut «jeg må prestere» med «jeg er her for å bidra».", "Kroppsholdning påvirker hvordan du føler deg. Test det i dag."],
     focus_father: ["Ti minutter udelt oppmerksomhet, mobilen unna.", "Si unnskyld hvis du bommer. Det bygger tillit.", "Legg merke til hva som trigger utålmodigheten din.", "Fortell partneren din én ting du setter pris på ved dem."],
+    focus_anger: ["Legg merke til det første fysiske tegnet sinnet gir deg — varmt ansikt, stram kjeve, knyttede never. Det er varselet ditt.", "Før du svarer: er dette det faktiske problemet, eller er noe annet med på å spe på det?", "Øv på å si «jeg trenger et minutt» i stedet for å tie eller si for mye.", "På slutten av en tung dag: sett ord på hva som faktisk gjorde deg sint, høyt eller skriftlig."],
+    focus_anxiety: ["Legg merke til når du unngår noe på grunn av angst, ikke fordi du faktisk ikke vil.", "Angstfylte tanker spår katastrofe. Spør: hva er det mest sannsynlige utfallet, ikke bare det verste?", "Øv på å sitte med ubehaget i to minutter til før du distraherer deg selv fra det.", "Skriv ned hva som faktisk skjedde sist du følte det sånn. Slo katastrofen til?"],
+    focus_loneliness: ["Ta kontakt med én person i dag, selv om det bare er for å si hei.", "Si ja til én invitasjon du vanligvis ville takket nei til.", "Legg merke til hvem du faktisk føler deg avslappet rundt, ikke bare hvem som er lett tilgjengelig.", "Still noen et ekte spørsmål om hvordan de har det, og vent faktisk på svaret."],
+    focus_grief: ["Det finnes ingen tidsplan. Slik du sørger i dag, er den riktige måten.", "La deg selv gjøre noe helt vanlig i dag. Sorgen ber ikke om lov til å ta en pause.", "Hvis et minne treffer hardt, la det gjøre det. Det går som regel fortere over enn du forbereder deg på.", "Fortell én person du stoler på hvordan du faktisk har det, ikke den korte versjonen."],
     refl_r1_title: "Hva er du egentlig redd for?", refl_r1_prompt: "Ikke det du innrømmer i selskap. Frykten du sitter med om natten, alene, den du sjelden setter ord på. Hva er det?",
     refl_r2_title: "Hvem ville du vært uten andres forventninger til deg?", refl_r2_prompt: "Se for deg at alle roller og krav forsvant i morgen. Ingen forventninger fra jobb, familie eller samfunn. Hvem er du da, og hva vil du?",
     refl_r3_title: "Hva har du aldri sagt høyt til noen?", refl_r3_prompt: "Noe du har båret på i årevis uten å si det til et annet menneske. Hva er det? Skriv det her, bare for deg selv.",
@@ -775,6 +843,12 @@ const T = {
     art_a9_body: ["De fleste vanskelige samtalene skjer aldri fordi ingen av partene vet hvordan de skal starte. Stillheten vokser. Avstanden øker.", "En enkel åpning som virker: «Jeg vil snakke om noe, og jeg er ikke sikker på hvordan jeg skal si det.» Det signaliserer ærlighet, og gir deg et øyeblikk til å finne ordene.", "Velg tidspunktet med omhu: ikke rett etter en konflikt, ikke ved leggetid, ikke foran andre. En tur side om side er ofte lettere enn ansikt til ansikt.", "Du trenger ikke løse alt i én samtale. Å starte er nok."],
     art_a10_title: "Søvn og mental helse: koblingen de fleste menn undervurderer", art_a10_cat: "Søvn",
     art_a10_body: ["Dårlig søvn er både et symptom på og en årsak til dårlig mental helse. Sammenhengen går begge veier.", "Etter én natt med under 6 timers søvn øker den følelsesmessige reaktiviteten med opptil 60 %. Du blir mer tilbøyelig til å kjefte, trekke deg unna, katastrofetenke, eller ta dårlige avgjørelser.", "Menn underrapporterer konsekvent søvnproblemer. Det kulturelle manuset sier press deg gjennom. Forskningen sier at det er noe av det dyreste du kan gjøre.", "Praktisk: et fast oppvåkningstidspunkt (også i helgene) er mer effektivt enn tidlig leggetid. Reduser skjermbruk 30 minutter før leggetid, ikke på grunn av lyset, men for å la sinnet roe seg ned."],
+    art_a11_title: "Alkohol som mestringsverktøy", art_a11_cat: "Mestring",
+    art_a11_body: ["Et glass for å dempe stresset er ikke uvanlig. Problemet er ikke det første glasset, det er når det blir det eneste verktøyet du griper til.", "Alkohol fjerner ikke stresset, det utsetter det. Nervesystemet legger spenningen til side til morgenen, med litt renter på toppen.", "En nyttig sjekk: drikker du for å nyte noe, eller for å slippe å kjenne på noe? Begge deler skjer, men bare det ene har en tendens til å vokse stille over tid.", "Hvis du har lagt merke til at du drikker mer alene, eller mer enn du pleide, er det verdt å se nærmere på, ikke fordi du har gjort noe galt, men fordi det er lettere å endre tidlig enn sent."],
+    art_a12_title: "Skam og selvbilde", art_a12_cat: "Selvbilde",
+    art_a12_body: ["Skam sier at det er noe galt med deg. Skyldfølelse sier at du gjorde noe galt. Å blande de to sammen holder folk fast mye lenger enn selve feilen fortjener.", "Stemmen inni deg som kritiserer hardest, beskytter deg som regel ikke, den gjentar bare noe du hørte en gang, fra noen som ikke visste bedre.", "Skam vokser i stillhet og krymper i det øyeblikket den sies høyt til noen som ikke bruker den mot deg. Det er hele mekanismen, ikke bare et bilde.", "Du trenger ikke like det du gjorde, eller det du føler om deg selv, for likevel å bestemme deg for at du har lov til å gå videre fra det."],
+    art_a13_title: "Tegn på at det kan være mer enn du klarer alene", art_a13_cat: "Oppmerksomhet",
+    art_a13_body: ["Selvhjelpsverktøy er nyttige for mye. De er ikke alltid nok alene, og det er ikke en fiasko, verken for verktøyene eller for deg.", "Noen ærlige tegn som er verdt å legge merke til: søvn eller matlyst som har sviktet i flere uker, mindre interesse for ting du pleide å bry deg om, følelsen av å være en byrde for folk rundt deg, eller tanker om at du ikke vil være her lenger.", "Ingenting av dette betyr at noe er ødelagt i deg. Det betyr at det kanskje er på tide å hente inn noen som faktisk kan hjelpe deg å bære det, en lege, en terapeut, eller ett av numrene under Krisehjelp i denne appen.", "Hvis det noen gang har gått så langt som å tenke på å avslutte livet ditt, er det ikke noe du skal presse deg gjennom alene. Ta kontakt med en gang, med noen du stoler på eller med ett av de numrene. Det er akkurat det de er der for."],
     myth_1_myth: "Ekte menn ordner ting selv.", myth_1_fact: "Å be om hjelp krever mer selvtillit enn å late som alt er fint. De fleste som har gjort det angrer bare på at de ventet så lenge.",
     myth_2_myth: "Å snakke om problemer gjør dem større.", myth_2_fact: "Forskning viser det motsatte: å sette ord på følelser reduserer aktiviteten i hjernens alarmsystem.",
     myth_3_myth: "Terapi er for folk i krise.", myth_3_fact: "Mental trening fungerer som fysisk trening. Den er mest effektiv før ting blir akutt.",
@@ -1006,6 +1080,10 @@ const PROGRAMS = [
   { id: "transition", title: "Handling transitions", days: 14, icon: "\u{1F9ED}", desc: "Steady through a job change, breakup, or other major shift." },
   { id: "confidence", title: "Confidence and performance", days: 21, icon: "\u{1F3AF}", desc: "Train your confidence at work, in sport, in life." },
   { id: "father", title: "Better father and partner", days: 30, icon: "\u{1F46A}", desc: "Tools for presence, patience and communication at home." },
+  { id: "anger", title: "Anger and emotional control", days: 14, icon: "\u{1F525}", desc: "Understand what's underneath the anger, and build tools to catch it before it takes over." },
+  { id: "anxiety", title: "Anxiety and panic", days: 21, icon: "\u{1F30A}", desc: "Learn to work with anxiety and panic instead of being ruled by them." },
+  { id: "loneliness", title: "Loneliness and connection", days: 14, icon: "\u{1F91D}", desc: "Rebuild real connection, one small step at a time." },
+  { id: "grief", title: "Grief and loss", days: 21, icon: "\u{1F54A}\u{FE0F}", desc: "A steady companion through loss, at your own pace." },
 ];
 
 const REFLECTIONS = [
@@ -1179,9 +1257,9 @@ const SEED_POSTS = [
 const ARTICLES = [
   { id: "a1", icon: "\u{1F3A4}", title: "Performance anxiety when demands take over", min: 2, cat: "Performance", program: "confidence",
     body: ["Performance anxiety rarely comes from the task itself. It comes from what you think it means about you if things go wrong.", "Your body's alarm response — racing heart, restlessness, racing thoughts — is the same whether the threat is a bear or a presentation. Your brain is trying to protect you. It's just a bit too eager.", "What helps: lower the mental stakes ('this is one meeting, not a verdict'), breathe longer on the exhale than the inhale, and practise the situation in small doses rather than avoiding it.", "Avoidance brings relief today and more anxiety tomorrow. Gradual exposure does the opposite."] },
-  { id: "a2", icon: "\u{1F525}", title: "Anger is often something else", min: 2, cat: "Anger", program: "father",
+  { id: "a2", icon: "\u{1F525}", title: "Anger is often something else", min: 2, cat: "Anger", program: "anger",
     body: ["For many men, anger is the only feeling that seems 'allowed'. Underneath is often something else: worry, shame, helplessness, hurt.", "Next time you feel it rising: try to name what happened a second before. Did you feel overruled? Unheard? Afraid of failing?", "Anger isn't dangerous in itself. It's information. The question is what you do with it, and whether the people around you have to bear the cost.", "A practical rule: pause before responding when your pulse is high. You can always return to the conversation. What you say in full anger you can rarely take back."] },
-  { id: "a3", icon: "\u{1F9CD}", title: "Loneliness among men", min: 3, cat: "Loneliness", program: null,
+  { id: "a3", icon: "\u{1F9CD}", title: "Loneliness among men", min: 3, cat: "Loneliness", program: "loneliness",
     body: ["Many men have colleagues, training partners and family, and are still lonely. Because none of those relationships have room for what actually weighs on them.", "Male friendships are often built around activity, not conversation. That's not wrong, but it means the heavy stuff never gets space.", "The good news: it takes less than you think. One honest sentence — 'it's been a tough stretch, actually' — opens more than a hundred surface-level conversations.", "Start with the friend you think can handle it best. He's probably been waiting for a chance to say something real himself."] },
   { id: "a4", icon: "\u{1F504}", title: "Who am I without the job?", min: 2, cat: "Identity", program: "transition",
     body: ["When your identity is largely built on what you achieve, a career change, redundancy or retirement becomes more than practical. It becomes existential.", "Ask yourself: what did people value in me before my title? Your temperament? Your calm? Your ability to fix things? That doesn't disappear with the job.", "Transition periods are uncomfortable because the old is gone and the new hasn't taken shape yet. It's a middle phase, not a final destination.", "Use the time to explore, not conclude. Identity is built through action, not rumination."] },
@@ -1189,14 +1267,20 @@ const ARTICLES = [
     body: ["Many fathers feel a mixture of love, detachment and inadequacy in the early months. It's common, and almost nobody talks about it.", "Bonding isn't always a lightning bolt. For many it builds gradually, through nappy changes, carrying, and sleepless nights. It counts just as much.", "You don't need to be perfect. The research is clear: 'good enough' and repair after mistakes is what builds secure children.", "And: look after the relationship. The early years with young children are one of the hardest periods for a couple. Short, honest check-ins with your partner are underrated."] },
   { id: "a6", icon: "\u{1F62E}", title: "Burnout: how to recognise it before it's too late", min: 2, cat: "Burnout", program: null,
     body: ["Burnout doesn't announce itself. It creeps in as reduced motivation, shorter patience, and a growing numbness toward things that used to matter.", "The three core signs: emotional exhaustion (nothing left to give), depersonalisation (feeling detached, going through the motions), and a reduced sense of accomplishment.", "Men often mask burnout with more work, alcohol, or withdrawal. The instinct to push through is understandable — but it accelerates the process.", "Recovery takes time. The first step is usually the hardest: admitting to yourself that something is wrong."] },
-  { id: "a7", icon: "\u{1F5A4}", title: "How men grieve — and why it looks different", min: 2, cat: "Grief", program: null,
+  { id: "a7", icon: "\u{1F5A4}", title: "How men grieve — and why it looks different", min: 2, cat: "Grief", program: "grief",
     body: ["Men grieve. They just often don't do it the way we expect grief to look.", "Where women are more likely to process loss through talking, men more often grieve through action — staying busy, taking care of practical things, exercising, or withdrawing temporarily.", "Neither is better. Both are valid. The danger for men is when temporary withdrawal becomes permanent avoidance.", "If you've lost someone: you don't have to talk about it. But notice when the numbness stops being a phase and starts being a wall."] },
-  { id: "a8", icon: "\u{1F9BE}", title: "When stress shows up in the body", min: 2, cat: "Stress", program: null,
+  { id: "a8", icon: "\u{1F9BE}", title: "When stress shows up in the body", min: 2, cat: "Stress", program: "anxiety",
     body: ["Many men notice stress physically before they notice it emotionally: tight shoulders, jaw clenching, trouble sleeping, chest tightness, headaches.", "This isn't weakness — it's how the nervous system works. Stress is a physical state, not just a thought.", "The body often knows something is wrong before the mind admits it. If you're grinding your teeth at night, it's worth asking: what am I carrying that I haven't named yet?", "Short-term interventions that work: cold water on the face, slow exhalation, physical movement, and changing your environment — even briefly."] },
   { id: "a9", icon: "\u{1F4AC}", title: "How to start a difficult conversation", min: 2, cat: "Relationships", program: null,
     body: ["Most difficult conversations never happen because neither person knows how to start. The silence grows. The distance increases.", "A simple opener that works: 'I want to talk about something, and I'm not sure how to say it.' It signals honesty, and it buys you a moment to find the words.", "Time it well: not after a conflict, not at bedtime, not in front of others. A walk side by side is often easier than face to face.", "You don't need to resolve everything in one conversation. Starting is enough."] },
   { id: "a10", icon: "\u{1F634}", title: "Sleep and mental health: the link most men underestimate", min: 2, cat: "Sleep", program: null,
     body: ["Poor sleep is both a symptom and a cause of poor mental health. The relationship runs in both directions.", "After one night of less than 6 hours, emotional reactivity increases by up to 60%. You're more likely to snap, withdraw, catastrophise, or make poor decisions.", "Men consistently underreport sleep problems. The cultural script says power through. The research says that's one of the most expensive things you can do.", "Practical: a consistent wake time (even on weekends) is more effective than early bedtimes. Reduce screens 30 minutes before bed — not for the light, but to let your mind decelerate."] },
+  { id: "a11", icon: "\u{1F37A}", title: "Alcohol as a coping tool", min: 2, cat: "Coping", program: null,
+    body: ["A drink to take the edge off isn't unusual. The problem isn't the first one — it's when it becomes the only tool you reach for.", "Alcohol doesn't remove stress, it postpones it. The nervous system files the tension away for the morning, plus a bit of interest.", "A useful check: are you drinking to enjoy something, or to not feel something? Both happen — but only one of them tends to grow quietly over time.", "If you've noticed you're drinking alone more, or more than you used to, that's worth a closer look — not because you did something wrong, but because it's easier to change early than late."] },
+  { id: "a12", icon: "\u{1FA9E}", title: "Shame and self-image", min: 2, cat: "Self-worth", program: "confidence",
+    body: ["Shame says something is wrong with you. Guilt says you did something wrong. Mixing the two up keeps people stuck far longer than the actual mistake deserves.", "The inner voice that criticises you the hardest usually isn't protecting you — it's repeating something you heard once, from someone who didn't know better.", "Shame grows in silence and shrinks the moment it's said out loud to someone who won't use it against you. That's the whole mechanism, not just a metaphor.", "You don't have to like what you did, or feel about yourself, to still decide you're allowed to move forward from it."] },
+  { id: "a13", icon: "\u{1F440}", title: "Signs it might be more than you can handle alone", min: 2, cat: "Awareness", program: null,
+    body: ["Self-help tools are useful for a lot of things. They're not always enough on their own, and that's not a failure of the tools, or of you.", "Some honest signs worth paying attention to: sleep or appetite that's been off for weeks, losing interest in things you used to care about, feeling like a burden to the people around you, or thoughts about not wanting to be here anymore.", "None of that means something is broken in you. It means it might be time to bring in someone who can actually help carry it — a doctor, a therapist, or one of the numbers under Crisis support in this app.", "If it's ever gone as far as thinking about ending your life, that's not something to push through alone. Reach out right then, to someone you trust or to one of those numbers. That's exactly what they're there for."] },
 ];
 
 const MYTHS = [
@@ -1793,17 +1877,28 @@ function quitProgram(id) {
 }
 function openProgramDay(id, day) {
   const p = PROGRAMS.find(x => x.id === id);
-  openModal(`
-    <h3>${p.icon} ${t('prog_' + id + '_title')}${t("day_comma")} ${day}</h3>
-    <div class="sub">${t("short_content_line")}</div>
-    <div class="articleBody">
-      <p><b>${t("todays_focus_lbl")}</b> ${programDayFocus(id, day)}</p>
-      <p><b>${t("exercise_lbl")}</b> ${t("program_exercise_text")}</p>
-      <p><b>${t("reflection_lbl")}</b> ${t("program_reflection_text")}</p>
+  closeProgramOverlay();
+  const ov = document.createElement("div");
+  ov.id = "programOverlay";
+  ov.innerHTML = `
+    <div class="closeRow"><button onclick="closeProgramOverlay()" aria-label="${t("close")}">&#10005;</button></div>
+    <div class="progHead">
+      <div class="progIcon">${p.icon}</div>
+      <div class="progTitle">${t('prog_' + id + '_title')}${t("day_comma")} ${day}</div>
+      <div class="progSub">${t("short_content_line")}</div>
     </div>
-    <button class="btn" style="width:100%;margin-top:14px" onclick="completeExercise('program-${id}-${day}'); closeModal()">${t("mark_day_complete")}</button>
-  `);
+    <div class="progBody">
+      <p><b>${t("todays_focus_lbl")}</b>${programDayFocus(id, day)}</p>
+      <p><b>${t("exercise_lbl")}</b>${t('program_exercise_' + id)}</p>
+      <p><b>${t("reflection_lbl")}</b>${t('program_reflection_' + id)}</p>
+    </div>
+    <div class="controls">
+      <button class="btn" id="progComplete">${t("mark_day_complete")}</button>
+    </div>`;
+  document.getElementById("app").appendChild(ov);
+  document.getElementById("progComplete").onclick = () => { completeExercise('program-' + id + '-' + day); closeProgramOverlay(); };
 }
+function closeProgramOverlay() { const ov = document.getElementById("programOverlay"); if (ov) ov.remove(); }
 function programDayFocus(id, day) {
   const f = t('focus_' + id) || t('focus_sleep');
   return f[(day - 1) % f.length];
