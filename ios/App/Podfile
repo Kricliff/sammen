@@ -7,6 +7,11 @@ target 'App' do
   pod 'CapacitorLocalNotifications', :path => '../../node_modules/@capacitor/local-notifications'
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'
   pod 'RevenuecatPurchasesCapacitor', :path => '../../node_modules/@revenuecat/purchases-capacitor'
+  # AnalyticsWithoutAdIdSupport (not the default Lite or the full Analytics
+  # subspec): gives real event/session tracking without pulling in
+  # FirebaseAnalytics/IdentitySupport (IDFA), which would require an App
+  # Tracking Transparency prompt we have no other reason to add.
+  pod 'CapacitorFirebaseAnalytics/AnalyticsWithoutAdIdSupport', :path => '../../node_modules/@capacitor-firebase/analytics'
 end
 
 post_install do |installer|

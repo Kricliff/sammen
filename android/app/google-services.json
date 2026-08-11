@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "586820726250",
+    "project_id": "together-4188b",
+    "storage_bucket": "together-4188b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586820726250:android:d74140ece10aeeb3b05693",
+        "android_client_info": {
+          "package_name": "com.kricliff.together"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCb2gJ_Vx3rQDkJGgBSAK-_3bGiIXckQwc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

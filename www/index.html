@@ -1467,7 +1467,25 @@ function renderNav() {
   const sos = document.getElementById("sosBtn");
   if (sos) sos.innerHTML = "&#10084;&#65039; " + t("crisis_support");
 }
-function goTab(id) { haptic(); currentTab = id; currentSubView = null; render(); main.scrollTop = 0; }
+function goTab(id) { haptic(); currentTab = id; currentSubView = null; render(); main.scrollTop = 0; logScreenView(id); }
+
+// Native Firebase Analytics (Google Analytics for Firebase) — not the
+// Firestore/Auth web SDK loaded via CDN elsewhere in this file. Uses the
+// CapacitorFirebaseAnalytics native plugin so app opens/sessions register
+// correctly (a web-SDK approach inside the WebView would report as web
+// traffic and miss native lifecycle events). AnalyticsWithoutAdIdSupport
+// subspec (iOS Podfile) / no ads module (Android) means no IDFA collection
+// and no App Tracking Transparency prompt needed.
+async function initAnalytics() {
+  const FA = window.Capacitor?.Plugins?.FirebaseAnalytics;
+  if (!FA) return;
+  try { await FA.setEnabled({ enabled: true }); } catch (e) { console.warn('Analytics:', e); }
+}
+function logScreenView(screenName) {
+  const FA = window.Capacitor?.Plugins?.FirebaseAnalytics;
+  if (!FA) return;
+  FA.setCurrentScreen({ screenName }).catch(() => {});
+}
 
 function render() {
   renderNav();
@@ -3161,6 +3179,8 @@ render();
   if (state.settings.notifications) setTimeout(setupDailyNotifications, 3000);
   if (state.settings.weeklyReflection) setTimeout(setupWeeklyReflectionNotif, 3200);
   firebaseReadyPromise = initFirebase();
+  initAnalytics();
+  logScreenView(currentTab);
   setTimeout(checkICloudRestore, 1200);
 })();
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
