@@ -7,11 +7,17 @@ target 'App' do
   pod 'CapacitorLocalNotifications', :path => '../../node_modules/@capacitor/local-notifications'
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'
   pod 'RevenuecatPurchasesCapacitor', :path => '../../node_modules/@revenuecat/purchases-capacitor'
-  # AnalyticsWithoutAdIdSupport (not the default Lite or the full Analytics
-  # subspec): gives real event/session tracking without pulling in
-  # FirebaseAnalytics/IdentitySupport (IDFA), which would require an App
-  # Tracking Transparency prompt we have no other reason to add.
-  pod 'CapacitorFirebaseAnalytics/AnalyticsWithoutAdIdSupport', :path => '../../node_modules/@capacitor-firebase/analytics'
+  # Firebase Analytics is a hand-written native plugin (see
+  # ios/App/App/FirebaseAnalyticsPlugin.swift) calling these SDKs directly,
+  # not @capacitor-firebase/analytics — that npm package's podspec makes
+  # CocoaPods generate it as a dependency-only aggregate target with no
+  # build phases, so its own plugin source is never compiled (confirmed
+  # across two package versions by inspecting the generated Pods.xcodeproj).
+  # Core subspec, not Default/IdentitySupport: gives real event/session
+  # tracking without pulling in the IDFA-collecting IdentitySupport
+  # subspec, which would need an App Tracking Transparency prompt we have
+  # no other reason to add.
+  pod 'FirebaseAnalytics/Core', '~> 12.17.0'
 end
 
 post_install do |installer|
