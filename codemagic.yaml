@@ -49,6 +49,8 @@ workflows:
     environment:
       android_signing:
         - together_keystore
+      groups:
+        - android
       node: latest
       java: 17
     scripts:
