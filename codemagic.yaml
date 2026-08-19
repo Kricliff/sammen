@@ -52,7 +52,7 @@ workflows:
       groups:
         - android
       node: latest
-      java: 17
+      java: 21
     scripts:
       - name: Install npm dependencies
         script: npm install --legacy-peer-deps
