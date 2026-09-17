@@ -238,35 +238,64 @@ Det er ikke et argument mot å bygge systemet. Det er et argument mot å måle d
 
 ---
 
-## 6. Regnestykket som faktisk går opp
+## 6. Går det opp på noen annen måte?
 
-Her snur tallene fullstendig, og det er verdt å regne på det like nøye.
+**Rettelse 2026-09-17:** En tidligere versjon av dette avsnittet regnet rekrutteringshonorarer som Kristians inntekt og landet på 135 000–180 000 NOK per oppdrag. **Det er feil.** Kristian er fast ansatt i et rekrutteringsselskap og kjører ikke oppdrag alene. Honorarene tilfaller arbeidsgiver, ikke ham. Tallet er fjernet, og konklusjonen under er svakere enn den var.
 
 **Årlig systemkostnad, scenario B: ~17 300 NOK.**
 
-Sett det mot Kristians faktiske inntektskilder:
+Den eneste inntekten Kristian selv tar ut av synlighet på sosiale medier, går gjennom **Clifford Coaching og Mentaltrening** — hans eget selskap. Det er der en henvendelse kan bli til omsetning.
 
-| Utfall | Verdi | Hva som skal til |
+| Utfall | Verdi | Merknad |
 |---|---|---|
-| Én coachingklient, 2 500 NOK/mnd i 6 mnd | **15 000 NOK** | Dekker nesten hele året |
-| Ett rekrutteringsoppdrag, senior IT-rolle (900k årslønn, 15–20 % honorar) | **135 000–180 000 NOK** | Dekker systemet i 8–10 år |
-| 10 millioner YouTube Shorts-visninger ved RPM $0,05 | **4 650 NOK** | Krever at YPP-terskelen alt er passert |
+| 10 mill. YouTube Shorts-visninger ved RPM $0,05 | **4 650 NOK** | Krever at YPP-terskelen alt er passert |
+| Årlig systemkostnad | **17 300 NOK** | Scenario B, 90 kortvideoer + 13 LinkedIn-innlegg i måneden |
+| Coachingklient | **? NOK** | `TODO(kristian): hva tar du per forløp?` |
 
-Sammenligningen er ikke i nærheten av jevn. **Ett rekrutteringsoppdrag er verdt omtrent 29 ganger mer enn å nå hele YouTube-terskelen.** Og LinkedIn — kanalen med null annonseinntekt og lavest produksjonskostnad — er kanalen som faktisk leverer den typen henvendelse.
+### 6.1 Hvor mange coachingklienter må systemet skaffe for å betale for seg selv?
 
-### 6.1 Hva jeg foreslår at vi endrer
+Dette kan jeg svare på uten å kjenne prisen din, som en funksjon av den:
 
-**Ingenting i arkitekturen. Bare hva `revenue_events` har lov til å inneholde.**
+```
+klienter per år = 17 300 NOK / verdi per forløp
+```
 
-Alt det du har spesifisert — kostnad per innlegg, RPM, margin, Portfolio-agentens kutt-og-skaler, budsjettak, kill switch — er riktig bygget og verdt å bygge. Det eneste som ikke stemmer, er antagelsen om at annonser er hovedinntekten.
+| Verdi per coachingforløp | Klienter/år for break-even |
+|---|---|
+| 5 000 NOK | 3,5 |
+| 10 000 NOK | 1,7 |
+| 15 000 NOK | 1,2 |
+| 20 000 NOK | 0,9 |
 
-Tre konkrete endringer:
+**Terskelen er lavere enn den kunne vært.** Selv i det dyreste kostnadsscenarioet (A: 27 100 NOK/år) er vi på 1–5 klienter i året. Det er ikke en urimelig ambisjon for et helt års systematisk synlighet.
 
-1. **`revenue_events.type` utvides med `lead`** — en attribuert henvendelse, med verdi satt av Kristian når den lukkes. Marginformelen er uendret. Portfolio-agenten begynner å se at LinkedIn leverer, og skalerer den, i stedet for å kutte den som «null inntekt».
-2. **RPM forblir hovedmetrikken for kanaler som faktisk betaler RPM.** For LinkedIn måles **kostnad per kvalifisert henvendelse** i stedet. Begge er marginmålinger — bare ulike nevnere.
-3. **Terskelfremdrift beholdes som eksplisitt delmål**, akkurat som du spesifiserte. Når YouTube-terskelen passeres, slår annonseinntekten inn som en ekte andre inntektsstrøm. Da er systemet allerede bygget for den.
+Men jeg vil være presis om hva det betyr, siden jeg nettopp tok feil om det motsatte:
 
-### 6.2 Og det ene menneskelige trykket — besluttet
+- **Dette er ikke lenger et argument som vinner med god margin.** Med rekrutteringstallet var forholdet 1:8 i systemets favør. Nå er det omtrent 1:1 — systemet må faktisk levere et par klienter i året, ellers er det en utgift.
+- **Annonseinntekt forblir uaktuelt som hovedinntekt.** Hele seksjon 5.3 står uendret. Å nå hele YouTube-terskelen er verdt mindre enn én coachingklient.
+- **Det avgjørende tallet er ditt, ikke mitt.** Jeg trenger prisen på et forløp og et grovt anslag på hvor mange klienter du realistisk kan ta ved siden av full jobb. Kapasitetstaket kan fort være den bindende begrensningen, ikke etterspørselen.
+
+### 6.2 En føring ansettelsesforholdet legger på innholdet
+
+Du er ansatt i et rekrutteringsselskap. Det har en konsekvens for temavalget som bør ligge i `config/strategy.yaml` fra dag én, ikke oppdages senere:
+
+- **Mental trening, prestasjonspsykologi og coaching** er ditt eget selskaps domene. Rene baner, og det er der henvendelsene kan bli til din omsetning.
+- **Rekrutteringsfaglig innhold** ligger tett på arbeidsgivers virksomhet. Det kan være helt uproblematisk, og det kan være regulert i arbeidsavtalen din. `TODO(kristian): sjekk hva avtalen sier om egen næringsvirksomhet og offentlig profilering på fagfeltet.`
+- **Arbeidsinkludering** — som du har sagt du vil satse på — ligger i grenselandet og er verdt en egen vurdering.
+
+Systemet skal ikke ta den avgjørelsen for deg. Men Strategist-agenten allokerer produksjonsbudsjett mellom temaer, og hvis ett tema er ute av spill, må den vite det. Det løses med en `allowed`/`blocked`-markering per tema i `strategy.yaml`, og Quality-agenten får en sjekk mot den.
+
+### 6.3 Hva jeg foreslår at vi endrer i arkitekturen
+
+**Fortsatt ingenting av substans. Bare hva `revenue_events` har lov til å inneholde.**
+
+Alt du har spesifisert — kostnad per innlegg, RPM, margin, Portfolio-agentens kutt-og-skaler, budsjettak, kill switch — er riktig bygget og verdt å bygge. Det eneste som ikke stemmer, er antagelsen om at annonser er hovedinntekten.
+
+1. **`revenue_events.type` utvides med `lead`** — en attribuert henvendelse til Clifford Coaching, med verdi satt av deg når forløpet lukkes. Marginformelen er uendret. Uten den kutter Portfolio-agenten LinkedIn som nullinntektskanal.
+2. **RPM forblir hovedmetrikken for kanaler som faktisk betaler RPM.** For LinkedIn måles **kostnad per kvalifisert henvendelse**. Begge er marginmålinger, bare med ulik nevner.
+3. **Terskelfremdrift beholdes som eksplisitt delmål.** Når YouTube-terskelen passeres, slår annonseinntekten inn som en reell andre inntektsstrøm, og systemet er allerede bygget for den.
+
+### 6.4 Og det ene menneskelige trykket — besluttet
 
 Kostnaden ved en kanalterminering er ikke bare de 17 300 kronene. Det er publikummet, tiden og opsjonen på all fremtidig inntekt fra kontoen. YouTube håndhever på **kanalnivå**.
 
@@ -279,7 +308,7 @@ To ting det gir oss gratis:
 - **Avvisningene dine blir treningsdata.** Hver gang du forkaster et utkast, lagres begrunnelsen og mates inn i `learnings`. Det er den raskeste veien til at Copywriter-agenten treffer stemmen din — raskere enn noen mengde finpussing av `voice.md`.
 - **Dry-run-modus blir mindre nødvendig som sikkerhetsnett**, siden du uansett ser hvert innlegg før det går ut. Den beholdes likevel som default ved første oppstart, for å vise deg kostnadstallene før noe produseres.
 
-### 6.3 Formatvalg — besluttet
+### 6.5 Formatvalg — besluttet
 
 **Hybrid.** Kortvideo forblir hovedmotoren for volum og rekkevidde, men noen få langvideoer i måneden jobber mot YPPs visningstime-spor (se 4.2). 75 000 langformat-visninger på 12 måneder er en vesentlig mer oppnåelig terskel enn 10 millioner Shorts-visninger på 90 dager, og det er den terskelen som avgjør om annonseinntekten i det hele tatt begynner å flyte.
 
@@ -297,5 +326,6 @@ Kostnadskonsekvensen er ikke triviell og må måles i Fase 2: en 8-minutters vid
 | 5 | Snitt 0,5 revisjonsrunder | Hvis Quality-agenten avviser mye oftere, stiger tokenkostnaden raskt |
 | 6 | Norge er ikke i TikTok Creator Rewards | Hvis feil: TikTok blir plutselig den beste inntektskanalen ($0,40–1,20 RPM) |
 | 7 | RPM $0,05 konservativt / $0,12 optimistisk for nisjen | Måles fra faktiske tall så snart YPP er på plass |
+| 8 | Verdi per coachingforløp — **ukjent, og nå den avgjørende variabelen** | Avgjør om systemet er en investering eller en utgift. Se 6.1 |
 
-Forutsetning 3 og 6 er de to som er verdt å bruke tid på å avklare før vi koder videre.
+Forutsetning **8** er nå den viktigste — den avgjør om systemet lønner seg i det hele tatt. Deretter 3 og 6.

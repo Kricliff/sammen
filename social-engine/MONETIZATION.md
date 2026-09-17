@@ -180,7 +180,7 @@ Instagram-monetisering er i bevegelse og dårlig dokumentert for Norge spesifikt
 - **LinkedIn har ikke offentliggjort hvor stor andelen er.** Da forgjengeren (Wire-programmet for forlag) var i drift, lå den nær 50 %.
 - Tidlige deltakere er navn som Steven Bartlett og Gary Vaynerchuk — altså etablerte storskapere, ikke folk som akkurat har startet.
 
-**Vurdering:** LinkedIn gir ingen annonseinntekt vi kan planlegge mot. Men for Kristian er LinkedIn sannsynligvis den mest lønnsomme kanalen i hele porteføljen — bare ikke gjennom annonser. Én innkommende kundehenvendelse fra en rekrutteringskunde eller én coachingklient er verdt mer enn all realistisk annonseinntekt fra de fire andre kanalene til sammen det første året. Systemet må kunne måle det. Se UNIT_ECONOMICS.md seksjon 6.
+**Vurdering:** LinkedIn gir ingen annonseinntekt vi kan planlegge mot. Men det er den kanalen som ligger nærmest faktisk omsetning for Kristian — gjennom henvendelser til **Clifford Coaching og Mentaltrening**, hans eget selskap. Rekrutteringsoppdrag er *ikke* en inntektsvei her: Kristian er fast ansatt, og honorarene tilfaller arbeidsgiver. Systemet må kunne måle coachinghenvendelser som inntekt. Se UNIT_ECONOMICS.md seksjon 6.
 
 ---
 
@@ -229,7 +229,7 @@ Anbefalingen min står der, men kort: **behold hele autonomien i pipelinen, men 
 | Prioritet | Kanal | Begrunnelse |
 |---|---|---|
 | **1** | **YouTube Shorts** | Eneste åpne, søkbare vei til annonsekroner. Bygg publiseringen hit først. |
-| **2** | **LinkedIn** | Ingen annonseinntekt, men den korteste veien til faktisk omsetning for Kristians virksomhet. Lav produksjonskostnad (tekst + ett bilde). |
+| **2** | **LinkedIn** | Ingen annonseinntekt, men den korteste veien til coachinghenvendelser. Lavest produksjonskostnad (tekst + ett bilde). |
 | **3** | **Facebook / Instagram** | Mest tillatende AI-regler, og Creator Fast Track er det mest konkrete inntektstallet vi har funnet. Reels gjenbruker YouTube-assetet gratis. |
 | **4** | **TikTok** | Ren rekkevidde. Krever API-revisjon før autonom publisering i det hele tatt er mulig. Bygges sist. |
 

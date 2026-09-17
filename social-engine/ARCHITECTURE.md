@@ -26,7 +26,7 @@ social-engine/
 ├─ package.json                    # npm workspaces
 │
 ├─ config/                         # endres uten redeploy
-│  ├─ strategy.yaml                # temaer, kanalvekter, frekvens, publiseringstider
+│  ├─ strategy.yaml                # temaer (m/ allowed|blocked), kanalvekter, frekvens, tider
 │  ├─ voice.md                     # PÅ ENGELSK — tone, ordforråd, forbudte fraser, eksempler
 │  ├─ brand.json                   # farger, fonter, logo, sikre marger per format
 │  ├─ channels.yaml                # per kanal: aktiv, rate limit, autopublish-modus
@@ -148,7 +148,7 @@ PostgreSQL + Drizzle. Alle pengebeløp lagres som `numeric(14,4)` — **aldri fl
 | `source` | text | `youtube_analytics_api`, `meta_insights`, `manual` |
 | `attribution` | attribution_enum | `direct` (plattformen oppga per innlegg) eller `pro_rata` (fordelt på visningsandel) |
 
-> `type = 'lead'` er tillegget fra UNIT_ECONOMICS.md seksjon 6. Uten den kutter Portfolio-agenten LinkedIn som nullinntektskanal — som ville vært feil beslutning på riktig data.
+> `type = 'lead'` er tillegget fra UNIT_ECONOMICS.md 6.3 — en attribuert henvendelse til Clifford Coaching. Uten den kutter Portfolio-agenten LinkedIn som nullinntektskanal, som ville vært feil beslutning på riktig data.
 
 **`content_metrics`** — tidsserie per innlegg per kanal
 | `id`, `content_item_id` FK, `channel`, `measured_at`, `views` bigint, `engaged_views` bigint, `watch_time_seconds` bigint, `retention_pct` numeric, `likes`, `comments`, `shares`, `follows` |
@@ -409,6 +409,7 @@ Alle køer har dead-letter. En jobb som ender der, varsler eier — den forsvinn
 
 | Krav | Hvordan |
 |---|---|
+| **Temagating** | `strategy.yaml` markerer hvert tema `allowed` eller `blocked`. Begrunnelsen står i UNIT_ECONOMICS.md 6.2: Kristian er fast ansatt i et rekrutteringsselskap, og rekrutteringsfaglig innhold kan være regulert av arbeidsavtalen. Quality-agenten får en egen sjekk mot lista. |
 | **Kill switch** | `system_flags`. Sjekkes i `publish`-jobben, ikke bare i dashboardet. Av = alt køes, ingenting publiseres. |
 | **Rate limits** | `config/channels.yaml`, håndhevet i Publisher. Hard stopp, ikke advarsel. |
 | **Budsjettstopp** | Cost Controller skriver `budgets`. Ved 80 %: varsel. Ved 100 %: `strategy`, `research`, `copywrite` og `visual` pauses. Køen tømmes ferdig. |
