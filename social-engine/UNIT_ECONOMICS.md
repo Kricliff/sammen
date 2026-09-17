@@ -254,26 +254,49 @@ Den eneste inntekten Kristian selv tar ut av synlighet på sosiale medier, går 
 
 ### 6.1 Hvor mange coachingklienter må systemet skaffe for å betale for seg selv?
 
-Dette kan jeg svare på uten å kjenne prisen din, som en funksjon av den:
+Clifford Coaching selger i dag (hentet fra nettsiden, priser mangler — se under):
 
-```
-klienter per år = 17 300 NOK / verdi per forløp
-```
-
-| Verdi per coachingforløp | Klienter/år for break-even |
+| Produkt | Innhold |
 |---|---|
-| 5 000 NOK | 3,5 |
-| 10 000 NOK | 1,7 |
-| 15 000 NOK | 1,2 |
-| 20 000 NOK | 0,9 |
+| Konsultasjon | Kartlegging + smakebit på arbeidsformen |
+| Enkelttime | 1:1, 60 min |
+| **5-pakke** | 5 × 60 min, rabattert |
+| **10-pakke** | 10 × 60 min, rabattert |
+| Bedrift | Egen tjeneste mot virksomheter |
 
-**Terskelen er lavere enn den kunne vært.** Selv i det dyreste kostnadsscenarioet (A: 27 100 NOK/år) er vi på 1–5 klienter i året. Det er ikke en urimelig ambisjon for et helt års systematisk synlighet.
+`TODO(kristian): lim inn de fire prisene, så låser jeg tallene i tabellen under.`
 
-Men jeg vil være presis om hva det betyr, siden jeg nettopp tok feil om det motsatte:
+Break-even er en ren funksjon av pris per solgt pakke:
 
-- **Dette er ikke lenger et argument som vinner med god margin.** Med rekrutteringstallet var forholdet 1:8 i systemets favør. Nå er det omtrent 1:1 — systemet må faktisk levere et par klienter i året, ellers er det en utgift.
-- **Annonseinntekt forblir uaktuelt som hovedinntekt.** Hele seksjon 5.3 står uendret. Å nå hele YouTube-terskelen er verdt mindre enn én coachingklient.
-- **Det avgjørende tallet er ditt, ikke mitt.** Jeg trenger prisen på et forløp og et grovt anslag på hvor mange klienter du realistisk kan ta ved siden av full jobb. Kapasitetstaket kan fort være den bindende begrensningen, ikke etterspørselen.
+```
+pakker per år = 17 300 NOK / pris per pakke
+```
+
+| Pris per pakke | Pakker/år for break-even | Tolkning |
+|---|---|---|
+| 4 000 NOK | 4,3 | Én ny klient annenhver måned |
+| 6 000 NOK | 2,9 | Én per kvartal, pluss litt |
+| 8 000 NOK | 2,2 | To i året |
+| 12 000 NOK | 1,4 | Halvannen i året |
+| 16 000 NOK | 1,1 | Én i året |
+
+**Terskelen er lav i absolutte tall.** Selv i det dyreste kostnadsscenarioet (A: 27 100 NOK/år) snakker vi om 2–7 solgte pakker i året. Et helt års systematisk, daglig synlighet mot et engelsktalende publikum bør kunne levere det.
+
+Tre forbehold jeg vil være tydelig på, siden jeg nettopp bommet på det motsatte:
+
+1. **Marginen er ikke lenger komfortabel.** Med det feilaktige rekrutteringstallet lå forholdet på omtrent 1:8 i systemets favør. Nå er det nærmere 1:1–1:3. Systemet må faktisk levere, ellers er det en utgift.
+2. **Kapasiteten din kan binde før etterspørselen gjør det.** 10-pakker à 60 min ved siden av full jobb er et reelt tak. Om taket er 5 klienter i året, er også oppsiden 5 klienter i året — uansett hvor godt systemet virker. Det er verdt å vite før vi bygger for volum.
+3. **Bedriftssiden er sannsynligvis den viktigste, og den er ikke med i tallene over.** LinkedIn når beslutningstakere, ikke privatpersoner. Ett bedriftsoppdrag — workshop, foredrag, et lederutviklingsløp — er trolig verdt flere private pakker, og det er den typen henvendelse LinkedIn faktisk genererer. `TODO(kristian): hva tar du for et bedriftsoppdrag, og er det noe du har kapasitet til?` Hvis svaret er ja, endrer det kanalvektingen: da skal LinkedIn ha en større andel av produksjonsbudsjettet enn ren RPM-logikk tilsier.
+
+**Språkkonflikten som må løses før Fase 2:** alt publisert innhold skal være på engelsk mot et globalt publikum. Coachingtjenesten selges i Norge, på norsk, med 60-minutters timer i norsk tidssone. Et engelskspråklig publikum i USA kjøper ikke norsk 1:1-coaching.
+
+Det er en reell motsetning i oppdraget, og den har tre mulige utganger:
+
+- **A — Split:** YouTube/TikTok/Instagram på engelsk for annonseinntekt og rekkevidde. LinkedIn på norsk for henvendelser. To målgrupper, ett system. Bryter «alt på engelsk, uten unntak», men er det eneste som gir henvendelser fra folk som faktisk kan kjøpe.
+- **B — Alt engelsk, og coachingen internasjonaliseres:** digital 1:1 på engelsk, eller et digitalt produkt (kurs, e-bok) som kan selges globalt. Da holder språkregelen, men tjenesten må endres.
+- **C — Alt engelsk, og henvendelser regnes ikke med:** da er vi tilbake til annonseinntekt som eneste inntekt, og seksjon 5.3 sier at det ikke bærer.
+
+Jeg anbefaler **A**. Men det er din beslutning, og den påvirker `config/strategy.yaml`, `config/voice.md` og Quality-agentens språksjekk direkte.
 
 ### 6.2 En føring ansettelsesforholdet legger på innholdet
 
