@@ -85,5 +85,10 @@ Tre bevisste avvik, alle avklart med eier og begrunnet i dokumentene:
 **Fase 2:** ekte Claude-kall for agent 1–5, med kostnadslogging fra første kall.
 Systemprompter i egne markdown-filer så de kan endres uten redeploy.
 
+`config/voice.en.md` og `voice.no.md` er fylt ut fra faktiske LinkedIn-innlegg
+og fra talemønstre hentet ut av kandidatsamtaler. **Kildematerialet fra
+samtalene er bevisst ikke committet** — det inneholder navngitte kandidater,
+kundedata og arbeidsgiverinformasjon. Kun abstraherte talemønstre er tatt inn.
+
 Se `TODO(kristian):` i koden og dokumentene for det som trenger dine tall
 eller din avklaring.

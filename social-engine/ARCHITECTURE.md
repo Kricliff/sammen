@@ -477,6 +477,18 @@ Konsekvenser i koden:
 - **Quality-agentens språksjekk blir toveis og kanalbevisst.** Den må avvise norsk tekst på en engelsk kanal *og* engelsk tekst på LinkedIn, og i begge retninger avvise oversettelsespreg: direkte oversatte idiomer, feil preposisjonsbruk, setningsstruktur fra feil språk. Sjekken gjelder også tekst i bilder, tekstoverlegg og undertekster.
 - `content_items.language` valideres mot kanalens språk ved overgang til `drafted`. Feil språk er en hard feil, ikke en advarsel.
 
+**Empirisk bekreftelse (2026-09-17).** Kristians tre siste LinkedIn-innlegg:
+
+| Innlegg | Språk | Visninger |
+|---|---|---|
+| Together gratis | Norsk + engelsk | 1 462 |
+| «Tungt.» | Norsk | 1 108 |
+| Together lansering | **Kun engelsk** | **181** |
+
+Det engelske innlegget nådde 6–8 ganger færre enn de norske, på samme profil,
+i samme periode. Antakelsen bak språksplitten var at LinkedIn-nettverket hans
+er norsk. Den holder, og med større margin enn ventet.
+
 **Det som *ikke* endres:** kravet om morsmålsnivå. Engelsk innhold skal fortsatt være skrevet som av en engelsktalende, ikke som oversatt norsk. Kravet gjelder nå bare begge veier.
 
 ### 9.5 B2B prioriteres på LinkedIn, med et eksplisitt kapasitetstak
