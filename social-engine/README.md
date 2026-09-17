@@ -3,8 +3,9 @@
 Autonomt multi-agent-system for innhold på sosiale medier, bygget for å
 optimaliseres mot **margin**, ikke mot likes.
 
-**Status: Fase 1 ferdig.** Fundamentet står og er testet. Agentene er fortsatt
-mocks — de rapporterer realistisk tokenforbruk, men gjør ingen modellkall.
+**Status: Fase 2 ferdig.** Agent 1–5 gjør ekte Claude-kall, med kostnadslogging
+fra første kall. Systempromptene ligger i `prompts/` og leses ved kjøring, så de
+kan endres uten redeploy.
 
 ## Les dette først
 
@@ -64,6 +65,38 @@ Eksempel på utskrift ved 20 innlegg i uka:
 - **Dry-run** som default
 - **67 tester**, hvorav 16 ende-til-ende mot ekte Postgres
 
+## Hva som er bygget i Fase 2
+
+- **Claude-klient** bak et grensesnitt agentene tar inn som argument. Ekte
+  implementasjon mot `@anthropic-ai/sdk`, og en `FakeClaudeClient` som
+  validerer testsvar mot de ekte Zod-skjemaene. **Testsuiten gjør aldri
+  API-kall og koster aldri penger.**
+- **Agent 1–5** med ekte kall: Strategist, Research, Copywriter, Visual, Quality
+- **Systemprompter** i `prompts/*.md`, lest ved kjøring
+- **Modellvalg per agent**, etter hva jobben faktisk krever:
+
+  | Agent | Modell | Hvorfor |
+  |---|---|---|
+  | Strategist | Opus 5 | Strategi er ikke stedet å spare |
+  | Research (søk) | Sonnet 5 | Websøk med `web_search_20260209` |
+  | Research (struktur) | Haiku 4.5 | Ren ekstraksjon, under ett øre |
+  | Copywriter | Opus 5 | Her avgjøres morsmålskvaliteten |
+  | Visual | Sonnet 5 | Planlegging, ikke prosa |
+  | Quality | Sonnet 5 | Skjønn, men mot en fast sjekkliste |
+
+- **Prompt-caching** på systemprompt og voice-fil, som er identiske for hvert
+  innlegg på samme språk
+- **Quality i to lag:** deterministiske sjekker i kode (språk mot kanal, tema
+  mot allowed-lista, tegngrenser) kjøres først og blokkerer **uten å bruke et
+  modellkall**. Først når de passerer, brukes modellen på det som krever skjønn.
+- **Visual planlegger før den genererer**, så kostnadstaket kan sjekkes før
+  første krone brukes. Den dyreste operasjonen i systemet startes aldri på håp.
+- **Læringsløkka koblet på:** eiers avvisninger og Analyst-innsikt leses inn i
+  Copywriter-promptet.
+- **`npm run smoke`** — eneste kommando som bruker penger. Kjører hvert
+  agentkall én gang mot ekte API og skriver ut hva det kostet. Under 2 NOK.
+- **93 tester** totalt, hvorav 23 ende-til-ende mot ekte Postgres.
+
 ## Beslutninger som avviker fra det opprinnelige oppdraget
 
 Tre bevisste avvik, alle avklart med eier og begrunnet i dokumentene:
@@ -82,8 +115,10 @@ Tre bevisste avvik, alle avklart med eier og begrunnet i dokumentene:
 
 ## Neste
 
-**Fase 2:** ekte Claude-kall for agent 1–5, med kostnadslogging fra første kall.
-Systemprompter i egne markdown-filer så de kan endres uten redeploy.
+**Fase 3:** publisering, én kanal om gangen. YouTube først — det er den eneste
+kanalen med en åpen vei til annonseinntekt, og den eneste som kan publisere
+offentlig uten en ekstern godkjenningsrunde. Full OAuth-flyt, token-lagring og
+-fornying, idempotent publisering, retry.
 
 `config/voice.en.md` og `voice.no.md` er fylt ut fra faktiske LinkedIn-innlegg
 og fra talemønstre hentet ut av kandidatsamtaler. **Kildematerialet fra

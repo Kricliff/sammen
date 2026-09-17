@@ -31,13 +31,18 @@ export interface AgentContext {
 /**
  * Det en agent leverer tilbake.
  *
- * `usage` er ikke valgfri. Kostnadssporingen er koblet på fra første kall,
- * ikke ettermontert - en agent som ikke rapporterer forbruket sitt kan ikke
+ * `usages` er en LISTE, ikke ett forbruk. En agent kan gjøre flere kall på
+ * flere modeller - Research gjør websøk på Sonnet og strukturering på Haiku -
+ * og de må prises hver for seg. Slår vi dem sammen under én modell, blir
+ * kostnadstallet feil, og da tar Portfolio-agenten beslutninger på feil tall.
+ *
+ * Lista er aldri tom. Kostnadssporingen er koblet på fra første kall, ikke
+ * ettermontert: en agent som ikke rapporterer forbruket sitt kan ikke
  * regnskapsføres, og da kan innlegget aldri nå `settled`.
  */
 export interface AgentResult<T> {
   output: T;
-  usage: TokenUsage;
+  usages: TokenUsage[];
   /** Ikke-token-kostnader agenten påførte, i USD. */
   extraCostsUsd?: { type: "media_image" | "media_video" | "tts"; quantity: number; unitPriceUsd: string }[];
 }

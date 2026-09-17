@@ -43,7 +43,7 @@ export async function mockResearch(
 
   return {
     output,
-    usage: { model: "claude-sonnet-5", inputTokens: 25_000, outputTokens: 2_000 },
+    usages: [{ model: "claude-sonnet-5", inputTokens: 25_000, outputTokens: 2_000 }],
   };
 }
 
@@ -81,17 +81,17 @@ export async function mockCopywriter(
   // morsmålskvaliteten avgjøres, og det er ikke stedet å spare.
   return {
     output,
-    usage: {
+    usages: [{
       model: "claude-opus-5",
       inputTokens: 12_000,
       outputTokens: 3_000,
       cachedTokens: 8_000, // voice-fila er identisk for hvert innlegg
-    },
+    }],
   };
 }
 
 export async function mockVisual(
-  _ctx: AgentContext,
+  ctx: AgentContext,
   input: AgentRunInput,
 ): Promise<AgentResult<VisualOutput>> {
   const isVideo = input.brief.format === "short_video" || input.brief.format === "long_video";
@@ -107,12 +107,12 @@ export async function mockVisual(
       mediaUrls: Array.from({ length: clips }, (_, i) => `mock://clip-${i + 1}.mp4`),
       reusedFromLibrary: false,
       aspectRatio: "9:16",
-      estimatedCostNok: videoUsd.plus(ttsUsd).toFixed(4),
+      estimatedCostNok: videoUsd.plus(ttsUsd).times(new Decimal(ctx.fxRate)).toFixed(4),
     });
 
     return {
       output,
-      usage: { model: "claude-sonnet-5", inputTokens: 6_000, outputTokens: 1_000 },
+      usages: [{ model: "claude-sonnet-5", inputTokens: 6_000, outputTokens: 1_000 }],
       extraCostsUsd: [
         {
           type: "media_video",
@@ -129,12 +129,12 @@ export async function mockVisual(
     mediaUrls: ["mock://image-1.png"],
     reusedFromLibrary: false,
     aspectRatio: "4:5",
-    estimatedCostNok: imageUsd.toFixed(4),
+    estimatedCostNok: imageUsd.times(new Decimal(ctx.fxRate)).toFixed(4),
   });
 
   return {
     output,
-    usage: { model: "claude-sonnet-5", inputTokens: 3_000, outputTokens: 500 },
+    usages: [{ model: "claude-sonnet-5", inputTokens: 3_000, outputTokens: 500 }],
     extraCostsUsd: [{ type: "media_image", quantity: 1, unitPriceUsd: imageUsd.toFixed(8) }],
   };
 }
@@ -202,7 +202,7 @@ export async function mockQuality(
 
   return {
     output: verdict,
-    usage: { model: "claude-sonnet-5", inputTokens: 15_000, outputTokens: 1_500 },
+    usages: [{ model: "claude-sonnet-5", inputTokens: 15_000, outputTokens: 1_500 }],
   };
 }
 

@@ -71,6 +71,7 @@ export const visualOutputSchema = z.object({
   /** Hentet fra /assets i stedet for generert. Kostnad ~0. */
   reusedFromLibrary: z.boolean(),
   aspectRatio: z.enum(["9:16", "4:5", "1:1", "16:9"]),
+  /** I NOK, ferdig omregnet. Kalleren skal IKKE gange med valutakursen. */
   estimatedCostNok: z.string(),
 });
 export type VisualOutput = z.infer<typeof visualOutputSchema>;

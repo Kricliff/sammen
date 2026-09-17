@@ -3,8 +3,13 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "engines": { "node": ">=22" },
-  "workspaces": ["packages/*", "apps/*"],
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
@@ -13,7 +18,8 @@
     "db:migrate": "tsx packages/db/src/migrate.ts",
     "dry-run": "tsx apps/worker/src/dry-run.ts",
     "worker": "tsx apps/worker/src/index.ts",
-    "api": "tsx apps/api/src/index.ts"
+    "api": "tsx apps/api/src/index.ts",
+    "smoke": "tsx apps/worker/src/smoke.ts"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
@@ -23,6 +29,7 @@
     "vitest": "^2.1.8"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.126.0",
     "bullmq": "^5.34.5",
     "decimal.js": "^10.4.3",
     "drizzle-orm": "^0.38.3",
