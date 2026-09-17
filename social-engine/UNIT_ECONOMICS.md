@@ -266,15 +266,24 @@ Tre konkrete endringer:
 2. **RPM forblir hovedmetrikken for kanaler som faktisk betaler RPM.** For LinkedIn måles **kostnad per kvalifisert henvendelse** i stedet. Begge er marginmålinger — bare ulike nevnere.
 3. **Terskelfremdrift beholdes som eksplisitt delmål**, akkurat som du spesifiserte. Når YouTube-terskelen passeres, slår annonseinntekten inn som en ekte andre inntektsstrøm. Da er systemet allerede bygget for den.
 
-### 6.2 Og det ene menneskelige trykket
+### 6.2 Og det ene menneskelige trykket — besluttet
 
 Kostnaden ved en kanalterminering er ikke bare de 17 300 kronene. Det er publikummet, tiden og opsjonen på all fremtidig inntekt fra kontoen. YouTube håndhever på **kanalnivå**.
 
-Ett godkjenningstrykk per innlegg — 30 sekunder på mobilen, hele pipelinen ellers autonom — er det som skiller «masseprodusert med minimal menneskelig input» fra «publisert av en skaper» i plattformenes formuleringer.
+**Besluttet 2026-09-17: ett godkjenningstrykk per innlegg.** Hele pipelinen er autonom fram til publisering; der venter innlegget på deg. Det koster ~30 sekunder på mobilen og er det som skiller «masseprodusert med minimal menneskelig input» fra «publisert av en skaper» i plattformenes egne formuleringer.
 
-Det bryter bokstaven i «uten menneskelig involvering i normal drift». Jeg tar det opp fordi det er den billigste forsikringen i hele systemet, og fordi dry-run-modus uansett skal være default ved første oppstart. **Beslutningen er din** — systemet bygges slik at bryteren finnes enten vei, og `AUTOPUBLISH_MODE` styrer den per kanal.
+Det bryter bokstaven i «uten menneskelig involvering i normal drift», og det er et bevisst avvik fra oppdraget. `AUTOPUBLISH_MODE` settes per kanal, så bryteren finnes begge veier om du ombestemmer deg. Arkitekturkonsekvensene står i ARCHITECTURE.md 9.1.
 
----
+To ting det gir oss gratis:
+
+- **Avvisningene dine blir treningsdata.** Hver gang du forkaster et utkast, lagres begrunnelsen og mates inn i `learnings`. Det er den raskeste veien til at Copywriter-agenten treffer stemmen din — raskere enn noen mengde finpussing av `voice.md`.
+- **Dry-run-modus blir mindre nødvendig som sikkerhetsnett**, siden du uansett ser hvert innlegg før det går ut. Den beholdes likevel som default ved første oppstart, for å vise deg kostnadstallene før noe produseres.
+
+### 6.3 Formatvalg — besluttet
+
+**Hybrid.** Kortvideo forblir hovedmotoren for volum og rekkevidde, men noen få langvideoer i måneden jobber mot YPPs visningstime-spor (se 4.2). 75 000 langformat-visninger på 12 måneder er en vesentlig mer oppnåelig terskel enn 10 millioner Shorts-visninger på 90 dager, og det er den terskelen som avgjør om annonseinntekten i det hele tatt begynner å flyte.
+
+Kostnadskonsekvensen er ikke triviell og må måles i Fase 2: en 8-minutters video kan ikke genereres som 60 klipp à 8 sekunder — det ville kostet ~180 NOK per video og ødelagt enhetsøkonomien. Produksjonsformen for langformat er den største åpne posten i budsjettet.
 
 ## 7. Forutsetninger du bør overprøve
 
@@ -284,6 +293,7 @@ Det bryter bokstaven i «uten menneskelig involvering i normal drift». Jeg tar 
 | 2 | Everygen starter = $18/mnd for 200 kreditter | Endrer kun scenario C, som vi forkaster uansett |
 | 3 | Veo 3.1 Lite til $0,03–0,05/sek holder kvalitetskravet | **Største enkeltrisiko.** Dobles videokostnaden, dobles break-even |
 | 4 | 4 klipp per 30-sekunders Short | Færre klipp med lengre varighet kan være billigere — mål det |
+| 4b | Langformat produseres ikke som ren klippgenerering | Uavklart. Ren generering gir ~180 NOK per 8-minutters video og velter regnestykket |
 | 5 | Snitt 0,5 revisjonsrunder | Hvis Quality-agenten avviser mye oftere, stiger tokenkostnaden raskt |
 | 6 | Norge er ikke i TikTok Creator Rewards | Hvis feil: TikTok blir plutselig den beste inntektskanalen ($0,40–1,20 RPM) |
 | 7 | RPM $0,05 konservativt / $0,12 optimistisk for nisjen | Måles fra faktiske tall så snart YPP er på plass |

@@ -8,11 +8,11 @@ Les [MONETIZATION.md](./MONETIZATION.md) og [UNIT_ECONOMICS.md](./UNIT_ECONOMICS
 
 ## 1. Plassering i repoet
 
-Systemet legges under `social-engine/` i `Kricliff/sammen`. Det er et helt annet prosjekt enn Together-appen, som eier resten av repoet.
+**Besluttet: eget repo.** Systemet hører ikke hjemme sammen med Together-appen, som eier resten av `Kricliff/sammen` og har sitt eget CI-oppsett mot Codemagic.
 
-Det er en **bevisst midlertidig plassering**, valgt fordi det er billig å flytte nå og dyrt senere. `TODO(kristian):` si fra hvis dette heller skal være et eget repo — det er en fem-minuttersjobb i Fase 1 og en dagsjobb i Fase 4.
+Fase 0-dokumentene ligger foreløpig i `sammen/social-engine/` fordi det var der de ble skrevet. **Første handling i Fase 1 er å flytte dem til et eget repo** og fjerne mappa herfra.
 
----
+`TODO(kristian):` bekreft repo-navn. Forslaget er `Kricliff/social-engine`. Si fra om du vil opprette det selv, eller om jeg skal gjøre det.
 
 ## 2. Mappestruktur
 
@@ -76,7 +76,7 @@ PostgreSQL + Drizzle. Alle pengebeløp lagres som `numeric(14,4)` — **aldri fl
 | `week_start` | date | mandag, Europe/Oslo |
 | `theme` | text | |
 | `channel` | channel_enum | |
-| `format` | format_enum | `short_video`, `image_post`, `text_post` |
+| `format` | format_enum | `short_video`, `long_video`, `image_post`, `text_post` |
 | `angle` | text | vinkelen briefen ber om |
 | `target_rpm_nok` | numeric(10,4) | målet innlegget måles mot |
 | `cost_cap_nok` | numeric(10,2) | **hard grense — Visual-agenten stopper ved overskridelse** |
@@ -197,8 +197,10 @@ Kantene som **skal** ha egne tester: null visninger (RPM er udefinert, ikke 0 �
 ## 4. Tilstandsmaskinen
 
 ```
-planned → researched → drafted → visual_ready → qa_passed → scheduled → published → measured → settled
+planned → researched → drafted → visual_ready → qa_passed → awaiting_approval → scheduled → published → measured → settled
 ```
+
+`awaiting_approval` er gaten fra 9.1. Kanaler satt til `AUTOPUBLISH_MODE=auto` passerer rett gjennom uten opphold.
 
 Sideutganger:
 
@@ -208,7 +210,7 @@ Sideutganger:
 | `revising` | Quality sa `revise`. **Maks 2 runder**, så `blocked`. |
 | `blocked` | Quality sa `blocked`, eller budsjett-/kostnadstak truffet. Varsler eier. |
 | `failed` | Publisering feilet endelig etter retry. Havner i dead-letter. |
-| `cancelled` | Eier avlyste, eller kill switch var av da turen kom. |
+| `cancelled` | Eier avlyste, kill switch var av da turen kom, eller godkjenningsfristen løp ut. |
 
 Regler som håndheves i kode, ikke i konvensjon:
 
@@ -418,10 +420,47 @@ Alle køer har dead-letter. En jobb som ender der, varsler eier — den forsvinn
 
 ---
 
-## 9. Åpne spørsmål som påvirker arkitekturen
+## 9. Avklarte valg og hva de medfører
 
-Disse tre må besvares før Fase 1 lukkes. Resten kan avgjøres underveis.
+Besluttet 2026-09-17.
 
-1. **Autopubliser eller ett godkjenningstrykk?** Se UNIT_ECONOMICS.md 6.2. Systemet bygges med `AUTOPUBLISH_MODE` per kanal uansett, så dette låser ingenting — men det avgjør hva som er default, og hvor mye dashboardets kø-visning må gjøre.
-2. **Ren Shorts-strategi, eller hybrid med langformat?** Se UNIT_ECONOMICS.md 4.2. Hybrid endrer Strategist-agentens formatvalg og legger til en langformat-produksjonsvei i Visual-agenten. Vesentlig forskjell i Fase 2.
-3. **Direkte modell-API eller Everygen for video?** Anbefalingen er direkte (3–4x billigere og uten 200-kredittaket). Det avgjør hvilken leverandøradapter Visual-agenten bygges mot først.
+### 9.1 Ett godkjenningstrykk per innlegg før publisering
+
+Hele pipelinen er autonom fram til publisering. Der stopper innlegget og venter på eier.
+
+Konsekvenser i koden:
+
+- **Ny tilstand `awaiting_approval`**, mellom `qa_passed` og `scheduled`. Se seksjon 4.
+- `AUTOPUBLISH_MODE` per kanal i `config/channels.yaml`: `manual` (default), `auto`, `off`.
+- Dashboardets kø-visning blir en **primærflate, ikke en unntaksflate** — den må fungere godt på mobil, med forhåndsvisning per kanal og godkjenn/avvis i ett trykk.
+- Push-varsel når noe venter, og et **utløp**: et innlegg som ikke er godkjent innen `scheduled_for` går til `cancelled` med begrunnelse, slik at gamle innlegg ikke publiseres på feil tidspunkt.
+- Eierens avvisninger er **treningsdata**. `qa_reviews` får en rad med `verdict = 'owner_rejected'` og fritekstbegrunnelse, som Analyst-agenten leser inn i `learnings`. Det er den raskeste veien til at Copywriter-agenten treffer stemmen din.
+
+### 9.2 Hybrid: kortvideo som hovedmotor, langformat mot visningstimer
+
+Begrunnelsen står i UNIT_ECONOMICS.md 4.2: 75 000 langformat-visninger på 12 måneder mot 10 millioner Shorts-visninger på 90 dager.
+
+Konsekvenser i koden:
+
+- `format_enum` utvides med `long_video`.
+- **Strategist-agenten får et eksplisitt delmål per YPP-spor.** Den allokerer ikke bare mellom temaer og kanaler, men mellom de to tersklene, og leser `monetization_thresholds` for å se hvilket spor som er nærmest.
+- **Visual-agenten trenger en egen langformat-vei.** En 8-minutters video kan ikke genereres som 60 klipp à 8 sekunder — det ville kostet ~180 NOK per video. Realistisk produksjonsform er talking-head eller skjermopptak med generert b-roll i utvalgte partier. `TODO(kristian):` dette er den største åpne posten i Fase 2, og det er verdt en egen samtale.
+- **Kostnadstaket per innlegg må være formatavhengig**, ikke én global verdi. `cost_cap_nok` ligger allerede per brief i `content_plan`, så datamodellen tåler det.
+- `content_metrics` må skille `watch_time_seconds` for langformat fra `engaged_views` for Shorts, siden de teller mot hvert sitt YPP-spor. Begge felt finnes allerede.
+
+### 9.3 Video genereres mot modell-API direkte, ikke via Everygen
+
+3–4x billigere, og uten 200-kredittaket som ville begrenset oss til 3–4 Shorts i måneden. Se UNIT_ECONOMICS.md 1.3.
+
+Visual-agenten bygges mot en leverandøradapter med Veo 3.1 Lite som første implementasjon. Everygen beholdes som et manuelt verktøy utenfor pipelinen.
+
+---
+
+## 10. Det som fortsatt er åpent
+
+| # | Spørsmål | Når det må avgjøres |
+|---|---|---|
+| 1 | Repo-navn, og hvem som oppretter det | Før Fase 1 starter |
+| 2 | Hvordan langformat faktisk produseres (se 9.2) | Fase 2 |
+| 3 | Holder Veo 3.1 Lite kvalitetskravet til $0,03–0,05/sek? | Fase 2 — må måles, ikke antas |
+| 4 | Er Norge virkelig utenfor TikTok Creator Rewards? | Før Fase 3 — snur hele kanalprioriteringen hvis nei |
