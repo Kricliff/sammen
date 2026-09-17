@@ -26,8 +26,10 @@ social-engine/
 ├─ package.json                    # npm workspaces
 │
 ├─ config/                         # endres uten redeploy
-│  ├─ strategy.yaml                # temaer (m/ allowed|blocked), kanalvekter, frekvens, tider
-│  ├─ voice.md                     # PÅ ENGELSK — tone, ordforråd, forbudte fraser, eksempler
+│  ├─ strategy.yaml                # temaer (allowed|blocked), kanalvekter, frekvens, tider,
+│  │                              # kapasitetstak for henvendelser (se 9.5)
+│  ├─ voice.en.md                  # ENGELSK — for video-kanalene. Tone, ordforråd, eksempler
+│  ├─ voice.no.md                  # NORSK — for LinkedIn. Egen stemme, B2B-rettet
 │  ├─ brand.json                   # farger, fonter, logo, sikre marger per format
 │  ├─ channels.yaml                # per kanal: aktiv, rate limit, autopublish-modus
 │  └─ budgets.yaml                 # dag/uke/måned-tak i NOK
@@ -59,7 +61,7 @@ social-engine/
    └─ e2e/            # full dry-run-pipeline med mock-agenter
 ```
 
-**Regelen fra oppdraget, håndhevet i struktur:** alt under `config/voice.md` og `prompts/` er på engelsk fordi det former publisert tekst. Alt i `apps/dashboard/`, alle logger, alle kodekommentarer og all dokumentasjon er på norsk.
+**Språkregelen, håndhevet i struktur:** publiseringsspråk settes **per kanal** (se 9.4). `voice.en.md` former engelsk innhold til videokanalene, `voice.no.md` norsk innhold til LinkedIn. Alt i `apps/dashboard/`, alle logger, alle kodekommentarer og all dokumentasjon er på norsk uansett — det er kun det publikum ser som styres av kanalens språk.
 
 ---
 
@@ -92,7 +94,7 @@ PostgreSQL + Drizzle. Alle pengebeløp lagres som `numeric(14,4)` — **aldri fl
 | `state` | state_enum | se 4 |
 | `channel` | channel_enum | |
 | `format` | format_enum | |
-| `language` | text | **alltid `en`** — en CHECK-constraint håndhever det |
+| `language` | text | `en` eller `no`, **må matche kanalens språk i `channels.yaml`** — validert ved overgang til `drafted` |
 | `script` | text | manus/brødtekst, engelsk |
 | `caption` | text | |
 | `hashtags` | text[] | |
@@ -254,7 +256,7 @@ sequenceDiagram
     R->>DB: state=researched
 
     O->>C: copywrite(brief, kilder, voice.md)
-    Note over C: Skriver på ENGELSK fra start.<br/>Aldri norsk utkast som oversettes.
+    Note over C: Skriver på kanalens språk FRA START.<br/>Aldri utkast på ett språk som oversettes.
     C->>DB: 2 varianter, samme ab_group_id, state=drafted
     C->>CC: cost_event(tokens)
 
@@ -274,7 +276,7 @@ sequenceDiagram
     V->>DB: state=visual_ready
 
     O->>Q: qa(innlegg, kilder, media)
-    Note over Q: VETORETT.<br/>Språk på morsmålsnivå · fakta mot kilder ·<br/>GDPR · ingen helsepåstander ·<br/>monetiseringsvennlighet · plagiat 90 dager ·<br/>kanalregler · reklamemerking
+    Note over Q: VETORETT.<br/>Riktig språk for kanalen, på morsmålsnivå ·<br/>fakta mot kilder · GDPR · ingen helsepåstander ·<br/>monetiseringsvennlighet · plagiat 90 dager ·<br/>tema mot allowed-lista · kanalregler · reklamemerking
     Q->>DB: qa_reviews (hver sjekk, med begrunnelse)
     alt revise
         Q->>O: tilbake til Copywriter (maks 2 runder)
@@ -454,6 +456,39 @@ Konsekvenser i koden:
 3–4x billigere, og uten 200-kredittaket som ville begrenset oss til 3–4 Shorts i måneden. Se UNIT_ECONOMICS.md 1.3.
 
 Visual-agenten bygges mot en leverandøradapter med Veo 3.1 Lite som første implementasjon. Everygen beholdes som et manuelt verktøy utenfor pipelinen.
+
+### 9.4 Publiseringsspråk settes per kanal, ikke globalt
+
+Oppdraget krevde engelsk på alt publisert innhold, uten unntak. **Dette er et bevisst, godkjent avvik**, av samme type som godkjenningsgaten i 9.1.
+
+Begrunnelsen står i UNIT_ECONOMICS.md 6.1: engelsk gir 10–20x RPM og et globalt publikum, men coachingen selges i Norge, på norsk, som 60-minutters timer i norsk tidssone. Et engelskspråklig publikum kjøper den ikke.
+
+| Kanal | Språk | Formål |
+|---|---|---|
+| YouTube Shorts, TikTok, Instagram | **Engelsk** | Rekkevidde og annonseinntekt. Globalt publikum. |
+| Facebook | **Engelsk** | Samme asset som over, gjenbrukt gratis. |
+| LinkedIn | **Norsk** | Henvendelser fra norske beslutningstakere som faktisk kan kjøpe. |
+
+Konsekvenser i koden:
+
+- `config/channels.yaml` får `language: en|no` per kanal. Det er sannhetskilden.
+- **To voice-filer.** `voice.en.md` og `voice.no.md`. De er ikke oversettelser av hverandre — stemmen mot et globalt selvutviklingspublikum og stemmen mot norske ledere er ikke den samme stemmen, og skal ikke være det.
+- **Copywriter-agenten skriver på målspråket fra start.** Regelen fra oppdraget står uendret, bare generalisert: aldri skrive på ett språk og oversette. Agenten får kanalens språk i briefen og laster riktig voice-fil.
+- **Quality-agentens språksjekk blir toveis og kanalbevisst.** Den må avvise norsk tekst på en engelsk kanal *og* engelsk tekst på LinkedIn, og i begge retninger avvise oversettelsespreg: direkte oversatte idiomer, feil preposisjonsbruk, setningsstruktur fra feil språk. Sjekken gjelder også tekst i bilder, tekstoverlegg og undertekster.
+- `content_items.language` valideres mot kanalens språk ved overgang til `drafted`. Feil språk er en hard feil, ikke en advarsel.
+
+**Det som *ikke* endres:** kravet om morsmålsnivå. Engelsk innhold skal fortsatt være skrevet som av en engelsktalende, ikke som oversatt norsk. Kravet gjelder nå bare begge veier.
+
+### 9.5 B2B prioriteres på LinkedIn, med et eksplisitt kapasitetstak
+
+Bedriftsoppdrag (workshop, foredrag, lederutvikling) er trolig høyest verdi per henvendelse i hele porteføljen, men kapasiteten er begrenset ved siden av full jobb.
+
+Konsekvenser i koden:
+
+- LinkedIn vektes **høyere enn ren RPM-logikk tilsier**, fordi RPM er null der og verdien ligger i `revenue_events.type = 'lead'`.
+- `strategy.yaml` får et **kapasitetstak**: maks antall åpne henvendelser systemet skal jobbe mot samtidig. Nås taket, skal Strategist flytte produksjonsbudsjett bort fra leadgenererende temaer og over på rekkevidde — det er ingen verdi i å skape etterspørsel du ikke kan ta imot.
+- **Portfolio-agenten må kjenne taket.** Uten det ser den at LinkedIn leverer best margin og skalerer den til himmels, mot en kapasitetsvegg den ikke vet finnes.
+- Engagement-agenten eskalerer alle sponsor- og bedriftshenvendelser til eier uansett, som allerede spesifisert. Den forhandler aldri.
 
 ---
 

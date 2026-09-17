@@ -296,7 +296,9 @@ Det er en reell motsetning i oppdraget, og den har tre mulige utganger:
 - **B — Alt engelsk, og coachingen internasjonaliseres:** digital 1:1 på engelsk, eller et digitalt produkt (kurs, e-bok) som kan selges globalt. Da holder språkregelen, men tjenesten må endres.
 - **C — Alt engelsk, og henvendelser regnes ikke med:** da er vi tilbake til annonseinntekt som eneste inntekt, og seksjon 5.3 sier at det ikke bærer.
 
-Jeg anbefaler **A**. Men det er din beslutning, og den påvirker `config/strategy.yaml`, `config/voice.md` og Quality-agentens språksjekk direkte.
+**Besluttet 2026-09-17: A.** Engelsk på YouTube, TikTok, Instagram og Facebook. Norsk på LinkedIn. Det er et bevisst avvik fra oppdragets «uten unntak», av samme type som godkjenningsgaten. Arkitekturkonsekvensene — to voice-filer, språk per kanal i `channels.yaml`, toveis språksjekk i Quality — står i ARCHITECTURE.md 9.4.
+
+**Besluttet samtidig:** bedriftsoppdrag i begrenset omfang. LinkedIn vektes høyere enn RPM-logikken tilsier, og `strategy.yaml` får et eksplisitt kapasitetstak så Portfolio-agenten ikke skalerer mot en vegg den ikke vet finnes. Se ARCHITECTURE.md 9.5.
 
 ### 6.2 En føring ansettelsesforholdet legger på innholdet
 
