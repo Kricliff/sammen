@@ -1,3 +1,6 @@
 node_modules/
 .claude/settings.local.json
 tools/
+# Lokale, maskinspesifikke stier - skrives på nytt hver kjøring, aldri portable mellom maskiner
+graphify-out/.graphify_python
+graphify-out/.graphify_root
