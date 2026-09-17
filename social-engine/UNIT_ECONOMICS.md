@@ -250,55 +250,68 @@ Den eneste inntekten Kristian selv tar ut av synlighet på sosiale medier, går 
 |---|---|---|
 | 10 mill. YouTube Shorts-visninger ved RPM $0,05 | **4 650 NOK** | Krever at YPP-terskelen alt er passert |
 | Årlig systemkostnad | **17 300 NOK** | Scenario B, 90 kortvideoer + 13 LinkedIn-innlegg i måneden |
-| Coachingklient | **? NOK** | `TODO(kristian): hva tar du per forløp?` |
+| Coaching 10-pakke | **12 140 NOK** | Break-even på 1,4 pakker i året |
 
 ### 6.1 Hvor mange coachingklienter må systemet skaffe for å betale for seg selv?
 
-Clifford Coaching selger i dag (hentet fra nettsiden, priser mangler — se under):
+Faktiske priser fra Clifford Coaching, per 2026-09-17:
 
-| Produkt | Innhold |
-|---|---|
-| Konsultasjon | Kartlegging + smakebit på arbeidsformen |
-| Enkelttime | 1:1, 60 min |
-| **5-pakke** | 5 × 60 min, rabattert |
-| **10-pakke** | 10 × 60 min, rabattert |
-| Bedrift | Egen tjeneste mot virksomheter |
-
-`TODO(kristian): lim inn de fire prisene, så låser jeg tallene i tabellen under.`
-
-Break-even er en ren funksjon av pris per solgt pakke:
-
-```
-pakker per år = 17 300 NOK / pris per pakke
-```
-
-| Pris per pakke | Pakker/år for break-even | Tolkning |
+| Produkt | Pris | Merknad |
 |---|---|---|
-| 4 000 NOK | 4,3 | Én ny klient annenhver måned |
-| 6 000 NOK | 2,9 | Én per kvartal, pluss litt |
-| 8 000 NOK | 2,2 | To i året |
-| 12 000 NOK | 1,4 | Halvannen i året |
-| 16 000 NOK | 1,1 | Én i året |
+| Introsamtale, 45 min | **kr 0** | Gratis i kroner. **Ikke gratis i tid.** Se 6.1.2 |
+| Enkelttime, 60 min | **kr 1 349** | |
+| 5-pakke | **kr 6 399** | 5 % rabatt |
+| 10-pakke | **kr 12 140** | 10 % rabatt |
 
-**Terskelen er lav i absolutte tall.** Selv i det dyreste kostnadsscenarioet (A: 27 100 NOK/år) snakker vi om 2–7 solgte pakker i året. Et helt års systematisk, daglig synlighet mot et engelsktalende publikum bør kunne levere det.
+#### 6.1.1 Break-even i solgte pakker
 
-Tre forbehold jeg vil være tydelig på, siden jeg nettopp bommet på det motsatte:
+```
+pakker per år = årlig systemkostnad / pris per pakke
+```
 
-1. **Marginen er ikke lenger komfortabel.** Med det feilaktige rekrutteringstallet lå forholdet på omtrent 1:8 i systemets favør. Nå er det nærmere 1:1–1:3. Systemet må faktisk levere, ellers er det en utgift.
-2. **Kapasiteten din kan binde før etterspørselen gjør det.** 10-pakker à 60 min ved siden av full jobb er et reelt tak. Om taket er 5 klienter i året, er også oppsiden 5 klienter i året — uansett hvor godt systemet virker. Det er verdt å vite før vi bygger for volum.
-3. **Bedriftssiden er sannsynligvis den viktigste, og den er ikke med i tallene over.** LinkedIn når beslutningstakere, ikke privatpersoner. Ett bedriftsoppdrag — workshop, foredrag, et lederutviklingsløp — er trolig verdt flere private pakker, og det er den typen henvendelse LinkedIn faktisk genererer. `TODO(kristian): hva tar du for et bedriftsoppdrag, og er det noe du har kapasitet til?` Hvis svaret er ja, endrer det kanalvektingen: da skal LinkedIn ha en større andel av produksjonsbudsjettet enn ren RPM-logikk tilsier.
+| Produkt | Scenario B (17 300 NOK/år) | Scenario A (27 100 NOK/år) |
+|---|---|---|
+| 10-pakke (12 140) | **1,4 pakker** | 2,2 pakker |
+| 5-pakke (6 399) | **2,7 pakker** | 4,2 pakker |
+| Enkelttimer (1 349) | **12,8 timer** | 20,1 timer |
 
-**Språkkonflikten som må løses før Fase 2:** alt publisert innhold skal være på engelsk mot et globalt publikum. Coachingtjenesten selges i Norge, på norsk, med 60-minutters timer i norsk tidssone. Et engelskspråklig publikum i USA kjøper ikke norsk 1:1-coaching.
+**Halvannen 10-pakke i året.** Det er hele kravet for at et helt års systematisk, daglig synlighet skal betale for seg selv.
 
-Det er en reell motsetning i oppdraget, og den har tre mulige utganger:
+Målt i leveringstid: 1,4 × 10 timer ≈ **14 fakturerbare timer i året**, altså drøyt én time i måneden. Det er godt innenfor det som er mulig ved siden av full jobb.
 
-- **A — Split:** YouTube/TikTok/Instagram på engelsk for annonseinntekt og rekkevidde. LinkedIn på norsk for henvendelser. To målgrupper, ett system. Bryter «alt på engelsk, uten unntak», men er det eneste som gir henvendelser fra folk som faktisk kan kjøpe.
-- **B — Alt engelsk, og coachingen internasjonaliseres:** digital 1:1 på engelsk, eller et digitalt produkt (kurs, e-bok) som kan selges globalt. Da holder språkregelen, men tjenesten må endres.
-- **C — Alt engelsk, og henvendelser regnes ikke med:** da er vi tilbake til annonseinntekt som eneste inntekt, og seksjon 5.3 sier at det ikke bærer.
+#### 6.1.2 Den gratis introsamtalen er systemets egentlige flaskehals
 
-**Besluttet 2026-09-17: A.** Engelsk på YouTube, TikTok, Instagram og Facebook. Norsk på LinkedIn. Det er et bevisst avvik fra oppdragets «uten unntak», av samme type som godkjenningsgaten. Arkitekturkonsekvensene — to voice-filer, språk per kanal i `channels.yaml`, toveis språksjekk i Quality — står i ARCHITECTURE.md 9.4.
+Dette er den viktigste konsekvensen av prislista, og den er lett å overse fordi tallet er null.
 
-**Besluttet samtidig:** bedriftsoppdrag i begrenset omfang. LinkedIn vektes høyere enn RPM-logikken tilsier, og `strategy.yaml` får et eksplisitt kapasitetstak så Portfolio-agenten ikke skalerer mot en vegg den ikke vet finnes. Se ARCHITECTURE.md 9.5.
+Hver henvendelse koster **45 minutter av din tid, ubetalt**, uavhengig av om den konverterer. Systemet genererer henvendelser. Det genererer ikke timer i døgnet.
+
+Regnestykket ved ulike konverteringsrater, for å nå break-even med 10-pakker:
+
+| Intro → betalende | Introsamtaler kreves | Ubetalt tid | Levert tid | **Sum timer/år** |
+|---|---|---|---|---|
+| 30 % | 5 | 3,8 t | 14 t | **17,8 t** |
+| 20 % | 7 | 5,3 t | 14 t | **19,3 t** |
+| 10 % | 14 | 10,5 t | 14 t | **24,5 t** |
+
+Fullt håndterbart — **på dette volumet.** Problemet oppstår hvis systemet virker bedre enn break-even krever:
+
+| Introsamtaler/år | Ubetalt tid bare på intro |
+|---|---|
+| 50 | 37,5 t |
+| 100 | **75 t** |
+| 200 | **150 t** |
+
+Ved 200 henvendelser i året bruker du nesten én arbeidsmåned ubetalt på introsamtaler, ved siden av full jobb. **Etterspørselen skalerer med rekkevidde. Timene dine gjør ikke det.**
+
+**Arkitekturkonsekvens:** kapasitetstaket i `strategy.yaml` uttrykkes i **introsamtaler per måned**, ikke i klienter per år. Det er den bindende ressursen. Når taket nås, skal Strategist flytte produksjonsbudsjett fra leadgenererende temaer over på ren rekkevidde, og Portfolio-agenten må kjenne taket — ellers ser den at LinkedIn gir best margin og skalerer den rett mot en vegg den ikke vet finnes.
+
+`TODO(kristian): hvor mange introsamtaler i måneden er realistisk for deg? Det tallet styrer hvor mye systemet får lov til å produsere.` Inntil du sier noe annet settes taket til **4 per måned** — én i uka — som et konservativt utgangspunkt.
+
+#### 6.1.3 Tre forbehold
+
+1. **Marginen er ikke lenger komfortabel.** Med det feilaktige rekrutteringstallet lå forholdet på omtrent 1:8 i systemets favør. Nå er det omtrent 1:1–1:3. Systemet må faktisk levere halvannen pakke i året, ellers er det en utgift.
+2. **Annonseinntekt forblir uaktuelt som hovedinntekt.** Seksjon 5.3 står uendret. Å nå hele YouTube-terskelen er verdt 4 650 NOK — mindre enn **halvparten** av én 10-pakke.
+3. **Bedriftssiden er ikke med i tallene over.** LinkedIn når beslutningstakere. Ett bedriftsoppdrag er trolig verdt flere private pakker. `TODO(kristian): pris på bedriftsoppdrag mangler fortsatt.`
 
 ### 6.2 En føring ansettelsesforholdet legger på innholdet
 
@@ -339,6 +352,30 @@ To ting det gir oss gratis:
 
 Kostnadskonsekvensen er ikke triviell og må måles i Fase 2: en 8-minutters video kan ikke genereres som 60 klipp à 8 sekunder — det ville kostet ~180 NOK per video og ødelagt enhetsøkonomien. Produksjonsformen for langformat er den største åpne posten i budsjettet.
 
+## 6.6 Målt mot estimert — Fase 1
+
+Estimatene over ble skrevet før systemet fantes. Nå kjører `npm run dry-run`
+hele pipelinen med reell prising, og tallene kan sammenliknes:
+
+| Post | Estimert (scenario B) | Målt i dry-run | Avvik |
+|---|---|---|---|
+| Kortvideo, uten infrastruktur | 13,02 NOK | **12,04 NOK** | -8 % |
+| LinkedIn tekstinnlegg, uten infrastruktur | 2,92 NOK | **2,42 NOK** | -17 % |
+| Årskostnad ved ~1 040 innlegg | 17 300 NOK | **12 306 NOK** | -29 % |
+
+Estimatene holdt, og lå konservativt an — som de skulle. Det målte
+årstallet gir:
+
+**Break-even: 1,0 solgt coaching-10-pakke i året.**
+
+Forbeholdene fra 6.1.3 står uendret. Særlig dette: å nå hele YouTube-terskelen
+på 10 millioner Shorts-visninger er verdt ca. 4 650 NOK — under 40 % av én
+10-pakke. Rangeringen mellom inntektsveiene er ikke nær.
+
+`npm run dry-run` bør kjøres på nytt hver gang en leverandør endrer pris, og
+tabellen over oppdateres. Det er billigere enn å oppdage prisendringen på
+fakturaen.
+
 ## 7. Forutsetninger du bør overprøve
 
 | # | Forutsetning | Konsekvens hvis feil |
@@ -351,6 +388,7 @@ Kostnadskonsekvensen er ikke triviell og må måles i Fase 2: en 8-minutters vid
 | 5 | Snitt 0,5 revisjonsrunder | Hvis Quality-agenten avviser mye oftere, stiger tokenkostnaden raskt |
 | 6 | Norge er ikke i TikTok Creator Rewards | Hvis feil: TikTok blir plutselig den beste inntektskanalen ($0,40–1,20 RPM) |
 | 7 | RPM $0,05 konservativt / $0,12 optimistisk for nisjen | Måles fra faktiske tall så snart YPP er på plass |
-| 8 | Verdi per coachingforløp — **ukjent, og nå den avgjørende variabelen** | Avgjør om systemet er en investering eller en utgift. Se 6.1 |
+| 8 | Kapasitetstak: 4 introsamtaler/mnd — **antatt, ikke bekreftet** | Den bindende ressursen. For lavt tak kveler systemet, for høyt tak kveler deg. Se 6.1.2 |
+| 9 | Konverteringsrate intro → betalende, antatt 10–30 % | Måles fra faktiske tall. Under 10 % blir ubetalt tid den dominerende kostnaden |
 
-Forutsetning **8** er nå den viktigste — den avgjør om systemet lønner seg i det hele tatt. Deretter 3 og 6.
+Forutsetning **8 og 9** er nå de viktigste: de avgjør om systemet skalerer inn i en vegg. Deretter 3 og 6.

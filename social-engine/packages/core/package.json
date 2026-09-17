@@ -1,0 +1,16 @@
+{
+  "name": "@se/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./domain": "./src/domain.ts"
+  },
+  "dependencies": {
+    "decimal.js": "^10.4.3",
+    "yaml": "^2.6.1",
+    "zod": "^3.24.1"
+  }
+}

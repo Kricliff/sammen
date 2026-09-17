@@ -1,0 +1,19 @@
+{
+  "colors": {
+    "primary": "#1F3A5F",
+    "accent": "#E8B04B",
+    "ink": "#12181F",
+    "paper": "#F7F5F1",
+    "muted": "#6B7785"
+  },
+  "fonts": {
+    "heading": "Inter",
+    "body": "Inter"
+  },
+  "safeMargins": {
+    "top": 120,
+    "bottom": 220,
+    "left": 60,
+    "right": 60
+  }
+}

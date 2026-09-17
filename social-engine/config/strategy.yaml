@@ -1,0 +1,63 @@
+# Innholdsstrategi. Leses av Strategist-agenten hver mandag 06:00 Europe/Oslo.
+
+themes:
+  - name: mental_training
+    status: allowed
+    weight: 0.35
+    reason: Kjernefaget. Clifford Coachings eget domene, ingen bindinger.
+
+  - name: performance_psychology
+    status: allowed
+    weight: 0.25
+    reason: Fagbakgrunn fra Høgskolen i Innlandet. Sterkt eierskap til stoffet.
+
+  - name: motivation_and_structure
+    status: allowed
+    weight: 0.20
+    reason: Bredest nedslagsfelt på kortvideo. Driver rekkevidde mot YPP-terskelen.
+
+  - name: work_inclusion
+    status: allowed
+    weight: 0.15
+    reason: >
+      Uttalt satsingsområde. Ligger i grenselandet mot arbeidsgivers
+      virksomhet - vurderes på nytt når arbeidsavtalen er sjekket.
+
+  - name: recruitment_craft
+    status: blocked
+    weight: 0.0
+    reason: >
+      TODO(kristian) Sjekk hva arbeidsavtalen sier om egen næringsvirksomhet
+      og offentlig profilering på fagfeltet. Eier er fast ansatt i et
+      rekrutteringsselskap. Blokkert til det er avklart.
+
+# Kanalvekting følger MONETIZATION.md 7, ikke antatt likhet.
+# LinkedIn vektes høyere enn RPM-logikken tilsier, fordi verdien der er
+# henvendelser, ikke visninger (ARCHITECTURE.md 9.5).
+channelWeights:
+  youtube: 0.40
+  linkedin: 0.30
+  facebook: 0.15
+  instagram: 0.15
+  tiktok: 0.0
+
+formatMix:
+  short_video: 0.65
+  long_video: 0.10   # mot YPPs visningstime-spor, se UNIT_ECONOMICS.md 4.2
+  image_post: 0.10
+  text_post: 0.15
+
+explorationShare: 0.15
+
+capacity:
+  # Den bindende ressursen i hele systemet.
+  #
+  # Introsamtalen koster kr 0, men 45 minutter av eierens tid per henvendelse,
+  # uansett om den konverterer. Etterspørsel skalerer med rekkevidde; timene i
+  # døgnet gjør ikke det. Ved 200 henvendelser i året går det med nesten en
+  # arbeidsmåned ubetalt. Se UNIT_ECONOMICS.md 6.1.2.
+  #
+  # TODO(kristian): 4 er et konservativt anslag, ikke ditt tall. Hvor mange
+  # introsamtaler i måneden er realistisk ved siden av full jobb?
+  maxIntroCallsPerMonth: 4
+  introCallMinutes: 45
