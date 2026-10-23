@@ -5,33 +5,27 @@ Ready to paste in once the app is created in Play Console.
 Together: Men's Mental Health
 
 === SHORT DESCRIPTION (max 80 chars) ===
-Practical mental health tools built for men. Try Pro free for 3 days.
+Practical mental health tools built for men. Free, anonymous, no account.
 
 === FULL DESCRIPTION (max 4000 chars) ===
 Most mental health apps aren't built for men. Together is.
 
-Practical tools, real community, and straightforward support that actually fits how men think. No therapy homework, no streaks to keep up.
+Practical tools, real community, and straightforward support that actually fits how men think. No therapy homework, no streaks to keep up. Everything is free.
 
 WHAT'S INSIDE
 
 - Daily mood check-ins that take seconds
-- Guided breathing, grounding, and reflection exercises
-- Structured training programmes on confidence, fatherhood, anger, and more
+- Guided exercises for stress, anger, panic, sleep and hard moments
+- Structured programmes on confidence, fatherhood, anxiety, loneliness, grief and more
 - An anonymous Community to share what's really going on, with replies and support
-- Journal and weekly review, with your full history in one place
+- Your progress in one place: mood trends, how your sleep affects your mood, journal and weekly review
 - Research-backed articles on men's mental health
 
 Available in English and Norwegian, with full dark mode support.
 
-TRY TOGETHER PRO FREE FOR 3 DAYS
-
-Unlock every training programme, unlimited journal, mood trends, sleep and energy tracking, and new content every month. Cancel anytime.
-
 Built by Kristian Clifford, a certified coach and mental trainer. Together is a tool, not a replacement for professional help. If you're in crisis, contact a professional or call your local crisis line.
 
-Your data stays on your device. We collect nothing. A background backup and manual backup/restore keep it safe. Full privacy policy: cliffordcoaching.no/privacy
-
-Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Your moods, journal and logs are private. They're stored on your device, with an anonymous backup so you don't lose them. No account, no name, no email. We use anonymous, aggregated usage statistics to improve the app, never for advertising or tracking. Privacy policy: kricliff.github.io/sammen/privacy.html
 
 === CATEGORY ===
 Health & Fitness (or Lifestyle, whichever performs better once live)

@@ -78,7 +78,9 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - **TARGETED_DEVICE_FAMILY = "1"**: iPhone-only (ikke iPad)
 - Avvisningshistorikk: 2.1(b) + 3.1.2(c) (RC-offering + pris — fikset), 1.2 UGC (moderasjon — fikset)
 - Review Notes-mal: ingen innlogging kreves; paywall via Profile → Go Pro; Community-test via gate → «⋯ More»
-- **Versjonsstatus**: 1.0.2 er sist godkjente/live versjon. 1.0.3 (`MARKETING_VERSION`) med et større feature-batch (se `review-notes-1.0.3.md`) ble sendt inn til Apple-review 2026-07-25, venter på svar.
+- **Versjonsstatus**: 1.0.4 og 1.0.5 ble laget på Macen (aug. 2026, se git-loggen). 1.0.6 (okt. 2026, `review-notes-1.0.6.md`): programmene «30 små steg» (`steps30`) og «Gjennom mørketiden» (`winter`), søvn/humør-innsiktskort i Fremgang, november-spørsmål i Fellesskap, november-kort på Hjem, og `logEvent()`-sporing av `program_start`/`program_day_complete` i Firebase Analytics.
+- **Alt er gratis siden 2026-08-03**: `IS_PRO = true` er hardkodet og `initRevenueCat()` kalles ikke. Ingen betalingsmur vises. Butikktekstene (`appstore-description-*.txt`, `appstore-listing-no.txt`) nevner fortsatt Pro og prøveperiode, så de må oppdateres før neste innsending.
+- **Sesongstyrt innhold** går på `isNovember()` (november-spørsmål, Hjem-kortet) og 19. november (mannsdag-melding i `todayMessage()`). Unngå varemerket «Movember» i appteksten, bruk «måneden for menns helse».
 
 ## Codemagic
 

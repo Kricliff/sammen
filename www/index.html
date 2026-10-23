@@ -424,6 +424,20 @@ const T = {
     mood_note_ph: "A few words about the day? Optional, completely private.", save_note: "Save note",
     mood_chart: "Mood chart", last_30_days: "last 30 days", days_ago_30: "30 days ago", today_lbl: "Today",
     mood_trend_h2: "Mood trend", last_14_days: "last 14 days", mood_diary_h2: "Mood diary",
+    sleep_mood_title: "Sleep and mood", sleep_mood_under: "Under", sleep_mood_or_more: "or more",
+    sleep_mood_avg: "avg mood", sleep_mood_days: "days",
+    sleep_mood_better: "Your mood tends to be better after a longer night.",
+    sleep_mood_worse: "Interesting: so far your mood has been a bit better after shorter nights.",
+    sleep_mood_same: "So far, how long you sleep doesn't seem to move your mood much.",
+    sleep_mood_need: "Log sleep and mood on the same day a few more times to see how they connect.",
+    sleep_mood_progress: "days logged so far", sleep_mood_log_btn: "Log sleep",
+    sleep_mood_novar: "Your sleep has been very even so far, so there's nothing to compare yet.",
+    nov_promo_label: "November · Men's health month",
+    nov_promo_text: "Start 30 small steps: one concrete action a day for your body, your head and the people around you. A few minutes a day.",
+    nov_promo_btn: "Start the programme", steps_todays_step: "Today's step", steps_done_btn: "Done",
+    steps_done_today: "Done for today. See you tomorrow.",
+    steps_finished_text: "You've taken 30 small steps. Keep the ones that worked.", steps_finished_btn: "Finish programme",
+    mens_day_msg: "Today is International Men's Day. Check in on one man in your life. Start with yourself.",
     no_mood_entries: "No mood entries yet. Log your first mood on the Home tab.", yesterday_lbl: "Yesterday",
     mood_chart_locked_desc: "See the pattern in your mood over 30 days.",
     sleep_energy: "Sleep and energy", logged: "Logged", log: "Log",
@@ -499,6 +513,10 @@ const T = {
     program_reflection_loneliness: "Who did you feel most like yourself around today, even for a minute?",
     program_exercise_grief: "Do today's Safe place exercise if you need somewhere calm to land.",
     program_reflection_grief: "What did you let yourself feel today, even briefly, instead of pushing it down?",
+    program_exercise_steps30: "Got five more minutes? Pair today's step with the Physical reset exercise.",
+    program_reflection_steps30: "How did today's step feel: easier or harder than you expected?",
+    program_exercise_winter: "Do the Physical reset when the afternoon slump hits, ideally by a window.",
+    program_reflection_winter: "What gave you a bit of energy today, and what drained it?",
     mark_day_complete: "Mark day as complete", exercise_complete_toast: "Well done. That counts.",
     step_lbl: "Step", back_btn: "Back", next_btn: "Next", complete_btn: "Complete",
     reflection_write_ph: "Write for yourself. No one else needs to see this...",
@@ -523,6 +541,8 @@ const T = {
     prog_anxiety_title: "Anxiety and panic", prog_anxiety_desc: "Learn to work with anxiety and panic instead of being ruled by them.",
     prog_loneliness_title: "Loneliness and connection", prog_loneliness_desc: "Rebuild real connection, one small step at a time.",
     prog_grief_title: "Grief and loss", prog_grief_desc: "A steady companion through loss, at your own pace.",
+    prog_steps30_title: "30 small steps", prog_steps30_desc: "One concrete action a day for your body, your head and the people around you.",
+    prog_winter_title: "Through the dark season", prog_winter_desc: "Keep your mood and energy steadier when the days get short.",
     focus_sleep: ["Map your evening routine as it actually is.", "Screen-free for the last 30 minutes before bed.", "Fixed bedtime, weekends too.", "Bedroom: dark, cool, quiet."],
     focus_transition: ["Name what has actually been lost, and what remains.", "What do you have control over today? Do one of those things.", "Talk to one person about how you're really doing.", "Small routines bring stability when the big things are in flux."],
     focus_confidence: ["Write down three situations you've handled well before.", "Practise taking up space: say one opinion out loud today.", "Replace 'I have to perform' with 'I'm here to contribute'.", "Posture affects how you feel. Test it today."],
@@ -531,6 +551,54 @@ const T = {
     focus_anxiety: ["Notice when you're avoiding something because of anxiety, not because you don't want to do it.", "Anxious thoughts predict disaster. Ask: what's the most likely outcome, not just the worst one?", "Practise sitting with discomfort for two extra minutes before you distract yourself from it.", "Write down what actually happened the last time you felt this anxious. Did the disaster come true?"],
     focus_loneliness: ["Reach out to one person today, even just to say hello.", "Say yes to one invitation you'd normally decline.", "Notice who you actually feel at ease around, not just who's convenient.", "Ask someone a real question about how they're doing, and actually wait for the answer."],
     focus_grief: ["There's no timeline. However you're grieving today is the right way.", "Let yourself do something ordinary today. Grief doesn't ask permission to pause.", "If a memory hits hard, let it. It usually passes faster than you brace for.", "Tell one person you trust how you're actually doing, not the short version."],
+    focus_steps30: [
+      "Book the GP check-up you've been putting off. Just make the booking today.",
+      "Get outside in daylight for 15 minutes, ideally before lunch.",
+      "Drink a glass of water before your first coffee.",
+      "Take a 20-minute walk. No podcast, just walk.",
+      "Do a testicular self-check in the shower. It takes two minutes, and catching things early matters.",
+      "Go to bed 30 minutes earlier than usual tonight.",
+      "Look back at the week: which of these steps was easiest to keep?",
+      "Log your mood both morning and evening today, and notice what changed in between.",
+      "Name one thing that's been weighing on you, out loud or in writing.",
+      "Catch one harsh thought about yourself and rewrite it the way you'd say it to a friend.",
+      "Keep your phone in another room for the first hour after you wake up.",
+      "Spend under ten minutes on one thing you've been putting off. Just start it.",
+      "Notice how much alcohol you've had this week. No judgement, just count.",
+      "Write down three things that went okay this week, however small.",
+      "Message a friend you haven't spoken to in a while. 'Thinking of you' is enough.",
+      "Ask someone 'How are you really doing?' and wait for the real answer.",
+      "Tell someone close to you one thing you appreciate about them.",
+      "Make a concrete plan with a mate: a day, a time, a place.",
+      "Share one honest sentence about how you're doing with someone you trust.",
+      "Read a few posts in Community, and reply to one of them.",
+      "Check in on the friend who always says he's fine.",
+      "Write down what actually matters to you right now, in three words.",
+      "Pick one habit from these weeks that you'll keep after the programme ends.",
+      "Do something just because you enjoy it, not because it's useful.",
+      "Spend 10 minutes outside without your phone.",
+      "Look at next week's calendar and make room for one thing that's just for you.",
+      "Notice one thing you're doing differently than four weeks ago.",
+      "Thank yourself for showing up these weeks. Seriously, say it.",
+      "Share one thing that helped along the way, with a friend or in Community.",
+      "Decide what you'll keep doing. Small is fine. Small is the point."
+    ],
+    focus_winter: [
+      "Get daylight in your eyes within an hour of waking. Even a grey sky helps.",
+      "Get up at the same time every day this week, weekends included.",
+      "Take a walk in daylight at lunch, even a short one.",
+      "Move your body for 20 minutes. Indoors counts.",
+      "Many in Norway take cod liver oil or vitamin D in winter. Ask a pharmacist what fits you.",
+      "Plan one thing to look forward to this week, and put it in the calendar.",
+      "Keep the last half hour before bed dim and mostly screen-free.",
+      "See someone in person this week. Winter makes it easy to stay in.",
+      "Notice how alcohol affects your mood the day after. It often hits harder in the dark months.",
+      "Brighten your mornings: open the curtains and turn the lights on straight away.",
+      "Do something with your hands: cook, fix, build. It pulls you out of your head.",
+      "Get outside in daylight at the weekend, for at least an hour.",
+      "Look at your mood chart for the last two weeks. What helped on the better days?",
+      "If you've felt low most days for two weeks or more, talk to your GP. It's common, and it's treatable."
+    ],
     refl_r1_title: "What are you really afraid of?", refl_r1_prompt: "Not what you admit in company. The fear you sit with at night, alone, the one you rarely put into words. What is it?",
     refl_r2_title: "Who would you be without others' expectations of you?", refl_r2_prompt: "Imagine all roles and demands fell away tomorrow. No expectations from work, family, or society. Who are you then, and what do you want?",
     refl_r3_title: "What have you never said out loud to anyone?", refl_r3_prompt: "Something you've carried for years without voicing it to another person. What is it? Write it here, just for yourself.",
@@ -726,6 +794,20 @@ const T = {
     mood_note_ph: "Noen ord om dagen? Valgfritt, helt privat.", save_note: "Lagre notat",
     mood_chart: "Humørkurve", last_30_days: "siste 30 dager", days_ago_30: "30 dager siden", today_lbl: "I dag",
     mood_trend_h2: "Humørtrend", last_14_days: "siste 14 dager", mood_diary_h2: "Humørdagbok",
+    sleep_mood_title: "Søvn og humør", sleep_mood_under: "Under", sleep_mood_or_more: "eller mer",
+    sleep_mood_avg: "snitt humør", sleep_mood_days: "dager",
+    sleep_mood_better: "Humøret ditt er gjerne bedre etter en lengre natt.",
+    sleep_mood_worse: "Interessant: så langt har humøret vært litt bedre etter kortere netter.",
+    sleep_mood_same: "Så langt ser det ikke ut til at hvor lenge du sover påvirker humøret ditt særlig.",
+    sleep_mood_need: "Registrer søvn og humør samme dag noen ganger til, så ser du hvordan de henger sammen.",
+    sleep_mood_progress: "dager registrert så langt", sleep_mood_log_btn: "Registrer søvn",
+    sleep_mood_novar: "Søvnen din har vært veldig jevn så langt, så det er ingenting å sammenligne ennå.",
+    nov_promo_label: "November · Måneden for menns helse",
+    nov_promo_text: "Start 30 små steg: én konkret handling om dagen, for kroppen, hodet og menneskene rundt deg. Noen få minutter om dagen.",
+    nov_promo_btn: "Start programmet", steps_todays_step: "Dagens steg", steps_done_btn: "Gjort",
+    steps_done_today: "Gjort for i dag. Vi ses i morgen.",
+    steps_finished_text: "Du har tatt 30 små steg. Behold de som fungerte.", steps_finished_btn: "Avslutt programmet",
+    mens_day_msg: "I dag er den internasjonale mannsdagen. Sjekk inn på én mann i livet ditt. Start med deg selv.",
     no_mood_entries: "Ingen humørregistreringer ennå. Registrer det første på Hjem-fanen.", yesterday_lbl: "I går",
     mood_chart_locked_desc: "Se hvordan humøret ditt har vært de siste 30 dagene.",
     sleep_energy: "Søvn og energi", logged: "Registrert", log: "Registrer",
@@ -801,6 +883,10 @@ const T = {
     program_reflection_loneliness: "Hvem følte du deg mest som deg selv rundt i dag, selv om det bare var et øyeblikk?",
     program_exercise_grief: "Gjør dagens «Trygt sted»-øvelse hvis du trenger et rolig sted å lande.",
     program_reflection_grief: "Hva lot du deg selv kjenne på i dag, om så bare kort, i stedet for å skyve det unna?",
+    program_exercise_steps30: "Har du fem minutter til? Kombiner dagens steg med øvelsen Fysisk reset.",
+    program_reflection_steps30: "Hvordan kjentes dagens steg: lettere eller tyngre enn du trodde?",
+    program_exercise_winter: "Gjør Fysisk reset når ettermiddagsdippen kommer, helst ved et vindu.",
+    program_reflection_winter: "Hva ga deg litt energi i dag, og hva tappet deg?",
     mark_day_complete: "Merk dagen som fullført", exercise_complete_toast: "Bra jobbet. Det teller.",
     step_lbl: "Steg", back_btn: "Tilbake", next_btn: "Neste", complete_btn: "Fullfør",
     reflection_write_ph: "Skriv for deg selv. Ingen andre trenger å se dette...",
@@ -825,6 +911,8 @@ const T = {
     prog_anxiety_title: "Angst og panikk", prog_anxiety_desc: "Lær å jobbe med angst og panikk i stedet for å bli styrt av dem.",
     prog_loneliness_title: "Ensomhet og tilhørighet", prog_loneliness_desc: "Bygg ekte tilhørighet igjen, ett lite steg om gangen.",
     prog_grief_title: "Sorg og tap", prog_grief_desc: "En rolig følgesvenn gjennom sorgen, i ditt eget tempo.",
+    prog_steps30_title: "30 små steg", prog_steps30_desc: "Én konkret handling om dagen, for kroppen, hodet og menneskene rundt deg.",
+    prog_winter_title: "Gjennom mørketiden", prog_winter_desc: "Hold humøret og energien jevnere når dagene blir korte.",
     focus_sleep: ["Kartlegg kveldsrutinen din slik den faktisk er.", "Skjermfritt de siste 30 minuttene før leggetid.", "Fast leggetid, også i helgene.", "Soverom: mørkt, kjølig, stille."],
     focus_transition: ["Sett ord på hva som faktisk er tapt, og hva som er igjen.", "Hva har du kontroll over i dag? Gjør én av de tingene.", "Snakk med én person om hvordan det egentlig går.", "Små rutiner gir stabilitet når de store tingene er i endring."],
     focus_confidence: ["Skriv ned tre situasjoner du har håndtert bra tidligere.", "Øv på å ta plass: si én mening høyt i dag.", "Bytt ut «jeg må prestere» med «jeg er her for å bidra».", "Kroppsholdning påvirker hvordan du føler deg. Test det i dag."],
@@ -833,6 +921,54 @@ const T = {
     focus_anxiety: ["Legg merke til når du unngår noe på grunn av angst, ikke fordi du faktisk ikke vil.", "Angstfylte tanker spår katastrofe. Spør: hva er det mest sannsynlige utfallet, ikke bare det verste?", "Øv på å sitte med ubehaget i to minutter til før du distraherer deg selv fra det.", "Skriv ned hva som faktisk skjedde sist du følte det sånn. Slo katastrofen til?"],
     focus_loneliness: ["Ta kontakt med én person i dag, selv om det bare er for å si hei.", "Si ja til én invitasjon du vanligvis ville takket nei til.", "Legg merke til hvem du faktisk føler deg avslappet rundt, ikke bare hvem som er lett tilgjengelig.", "Still noen et ekte spørsmål om hvordan de har det, og vent faktisk på svaret."],
     focus_grief: ["Det finnes ingen tidsplan. Slik du sørger i dag, er den riktige måten.", "La deg selv gjøre noe helt vanlig i dag. Sorgen ber ikke om lov til å ta en pause.", "Hvis et minne treffer hardt, la det gjøre det. Det går som regel fortere over enn du forbereder deg på.", "Fortell én person du stoler på hvordan du faktisk har det, ikke den korte versjonen."],
+    focus_steps30: [
+      "Bestill legetimen du har utsatt. Bare bestill den i dag.",
+      "Kom deg ut i dagslys i 15 minutter, helst før lunsj.",
+      "Drikk et glass vann før den første kaffen.",
+      "Gå en tur på 20 minutter. Ingen podkast, bare gå.",
+      "Gjør en testikkelsjekk i dusjen. Det tar to minutter, og det betyr mye å oppdage ting tidlig.",
+      "Legg deg 30 minutter tidligere enn vanlig i kveld.",
+      "Se tilbake på uken: hvilket av stegene var lettest å holde på?",
+      "Registrer humøret både morgen og kveld i dag, og legg merke til hva som endret seg imellom.",
+      "Sett ord på én ting som har tynget deg, høyt eller skriftlig.",
+      "Fang én hard tanke om deg selv, og skriv den om slik du ville sagt det til en venn.",
+      "Ha telefonen i et annet rom den første timen etter at du står opp.",
+      "Bruk under ti minutter på én ting du har utsatt. Bare begynn.",
+      "Legg merke til hvor mye alkohol du har drukket denne uken. Ingen dom, bare tell.",
+      "Skriv ned tre ting som gikk greit denne uken, uansett hvor små.",
+      "Send en melding til en venn du ikke har snakket med på en stund. «Tenkte på deg» holder.",
+      "Spør noen «Hvordan går det egentlig?», og vent på det ekte svaret.",
+      "Fortell noen nær deg én ting du setter pris på ved dem.",
+      "Lag en konkret avtale med en kompis: dag, tid og sted.",
+      "Del én ærlig setning om hvordan du har det, med noen du stoler på.",
+      "Les noen innlegg i Fellesskap, og svar på ett av dem.",
+      "Sjekk inn med kompisen som alltid sier at alt går fint.",
+      "Skriv ned hva som faktisk betyr noe for deg akkurat nå, med tre ord.",
+      "Velg én vane fra disse ukene som du vil fortsette med etter at programmet er ferdig.",
+      "Gjør noe bare fordi du liker det, ikke fordi det er nyttig.",
+      "Vær ute i 10 minutter uten telefonen.",
+      "Se på kalenderen for neste uke, og sett av plass til én ting som bare er for deg.",
+      "Legg merke til én ting du gjør annerledes enn for fire uker siden.",
+      "Takk deg selv for at du har stilt opp disse ukene. Seriøst, si det.",
+      "Del én ting som har hjulpet deg underveis, med en venn eller i Fellesskap.",
+      "Bestem hva du skal fortsette med. Lite er greit. Lite er hele poenget."
+    ],
+    focus_winter: [
+      "Få dagslys i øynene innen en time etter at du står opp. Selv en grå himmel hjelper.",
+      "Stå opp til samme tid hver dag denne uken, også i helgen.",
+      "Gå en tur i dagslys i lunsjen, selv en kort en.",
+      "Beveg kroppen i 20 minutter. Innendørs teller også.",
+      "Mange i Norge tar tran eller vitamin D om vinteren. Spør på apoteket hva som passer for deg.",
+      "Planlegg én ting å glede deg til denne uken, og legg den inn i kalenderen.",
+      "Hold den siste halvtimen før leggetid dempet og mest mulig skjermfri.",
+      "Møt noen ansikt til ansikt denne uken. Om vinteren er det lett å bli sittende inne.",
+      "Legg merke til hvordan alkohol påvirker humøret dagen etter. Det slår ofte hardere inn i de mørke månedene.",
+      "Lys opp morgenen: trekk fra gardinene og slå på lyset med en gang.",
+      "Gjør noe med hendene: lag mat, fiks noe, bygg noe. Det trekker deg ut av hodet.",
+      "Kom deg ut i dagslys i helgen, i minst en time.",
+      "Se på humørkurven din for de siste to ukene. Hva hjalp på de bedre dagene?",
+      "Har du følt deg nedfor de fleste dager i to uker eller mer, snakk med fastlegen. Det er vanlig, og det kan behandles."
+    ],
     refl_r1_title: "Hva er du egentlig redd for?", refl_r1_prompt: "Ikke det du innrømmer i selskap. Frykten du sitter med om natten, alene, den du sjelden setter ord på. Hva er det?",
     refl_r2_title: "Hvem ville du vært uten andres forventninger til deg?", refl_r2_prompt: "Se for deg at alle roller og krav forsvant i morgen. Ingen forventninger fra jobb, familie eller samfunn. Hvem er du da, og hva vil du?",
     refl_r3_title: "Hva har du aldri sagt høyt til noen?", refl_r3_prompt: "Noe du har båret på i årevis uten å si det til et annet menneske. Hva er det? Skriv det her, bare for deg selv.",
@@ -1115,6 +1251,8 @@ const EXERCISES = [
 ];
 
 const PROGRAMS = [
+  { id: "steps30", title: "30 small steps", days: 30, icon: "\u{1F9D4}", desc: "One concrete action a day for your body, your head and the people around you." },
+  { id: "winter", title: "Through the dark season", days: 14, icon: "\u{1F319}", desc: "Keep your mood and energy steadier when the days get short." },
   { id: "sleep", title: "Better sleep", days: 21, icon: "\u{1F634}", desc: "Wind down your evenings and build a sleep routine that sticks." },
   { id: "transition", title: "Handling transitions", days: 14, icon: "\u{1F9ED}", desc: "Steady through a job change, breakup, or other major shift." },
   { id: "confidence", title: "Confidence and performance", days: 21, icon: "\u{1F3AF}", desc: "Train your confidence at work, in sport, in life." },
@@ -1185,6 +1323,27 @@ const DAILY_PROMPTS_NO = [
   "Hva har gitt deg litt energi i det siste?",
   "Hva er den vanskeligste delen av rollen din akkurat nå: jobb, far, partner?",
 ];
+const NOVEMBER_PROMPTS = [
+  "November is the month for men's health. When did you last check in on your own?",
+  "Who's the mate you'd call if things got really bad?",
+  "What's one thing about being a man you wish was easier to talk about?",
+  "How are you holding up now that the days are getting shorter?",
+  "What's a small habit that's actually helped you this year?",
+  "What did your dad never talk about that you wish he had?",
+  "Who checked in on you when you needed it, and did you tell them it mattered?",
+  "What would you say to a younger man who's struggling and not saying it?",
+];
+const NOVEMBER_PROMPTS_NO = [
+  "November er måneden for menns helse. Når sjekket du sist inn på din egen?",
+  "Hvem er kompisen du ville ringt hvis ting ble skikkelig tunge?",
+  "Hva er én ting ved å være mann som du skulle ønske var lettere å snakke om?",
+  "Hvordan har du det nå som dagene blir kortere?",
+  "Hva er en liten vane som faktisk har hjulpet deg i år?",
+  "Hva snakket faren din aldri om, som du skulle ønske han hadde snakket om?",
+  "Hvem sjekket inn på deg da du trengte det, og fortalte du dem at det betydde noe?",
+  "Hva ville du sagt til en yngre mann som sliter og ikke sier det?",
+];
+function isNovember() { return new Date().getMonth() === 10; }
 
 const DAILY_MESSAGES = [
   { text: "How are you doing today, actually? One tap — five seconds.", tag: "check" },
@@ -1271,6 +1430,8 @@ const DAILY_MESSAGES_NO = [
   { text: "Ny uke foran deg. Hvordan føles det, egentlig?", tag: "check" },
 ];
 function todayMessage() {
+  const now = new Date();
+  if (now.getMonth() === 10 && now.getDate() === 19) return { text: t("mens_day_msg"), tag: "boost" };
   const arr = L() === "no" ? DAILY_MESSAGES_NO : DAILY_MESSAGES;
   return arr[Math.floor(Date.now() / 86400000) % arr.length];
 }
@@ -1486,6 +1647,11 @@ function logScreenView(screenName) {
   if (!FA) return;
   FA.setCurrentScreen({ screenName }).catch(() => {});
 }
+function logEvent(name, params) {
+  const FA = window.Capacitor?.Plugins?.FirebaseAnalytics;
+  if (!FA) return;
+  FA.logEvent({ name, params: params || {} }).catch(() => {});
+}
 
 function render() {
   renderNav();
@@ -1634,6 +1800,35 @@ async function restorePurchases() {
     if (IS_PRO) { closeModal(); render(); }
   } catch(e) { toast(t("could_not_restore")); }
 }
+function stepsHomeCard() {
+  const p = PROGRAMS.find(x => x.id === "steps30");
+  const ap = (state.activePrograms || []).find(x => x.id === "steps30");
+  if (ap) {
+    const day = Math.min(p.days, Math.floor((new Date() - new Date(ap.startDate)) / 86400000) + 1);
+    const done = state.completedExercises.some(e => e.id === "program-steps30-" + day);
+    const finished = done && day === p.days;
+    return `<div class="card nudge">
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--teal);margin-bottom:6px">${p.icon} ${t("prog_steps30_title")} &middot; ${t("day_lbl")} ${day} ${t("of_lbl")} ${p.days}</div>
+      ${finished
+        ? `<p>${t("steps_finished_text")}</p><div class="actions"><button class="btn small" onclick="quitProgram('steps30')">${t("steps_finished_btn")}</button></div>`
+        : `<p><b>${t("steps_todays_step")}:</b> ${programDayFocus("steps30", day)}</p>
+           ${done
+             ? `<div style="font-size:0.85rem;color:var(--teal);font-weight:500">✓ ${t("steps_done_today")}</div>`
+             : `<div class="actions"><button class="btn small" onclick="completeProgramDay('steps30', ${day})">${t("steps_done_btn")}</button></div>`}`}
+    </div>`;
+  }
+  const key = "nov-promo-" + new Date().getFullYear();
+  if (!isNovember() || state.dismissedNudges[key]) return "";
+  return `<div class="card nudge">
+    <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--teal);margin-bottom:6px">${p.icon} ${t("nov_promo_label")}</div>
+    <p>${t("nov_promo_text")}</p>
+    <div class="actions">
+      <button class="btn small" onclick="startProgram('steps30')">${t("nov_promo_btn")}</button>
+      <button class="btn small ghost" onclick="dismissNudge('${key}')">${t("nudge_not_now")}</button>
+    </div>
+  </div>`;
+}
+
 function socialGoalCard() {
   const wk = weekKey();
   const sg = state.socialGoal && state.socialGoal.weekKey === wk ? state.socialGoal : { weekKey: wk, done: false };
@@ -1709,6 +1904,8 @@ function renderHome() {
     </div>`;
   }
   html += `</div>`;
+
+  html += stepsHomeCard();
 
   // Mood chart (Pro)
   html += IS_PRO
@@ -1938,7 +2135,12 @@ function startProgram(id) {
   if (!state.activePrograms) state.activePrograms = [];
   if (state.activePrograms.some(p => p.id === id)) return;
   state.activePrograms.push({ id, startDate: todayStr() });
+  logEvent("program_start", { program_id: id });
   save(); render(); toast(t("program_started"));
+}
+function completeProgramDay(id, day) {
+  logEvent("program_day_complete", { program_id: id, day });
+  completeExercise('program-' + id + '-' + day);
 }
 function quitProgram(id) {
   state.activePrograms = (state.activePrograms || []).filter(p => p.id !== id);
@@ -1965,7 +2167,7 @@ function openProgramDay(id, day) {
       <button class="btn" id="progComplete">${t("mark_day_complete")}</button>
     </div>`;
   document.getElementById("app").appendChild(ov);
-  document.getElementById("progComplete").onclick = () => { completeExercise('program-' + id + '-' + day); closeProgramOverlay(); };
+  document.getElementById("progComplete").onclick = () => { completeProgramDay(id, day); closeProgramOverlay(); };
 }
 function closeProgramOverlay() { const ov = document.getElementById("programOverlay"); if (ov) ov.remove(); }
 function programDayFocus(id, day) {
@@ -2128,7 +2330,9 @@ function stopBreathCycle() { if (breathRaf) { cancelAnimationFrame(breathRaf); b
 function closeBreath() { stopBreathCycle(); const ov = document.getElementById("breathOverlay"); if (ov) ov.remove(); }
 
 function dailyPrompt() {
-  const arr = L() === "no" ? DAILY_PROMPTS_NO : DAILY_PROMPTS;
+  const arr = isNovember()
+    ? (L() === "no" ? NOVEMBER_PROMPTS_NO : NOVEMBER_PROMPTS)
+    : (L() === "no" ? DAILY_PROMPTS_NO : DAILY_PROMPTS);
   const dayIdx = Math.floor(new Date() / 86400000) % arr.length;
   return arr[dayIdx];
 }
@@ -2638,6 +2842,47 @@ function openArticle(id) {
 }
 function closeArticleOverlay() { const ov = document.getElementById("articleOverlay"); if (ov) ov.remove(); }
 
+// Splits the user's own nights at their median sleep length rather than a fixed
+// cut-off, so the comparison works even if they never sleep under 6 h.
+function sleepMoodCard() {
+  const MIN_DAYS = 6;
+  const pairs = lastNDates(60)
+    .filter(d => state.moods[d] && (state.sleep || {})[d])
+    .map(d => ({ hours: state.sleep[d].hours, mood: state.moods[d].level }));
+  const num = n => L() === "no" ? String(n).replace(".", ",") : String(n);
+  let html = `<div class="card"><b style="font-size:0.95rem">${t("sleep_mood_title")}</b>`;
+  if (pairs.length < MIN_DAYS) {
+    return html + `<p style="font-size:0.88rem;color:var(--text-soft);margin:8px 0 12px;line-height:1.5">${t("sleep_mood_need")}</p>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:0.8rem;color:var(--text-soft)">${pairs.length}/${MIN_DAYS} ${t("sleep_mood_progress")}</span>
+        <button class="btn small secondary" onclick="openSleepLog()">${t("sleep_mood_log_btn")}</button>
+      </div></div>`;
+  }
+  const sorted = pairs.map(p => p.hours).sort((a, b) => a - b);
+  const cut = sorted[Math.floor(sorted.length / 2)];
+  const short = pairs.filter(p => p.hours < cut), long = pairs.filter(p => p.hours >= cut);
+  if (short.length < 2 || long.length < 2) {
+    return html + `<p style="font-size:0.88rem;color:var(--text-soft);margin-top:8px;line-height:1.5">${t("sleep_mood_novar")}</p></div>`;
+  }
+  const avg = arr => arr.reduce((s, p) => s + p.mood, 0) / arr.length;
+  const row = (label, group, opacity) => {
+    const a = avg(group);
+    const mood = MOODS.find(m => m.level === Math.round(a)) || MOODS[2];
+    return `<div style="margin-top:12px">
+      <div style="display:flex;justify-content:space-between;font-size:0.84rem;margin-bottom:5px">
+        <span>${label}</span>
+        <span style="color:var(--text-soft)">${mood.emoji} ${num(a.toFixed(1))} ${t("sleep_mood_avg")} &middot; ${group.length} ${t("sleep_mood_days")}</span>
+      </div>
+      <div class="progBar"><div style="width:${Math.round(a / 5 * 100)}%;opacity:${opacity}"></div></div>
+    </div>`;
+  };
+  html += row(`${t("sleep_mood_under")} ${num(cut)} h`, short, 0.55);
+  html += row(`${num(cut)} h ${t("sleep_mood_or_more")}`, long, 1);
+  const diff = avg(long) - avg(short);
+  const verdict = diff >= 0.5 ? "sleep_mood_better" : diff <= -0.5 ? "sleep_mood_worse" : "sleep_mood_same";
+  return html + `<p style="font-size:0.88rem;margin-top:12px;line-height:1.5">${t(verdict)}</p></div>`;
+}
+
 function renderProgressOverview() {
   const dates = lastNDates(14);
   const labels = [new Date(dates[0]), new Date(dates[13])].map(d => d.getDate() + "/" + (d.getMonth() + 1));
@@ -2650,6 +2895,8 @@ function renderProgressOverview() {
     }).join("")}</div>
     <div class="chartLabels"><span>${labels[0]}</span><span>${t("today_lbl")}</span></div>
   </div>`;
+
+  html += sleepMoodCard();
 
   html += `<h2>${t("mood_diary_h2")}</h2>`;
   const moodDays = lastNDates(30).reverse().filter(d => state.moods[d]).slice(0, 10);
