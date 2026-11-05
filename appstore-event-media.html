@@ -10,6 +10,8 @@
   canvas { display: block; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
   #card { width: 960px; height: 540px; }
   #details { width: 405px; height: 720px; }
+  #header { width: 960px; height: 540px; }
+  #headerWide { width: 960px; height: 412px; }
 </style>
 </head>
 <body>
@@ -22,6 +24,8 @@
   Same scene language as the in-app game (www/index.html, stoneDraw).
 -->
 <figure><canvas id="card" width="1920" height="1080"></canvas><figcaption>Event card, 1920 × 1080</figcaption></figure>
+<figure><canvas id="header" width="5244" height="2950"></canvas><figcaption>Product page header, 5244 × 2950</figcaption></figure>
+<figure><canvas id="headerWide" width="3840" height="1646"></canvas><figcaption>Product page header (wide), 3840 × 1646</figcaption></figure>
 <figure><canvas id="details" width="1080" height="1920"></canvas><figcaption>Event details page, 1080 × 1920</figcaption></figure>
 <script>
 function rng(seed) { return () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; }
@@ -124,6 +128,12 @@ function drawScene(canvas, opt) {
 drawScene(document.getElementById("card"), { seed: 21, stoneSize: 0.75, horizon: 0.5, sunX: 0.66, sunLift: 0.17, farAmp: 0.13, nearAmp: 0.075, pathX0: 0.42, wiggle: 9 });
 // Portrait details page: the event title sits over the lower part.
 drawScene(document.getElementById("details"), { seed: 11, horizon: 0.44, sunX: 0.56, sunLift: 0.1, farAmp: 0.07, nearAmp: 0.04, pathX0: 0.46, wiggle: 8 });
+// Product page headers (App Store Connect → Product Page Information →
+// Header). Evergreen, no November content: the stone path reads as "small
+// steps" all year. Keep the sun high and central so the page chrome and
+// app title at the bottom don't cover it.
+drawScene(document.getElementById("header"), { seed: 21, stoneSize: 0.7, horizon: 0.52, sunX: 0.58, sunLift: 0.17, farAmp: 0.12, nearAmp: 0.07, pathX0: 0.46, wiggle: 9 });
+drawScene(document.getElementById("headerWide"), { seed: 21, stoneSize: 0.7, horizon: 0.5, sunX: 0.6, sunLift: 0.18, farAmp: 0.14, nearAmp: 0.08, pathX0: 0.47, wiggle: 9 });
 </script>
 </body>
 </html>
