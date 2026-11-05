@@ -15,6 +15,7 @@
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
 		A1B2C3D4E5F607182930A1B4 /* ICloudSyncPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F607182930A1B3 /* ICloudSyncPlugin.swift */; };
+		E5F6A7B8C9D0E1F2A3B4C5D8 /* AppReviewPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F6A7B8C9D0E1F2A3B4C5D7 /* AppReviewPlugin.swift */; };
 		D4E5F6A7B8C9D0E1F2A3B4C6 /* FirebaseAnalyticsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F6A7B8C9D0E1F2A3B4C5 /* FirebaseAnalyticsPlugin.swift */; };
 		C3D4E5F6A7B8091A2B3C4D5E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C3D4E5F6A7B8091A2B3C4D5D /* GoogleService-Info.plist */; };
 		E9804B72FE4B50AAB2399485 /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA094B7A7571C1076716146A /* Pods_App.framework */; };
@@ -34,6 +35,7 @@
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		A1B2C3D4E5F607182930A1B2 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 		A1B2C3D4E5F607182930A1B3 /* ICloudSyncPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudSyncPlugin.swift; sourceTree = "<group>"; };
+		E5F6A7B8C9D0E1F2A3B4C5D7 /* AppReviewPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewPlugin.swift; sourceTree = "<group>"; };
 		D4E5F6A7B8C9D0E1F2A3B4C5 /* FirebaseAnalyticsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAnalyticsPlugin.swift; sourceTree = "<group>"; };
 		C3D4E5F6A7B8091A2B3C4D5D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DDE2A1007678D8754102BE56 /* Pods-App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.debug.xcconfig"; path = "Target Support Files/Pods-App/Pods-App.debug.xcconfig"; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 				A1B2C3D4E5F607182930A1B2 /* App.entitlements */,
 				A1B2C3D4E5F607182930A1B3 /* ICloudSyncPlugin.swift */,
 				D4E5F6A7B8C9D0E1F2A3B4C5 /* FirebaseAnalyticsPlugin.swift */,
+				E5F6A7B8C9D0E1F2A3B4C5D7 /* AppReviewPlugin.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
@@ -256,6 +259,7 @@
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				A1B2C3D4E5F607182930A1B4 /* ICloudSyncPlugin.swift in Sources */,
 				D4E5F6A7B8C9D0E1F2A3B4C6 /* FirebaseAnalyticsPlugin.swift in Sources */,
+				E5F6A7B8C9D0E1F2A3B4C5D8 /* AppReviewPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -126,6 +126,14 @@
      modal for step-by-step exercises) ── */
   #exerciseOverlay { position: absolute; inset: 0; background: linear-gradient(170deg, #194d4d, #2a7f7f); z-index: 40; display: flex; flex-direction: column; align-items: center; color: #eaf4f4; padding: calc(20px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)); overflow: hidden; }
   #exerciseOverlay .closeRow { width: 100%; display: flex; justify-content: flex-end; z-index: 5; }
+  #gameOverlay { position: absolute; inset: 0; z-index: 40; background: #1b3f45; overflow: hidden; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  #gameOverlay canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  #gameOverlay .closeRow { position: absolute; top: calc(20px + env(safe-area-inset-top)); right: 20px; z-index: 5; }
+  #gameOverlay .closeRow button { background: rgba(255,255,255,0.18); color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
+  .gameHud { position: absolute; left: 0; right: 0; top: calc(70px + env(safe-area-inset-top)); text-align: center; color: #fff; pointer-events: none; padding: 0 28px; z-index: 3; }
+  .gameCount { font-size: 2.6rem; font-weight: 700; line-height: 1.1; min-height: 1.1em; text-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+  .gameMsg { font-size: 0.95rem; line-height: 1.45; margin-top: 8px; opacity: 0.92; text-shadow: 0 1px 8px rgba(0,0,0,0.3); }
+  .gameBest { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 10px; opacity: 0.7; }
   #exerciseOverlay .closeRow button { background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; }
   .exStage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; width: 100%; max-width: 420px; text-align: center; }
   .exStageIcon { font-size: 2.4rem; }
@@ -310,6 +318,8 @@ const defaultState = {
   reportedPosts: [],
   hiddenReplies: [],
   seenReplyCounts: {},
+  reviewAskedAt: null,
+  stoneBest: 0,
 };
 
 let state = loadState();
@@ -759,7 +769,20 @@ const T = {
     icloud_restored_toast: "Data restored from iCloud.", icloud_restore_failed: "Could not restore from iCloud.",
     backup_restored_toast: "Data restored from backup.",
     bug_title: "Report a bug", bug_sub: "Tell us what happened and we'll look into it.", bug_ph: "What happened? What did you expect to happen?",
-    bug_send: "Send report", bug_sending: "Sending…", bug_empty: "Please describe the problem first.", bug_sent: "Thanks. Your report has been sent.", bug_failed: "Couldn't send. Please try again."
+    bug_send: "Send report", bug_sending: "Sending…", bug_empty: "Please describe the problem first.", bug_sent: "Thanks. Your report has been sent.", bug_failed: "Couldn't send. Please try again.",
+    home_question_see: "See answers",
+    share_card_title: "Know a man who could use this?", share_card_text: "Most men find help through a friend. Send him the app, no explanation needed.",
+    share_app_btn: "Share Together", share_link_copied: "Link copied. Paste it into a message to a mate.",
+    share_app_text: "I've been using Together, a free app for men's mental health: short exercises, a private mood log and an anonymous community. Thought it might be useful for you too.",
+    rate_app_lbl: "Rate Together in the App Store", rate_app_sub: "A review helps other men find the app.",
+    prog_finished_title: "Programme complete",
+    prog_finished_text: "You finished {p}. That takes commitment. Hold on to the habits that worked for you.",
+    prog_finished_share: "Know someone who could use this too? Send him the app.",
+    unwind_h2: "Switch off", game_title: "Skip stones", game_desc: "A small game to give your head a break",
+    game_hint: "Hold to wind up. Let go when the marker is in the bright zone.",
+    game_skips: "skips", game_skip_one: "skip", game_best: "Best", game_new_best: "New best!",
+    game_low: "It happens. Pick up another stone.", game_mid: "Nice throw.", game_high: "Now that's a proper throw.",
+    game_again: "Hold to throw again."
   },
   no: {
     nav_home: "Hjem", nav_training: "Trening", nav_community: "Fellesskap", nav_progress: "Fremgang", nav_profile: "Profil",
@@ -1131,7 +1154,20 @@ const T = {
     icloud_restored_toast: "Data gjenopprettet fra iCloud.", icloud_restore_failed: "Kunne ikke gjenopprette fra iCloud.",
     backup_restored_toast: "Data gjenopprettet fra sikkerhetskopi.",
     bug_title: "Meld fra om en feil", bug_sub: "Fortell hva som skjedde, så ser vi på det.", bug_ph: "Hva skjedde? Hva forventet du skulle skje?",
-    bug_send: "Send rapport", bug_sending: "Sender…", bug_empty: "Beskriv problemet først.", bug_sent: "Takk. Rapporten er sendt.", bug_failed: "Kunne ikke sende. Prøv igjen."
+    bug_send: "Send rapport", bug_sending: "Sender…", bug_empty: "Beskriv problemet først.", bug_sent: "Takk. Rapporten er sendt.", bug_failed: "Kunne ikke sende. Prøv igjen.",
+    home_question_see: "Se svar",
+    share_card_title: "Kjenner du en mann som kunne trengt dette?", share_card_text: "De fleste menn finner hjelp gjennom en venn. Send ham appen, du trenger ikke forklare noe.",
+    share_app_btn: "Del Together", share_link_copied: "Lenken er kopiert. Lim den inn i en melding til en kompis.",
+    share_app_text: "Jeg har brukt Together, en gratis app for menns psykiske helse: korte øvelser, en privat humørlogg og et anonymt fellesskap. Tenkte den kunne være nyttig for deg også.",
+    rate_app_lbl: "Gi Together en vurdering i App Store", rate_app_sub: "En vurdering hjelper andre menn å finne appen.",
+    prog_finished_title: "Programmet er fullført",
+    prog_finished_text: "Du har fullført {p}. Det krever innsats. Hold fast på vanene som fungerte for deg.",
+    prog_finished_share: "Kjenner du noen som kunne hatt nytte av dette også? Send ham appen.",
+    unwind_h2: "Koble av", game_title: "Kast smutt", game_desc: "Et lite spill for å gi hodet en pause",
+    game_hint: "Hold inne for å ta sats. Slipp når markøren er i det lyse feltet.",
+    game_skips: "hopp", game_skip_one: "hopp", game_best: "Rekord", game_new_best: "Ny rekord!",
+    game_low: "Det skjer. Plukk opp en ny stein.", game_mid: "Fint kast.", game_high: "Det var et skikkelig kast.",
+    game_again: "Hold inne for å kaste igjen."
   }
 };
 
@@ -1985,6 +2021,22 @@ function stepsHomeCard() {
   </div>`;
 }
 
+function homeQuestionCard() {
+  return `<div class="card" style="border-left:3px solid var(--teal);padding-left:18px">
+    <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.08em;color:var(--teal);margin-bottom:8px">💬 ${t("todays_prompt_tag")}</div>
+    <div style="font-size:1rem;font-weight:600;line-height:1.45;margin-bottom:14px">${esc(dailyPrompt())}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn small" onclick="answerFromHome()">${t("reply_anon")}</button>
+      <button class="btn small secondary" onclick="goTab('community')">${t("home_question_see")}</button>
+    </div>
+  </div>`;
+}
+function answerFromHome() {
+  // The Community guidelines gate must be accepted before posting (Apple 1.2)
+  if (!state.guidelinesAccepted) { goTab('community'); return; }
+  openPromptComposer();
+}
+
 function socialGoalCard() {
   const wk = weekKey();
   const sg = state.socialGoal && state.socialGoal.weekKey === wk ? state.socialGoal : { weekKey: wk, done: false };
@@ -2061,6 +2113,7 @@ function renderHome() {
   }
   html += `</div>`;
 
+  html += homeQuestionCard();
   html += stepsHomeCard();
 
   // Mood chart (Pro)
@@ -2144,6 +2197,8 @@ function setMood(level) {
   state.moods[todayStr()] = { level, note: existing.note };
   haptic();
   save(); render();
+  // Ask for a review only on a good day, after a week of check-ins
+  if (level >= 3 && streak() >= 7) maybeAskForReview("streak");
 }
 function saveNote() {
   const ta = document.getElementById("moodNote");
@@ -2244,6 +2299,12 @@ function renderExercisesBody() {
           <div class="meta"><b>${t('ex_' + e.id + '_title')}</b><span>${t('ex_' + e.id + '_desc')}</span></div>
         </div>`;
   }).join("");
+  html += `<h2>${t("unwind_h2")}</h2>
+    <div class="card exCard" onclick="openStoneGame()">
+      <div class="exIcon">🪨</div>
+      <div class="meta"><b>${t("game_title")}</b><span>${t("game_desc")}</span></div>
+      ${state.stoneBest ? `<span style="font-size:0.75rem;color:var(--text-soft);white-space:nowrap">${t("game_best")}: ${state.stoneBest}</span>` : ""}
+    </div>`;
   const sr = REFLECTIONS[todaysReflectionIdx()];
   const srSaved = state.reflections[sr.id];
   html += `<h2>${t("reflection_h2")}</h2>`;
@@ -2297,7 +2358,52 @@ function startProgram(id) {
 function completeProgramDay(id, day) {
   logEvent("program_day_complete", { program_id: id, day });
   completeExercise('program-' + id + '-' + day);
+  const p = PROGRAMS.find(x => x.id === id);
+  if (p && day === p.days) {
+    logEvent("program_complete", { program_id: id });
+    setTimeout(() => showProgramFinished(id), 700);
+  }
 }
+function showProgramFinished(id) {
+  const p = PROGRAMS.find(x => x.id === id);
+  if (!p) return;
+  document.querySelectorAll(".toast").forEach(el => el.remove());
+  openModal(`
+    <div style="text-align:center;font-size:2.4rem;margin-bottom:6px">${p.icon}</div>
+    <h3 style="text-align:center">${t("prog_finished_title")}</h3>
+    <div class="sub" style="text-align:center;margin-bottom:16px">${t("prog_finished_text").replace("{p}", "<b>" + t('prog_' + id + '_title') + "</b>")}</div>
+    <div style="font-size:0.88rem;color:var(--text-soft);text-align:center;margin-bottom:12px">${t("prog_finished_share")}</div>
+    <button class="btn" style="width:100%" onclick="shareApp('program_complete')">${t("share_app_btn")}</button>
+    <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">${t("close")}</button>
+  `);
+  maybeAskForReview("program_complete");
+}
+
+/* ---------- Sharing and reviews ---------- */
+const APP_STORE_URL = "https://apps.apple.com/app/id6780441989";
+async function shareApp(source) {
+  logEvent("share_app", { source });
+  const text = t("share_app_text");
+  if (navigator.share) {
+    try { await navigator.share({ title: "Together", text, url: APP_STORE_URL }); return; }
+    catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  try { await navigator.clipboard.writeText(text + " " + APP_STORE_URL); toast(t("share_link_copied")); }
+  catch (e) { window.open(APP_STORE_URL, "_blank"); }
+}
+// Uses Apple's own review sheet (SKStoreReviewController via ios/App/App/AppReviewPlugin.swift).
+// iOS decides whether it actually appears (max 3 times a year), we only ask at good moments
+// and at most every 120 days.
+function maybeAskForReview(trigger) {
+  const rv = window.Capacitor?.Plugins?.AppReview;
+  if (!rv) return;
+  if (state.reviewAskedAt && Date.now() - new Date(state.reviewAskedAt).getTime() < 120 * 86400000) return;
+  state.reviewAskedAt = new Date().toISOString();
+  save();
+  logEvent("review_prompt", { trigger });
+  setTimeout(() => { try { rv.requestReview(); } catch (e) {} }, 1500);
+}
+function isNativeIOS() { return window.Capacitor?.getPlatform?.() === "ios"; }
 function quitProgram(id) {
   state.activePrograms = (state.activePrograms || []).filter(p => p.id !== id);
   save(); render();
@@ -2387,6 +2493,303 @@ function openExercise(id) {
   show();
 }
 function closeExerciseOverlay() { const ov = document.getElementById("exerciseOverlay"); if (ov) ov.remove(); }
+
+/* ---------- Switch off: Skip stones ----------
+   A calm one-button game. Hold to wind up (the marker swings back and forth),
+   let go in the bright zone for a good throw. No timer, no losing. */
+let stoneGame = null;
+const STONE_SWEET = [0.76, 0.92];
+function openStoneGame() {
+  closeStoneGame();
+  logEvent("game_open", { game: "stones" });
+  const ov = document.createElement("div");
+  ov.id = "gameOverlay";
+  ov.innerHTML = `
+    <canvas id="stoneCanvas"></canvas>
+    <div class="closeRow"><button onclick="closeStoneGame()" aria-label="${t("close")}">&#10005;</button></div>
+    <div class="gameHud">
+      <div id="gameCount" class="gameCount"></div>
+      <div id="gameMsg" class="gameMsg">${t("game_hint")}</div>
+      <div id="gameBest" class="gameBest">${state.stoneBest ? t("game_best") + ": " + state.stoneBest : ""}</div>
+    </div>`;
+  document.getElementById("app").appendChild(ov);
+  const cv = document.getElementById("stoneCanvas");
+  const g = stoneGame = { cv, ctx: cv.getContext("2d"), w: 0, h: 0, t: 0, last: performance.now(), raf: null,
+    phase: "idle", chargeT: 0, power: 0, stone: null, ripples: [], drops: [], nextFish: 3, throws: 0 };
+  g.onResize = () => stoneResize();
+  g.onUp = () => stoneRelease();
+  window.addEventListener("resize", g.onResize);
+  window.addEventListener("pointerup", g.onUp);
+  window.addEventListener("pointercancel", g.onUp);
+  cv.addEventListener("pointerdown", e => { e.preventDefault(); stonePress(); });
+  stoneResize();
+  g.raf = requestAnimationFrame(stoneFrame);
+}
+function closeStoneGame() {
+  const g = stoneGame;
+  if (g) {
+    cancelAnimationFrame(g.raf);
+    window.removeEventListener("resize", g.onResize);
+    window.removeEventListener("pointerup", g.onUp);
+    window.removeEventListener("pointercancel", g.onUp);
+    if (g.throws > 0) logEvent("game_session", { game: "stones", throws: g.throws });
+  }
+  stoneGame = null;
+  const ov = document.getElementById("gameOverlay");
+  if (ov) ov.remove();
+  if (currentTab === "training") render();
+}
+function stoneResize() {
+  const g = stoneGame; if (!g) return;
+  const r = g.cv.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  g.w = r.width; g.h = r.height;
+  g.cv.width = Math.round(r.width * dpr); g.cv.height = Math.round(r.height * dpr);
+  g.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.horizon = g.h * 0.46; g.shore = g.h * 0.84; g.cx = g.w / 2;
+  g.handY = g.shore + (g.h - g.shore) * 0.38;
+  g.sunX = g.w * 0.7; g.sunR = Math.max(24, g.w * 0.075); g.sunY = g.horizon - g.h * 0.15;
+  const ridge = (n, base, amp) => {
+    const pts = []; let y = 0;
+    for (let i = 0; i <= n; i++) {
+      y = Math.max(0.15, Math.min(1, y * 0.55 + Math.random() * 0.9));
+      pts.push([g.w * i / n, base - amp * y]);
+    }
+    return pts;
+  };
+  g.farRidge = ridge(14, g.horizon, g.h * 0.11);
+  g.nearRidge = ridge(6, g.horizon, g.h * 0.07);
+  g.shimmer = [];
+  for (let i = 0; i < 46; i++) {
+    const d = Math.random();
+    const nearSun = Math.random() < 0.65;
+    g.shimmer.push({ d, x: nearSun ? g.sunX + (Math.random() - 0.5) * g.sunR * 2.4 * (1 + d * 1.5) : Math.random() * g.w,
+      len: (6 + Math.random() * 22) * (0.4 + d), ph: Math.random() * 6.28, sun: nearSun });
+  }
+  g.pebbles = [];
+  for (let i = 0; i < 26; i++) g.pebbles.push({ x: Math.random() * g.w, y: g.shore + 14 + Math.random() * (g.h - g.shore), r: 3 + Math.random() * 9, c: 30 + Math.floor(Math.random() * 25) });
+}
+// Depth z runs from 0 (shore) to 1 (horizon). persp() maps it to screen space.
+function stonePersp(z) { const c = 0.42; return z * (1 + c) / (z + c); }
+function stoneY(z) { const g = stoneGame; return g.shore - (g.shore - g.horizon) * stonePersp(z); }
+function stoneScale(z) { return 1 - 0.9 * stonePersp(z); }
+function stoneX(z, drift) { return stoneGame.cx + drift * stonePersp(z); }
+
+function stonePress() {
+  const g = stoneGame;
+  if (!g || g.phase !== "idle") return;
+  g.phase = "charging"; g.chargeT = 0; g.power = 0;
+  haptic("LIGHT");
+}
+function stoneRelease() {
+  const g = stoneGame;
+  if (!g || g.phase !== "charging") return;
+  if (g.chargeT < 0.12) { g.phase = "idle"; return; } // a tap, not a throw
+  stoneThrow(g.power);
+}
+function stoneThrow(p) {
+  const g = stoneGame;
+  const inZone = p >= STONE_SWEET[0] && p <= STONE_SWEET[1];
+  const q = Math.max(0, 1 - Math.abs(p - 0.84) / 0.84);
+  let n = Math.round(1 + Math.pow(q, 2) * 9 + Math.random() * 2);
+  if (inZone) n += 2 + Math.floor(Math.random() * 4);
+  n = Math.max(1, Math.min(18, n));
+  const D = Math.min(0.94, 0.22 + 0.62 * q + (inZone ? 0.08 : 0));
+  // First flight from the hand, then n hops shrinking geometrically, the last one sinks
+  const r = 0.8, first = n > 1 ? D * 0.26 : D * 0.6;
+  const rest = D - first;
+  const h1 = rest * (1 - r) / (1 - Math.pow(r, n));
+  const segs = [{ z0: 0, z1: first, dur: 0.5, first: true }];
+  let z = first;
+  for (let k = 0; k < n; k++) {
+    const len = h1 * Math.pow(r, k);
+    segs.push({ z0: z, z1: z + len, dur: 0.2 + 1.5 * len, H: 30 + 520 * len });
+    z += len;
+  }
+  g.stone = { segs, si: 0, u: 0, skips: 0, n, drift: (Math.random() - 0.5) * g.w * 0.32, spin: 0 };
+  g.phase = "flying"; g.throws++;
+  document.getElementById("gameCount").textContent = "";
+  document.getElementById("gameMsg").textContent = "";
+}
+function stoneTouch(z, sink) {
+  const g = stoneGame, s = g.stone;
+  const x = stoneX(z, s.drift), y = stoneY(z), sc = stoneScale(z);
+  g.ripples.push({ x, y, sc, age: 0, life: sink ? 3.2 : 2.2, big: sink });
+  const drops = sink ? 7 : 4;
+  for (let i = 0; i < drops; i++) {
+    g.drops.push({ x, y, vx: (Math.random() - 0.5) * 60 * sc, vy: -(50 + Math.random() * 80) * sc, age: 0, life: 0.55, sc });
+  }
+  if (!sink) {
+    s.skips++;
+    document.getElementById("gameCount").textContent = s.skips;
+    haptic("LIGHT");
+  }
+}
+function stoneFinish() {
+  const g = stoneGame, s = g.stone;
+  const best = state.stoneBest || 0;
+  const isBest = s.skips > best;
+  if (isBest) { state.stoneBest = s.skips; save(); hapticSuccess(); }
+  document.getElementById("gameCount").textContent = s.skips + " " + (s.skips === 1 ? t("game_skip_one") : t("game_skips"));
+  const msg = isBest && best > 0 ? t("game_new_best") : s.skips >= 10 ? t("game_high") : s.skips >= 4 ? t("game_mid") : t("game_low");
+  document.getElementById("gameMsg").textContent = msg;
+  document.getElementById("gameBest").textContent = t("game_best") + ": " + state.stoneBest;
+  g.phase = "settling"; g.settleT = 0;
+}
+function stoneUpdate(dt) {
+  const g = stoneGame;
+  g.t += dt;
+  if (g.phase === "charging") {
+    g.chargeT += dt;
+    const ph = (g.chargeT / 1.3) % 2;
+    g.power = ph < 1 ? ph : 2 - ph;
+  } else if (g.phase === "flying") {
+    const s = g.stone;
+    s.spin += dt * 18;
+    s.u += dt / s.segs[s.si].dur;
+    while (s.u >= 1 && g.phase === "flying") {
+      s.u -= 1;
+      const seg = s.segs[s.si];
+      const sink = s.si === s.segs.length - 1;
+      stoneTouch(seg.z1, sink);
+      if (sink) { stoneFinish(); break; }
+      s.si++;
+    }
+  } else if (g.phase === "settling") {
+    g.settleT += dt;
+    if (g.settleT > 1.6) {
+      g.phase = "idle"; g.stone = null;
+      const msg = document.getElementById("gameMsg");
+      if (msg && g.throws < 3) msg.textContent = t("game_again");
+    }
+  }
+  g.nextFish -= dt;
+  if (g.nextFish <= 0) {
+    g.nextFish = 4 + Math.random() * 6;
+    const z = 0.15 + Math.random() * 0.7;
+    g.ripples.push({ x: Math.random() * g.w, y: stoneY(z), sc: stoneScale(z) * 0.6, age: 0, life: 2.6, big: false, fish: true });
+  }
+  for (const r of g.ripples) r.age += dt;
+  g.ripples = g.ripples.filter(r => r.age < r.life);
+  for (const d of g.drops) { d.age += dt; d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 320 * d.sc * dt; }
+  g.drops = g.drops.filter(d => d.age < d.life);
+}
+function stoneDraw() {
+  const g = stoneGame, c = g.ctx, w = g.w, h = g.h;
+  // Sky
+  let gr = c.createLinearGradient(0, 0, 0, g.horizon);
+  gr.addColorStop(0, "#173a40"); gr.addColorStop(0.55, "#3f6f70"); gr.addColorStop(1, "#e9a58e");
+  c.fillStyle = gr; c.fillRect(0, 0, w, g.horizon + 1);
+  // Sun with glow, sitting on the horizon
+  gr = c.createRadialGradient(g.sunX, g.sunY, g.sunR * 0.4, g.sunX, g.sunY, g.sunR * 4);
+  gr.addColorStop(0, "rgba(255,214,190,0.55)"); gr.addColorStop(1, "rgba(255,214,190,0)");
+  c.fillStyle = gr; c.fillRect(0, 0, w, g.horizon);
+  c.fillStyle = "#f6b49c";
+  c.beginPath(); c.arc(g.sunX, g.sunY, g.sunR, 0, Math.PI * 2); c.fill();
+  // Mountains
+  const ridge = (pts, color, sharp) => {
+    c.fillStyle = color; c.beginPath(); c.moveTo(0, g.horizon);
+    for (let i = 0; i < pts.length; i++) {
+      const [x, y] = pts[i];
+      if (i === 0 || sharp) c.lineTo(x, y);
+      else { const [px, py] = pts[i - 1]; c.quadraticCurveTo(px + (x - px) * 0.5, Math.min(py, y) - 6, x, y); }
+    }
+    c.lineTo(w, g.horizon); c.closePath(); c.fill();
+  };
+  ridge(g.farRidge, "#3b6466", true);
+  ridge(g.nearRidge, "#24494c");
+  // Lake
+  gr = c.createLinearGradient(0, g.horizon, 0, g.shore);
+  gr.addColorStop(0, "#5f8e8c"); gr.addColorStop(0.25, "#2f6a6d"); gr.addColorStop(1, "#14393d");
+  c.fillStyle = gr; c.fillRect(0, g.horizon, w, g.shore - g.horizon + 2);
+  // Mirrored mountains, faint
+  c.save(); c.globalAlpha = 0.22; c.translate(0, g.horizon); c.scale(1, -0.55); c.translate(0, -g.horizon);
+  ridge(g.nearRidge, "#16363a"); c.restore();
+  // Sun reflection and shimmer
+  for (const sh of g.shimmer) {
+    const y = g.horizon + 3 + (g.shore - g.horizon) * sh.d * sh.d;
+    const a = (sh.sun ? 0.55 : 0.18) * (0.5 + 0.5 * Math.sin(g.t * 1.3 + sh.ph)) * (1 - sh.d * 0.6);
+    c.strokeStyle = sh.sun ? `rgba(255,205,180,${a})` : `rgba(255,255,255,${a})`;
+    c.lineWidth = 1 + sh.d * 1.5;
+    const x = sh.x + Math.sin(g.t * 0.6 + sh.ph) * 4;
+    c.beginPath(); c.moveTo(x - sh.len / 2, y); c.lineTo(x + sh.len / 2, y); c.stroke();
+  }
+  // Ripples
+  for (const r of g.ripples) {
+    const k = r.age / r.life;
+    const rings = r.big ? 3 : 2;
+    for (let i = 0; i < rings; i++) {
+      const kk = k - i * 0.12; if (kk <= 0) continue;
+      const rad = (8 + kk * (r.big ? 95 : 60)) * r.sc;
+      c.strokeStyle = `rgba(255,255,255,${(1 - kk) * (r.fish ? 0.25 : 0.55)})`;
+      c.lineWidth = Math.max(0.6, 1.6 * r.sc);
+      c.beginPath(); c.ellipse(r.x, r.y, rad, rad * 0.28, 0, 0, Math.PI * 2); c.stroke();
+    }
+  }
+  for (const d of g.drops) {
+    c.fillStyle = `rgba(235,248,248,${1 - d.age / d.life})`;
+    c.beginPath(); c.arc(d.x, d.y, Math.max(0.8, 2.2 * d.sc), 0, Math.PI * 2); c.fill();
+  }
+  // Shore
+  c.fillStyle = "#10292b";
+  c.beginPath(); c.moveTo(0, g.shore + 10);
+  c.quadraticCurveTo(w * 0.3, g.shore - 6, w * 0.55, g.shore + 4);
+  c.quadraticCurveTo(w * 0.8, g.shore + 12, w, g.shore - 2);
+  c.lineTo(w, h); c.lineTo(0, h); c.closePath(); c.fill();
+  for (const p of g.pebbles) {
+    c.fillStyle = `rgb(${p.c},${p.c + 14},${p.c + 15})`;
+    c.beginPath(); c.ellipse(p.x, p.y, p.r, p.r * 0.55, 0, 0, Math.PI * 2); c.fill();
+  }
+  // Stone
+  const drawStone = (x, y, sc, spin) => {
+    const rx = 13 * sc, ry = 7.5 * sc * (0.75 + 0.25 * Math.abs(Math.cos(spin || 0)));
+    const sg = c.createRadialGradient(x - rx * 0.3, y - ry * 0.4, 1, x, y, rx);
+    sg.addColorStop(0, "#c9cfcc"); sg.addColorStop(1, "#6d7775");
+    c.fillStyle = sg; c.beginPath(); c.ellipse(x, y, rx, ry, -0.15, 0, Math.PI * 2); c.fill();
+  };
+  if (g.phase === "idle" || g.phase === "charging") {
+    drawStone(g.cx, g.handY + (g.phase === "charging" ? g.power * 14 : 0), 1.25, 0);
+  } else if (g.phase === "flying") {
+    const s = g.stone, seg = s.segs[s.si], u = Math.min(1, s.u);
+    const z = seg.z0 + (seg.z1 - seg.z0) * u;
+    let x, y, sc;
+    if (seg.first) {
+      const x1 = stoneX(seg.z1, s.drift), y1 = stoneY(seg.z1), sc1 = stoneScale(seg.z1);
+      x = g.cx + (x1 - g.cx) * u; y = g.handY + (y1 - g.handY) * u - 120 * 4 * u * (1 - u) * (0.5 + sc1 * 0.5);
+      sc = 1.25 + (sc1 - 1.25) * u;
+    } else {
+      sc = stoneScale(z); x = stoneX(z, s.drift);
+      const wy = stoneY(z), lift = seg.H * 4 * u * (1 - u) * sc;
+      c.fillStyle = `rgba(5,25,28,${0.3 * (1 - Math.min(1, lift / 60))})`;
+      c.beginPath(); c.ellipse(x, wy, 9 * sc, 2.5 * sc, 0, 0, Math.PI * 2); c.fill();
+      y = wy - lift;
+    }
+    drawStone(x, y, sc, s.spin);
+  }
+  // Wind-up meter
+  if (g.phase === "idle" || g.phase === "charging") {
+    const bw = Math.min(w * 0.62, 260), bx = (w - bw) / 2, by = h - 46 - 10;
+    c.globalAlpha = g.phase === "charging" ? 1 : 0.45;
+    c.fillStyle = "rgba(255,255,255,0.16)"; stoneRoundRect(c, bx, by, bw, 10, 5); c.fill();
+    c.fillStyle = "rgba(240,147,125,0.75)";
+    stoneRoundRect(c, bx + bw * STONE_SWEET[0], by, bw * (STONE_SWEET[1] - STONE_SWEET[0]), 10, 5); c.fill();
+    if (g.phase === "charging") {
+      const mx = bx + bw * g.power;
+      c.fillStyle = "#fff"; c.beginPath(); c.arc(mx, by + 5, 9, 0, Math.PI * 2); c.fill();
+    }
+    c.globalAlpha = 1;
+  }
+}
+function stoneRoundRect(c, x, y, w, h, r) {
+  c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+function stoneFrame(now) {
+  const g = stoneGame; if (!g) return;
+  const dt = Math.min(0.05, (now - g.last) / 1000); g.last = now;
+  stoneUpdate(dt); stoneDraw();
+  g.raf = requestAnimationFrame(stoneFrame);
+}
 
 let breathRaf = null;
 let breathPhaseIdx = 0;
@@ -3204,6 +3607,13 @@ function renderProgress() {
 
 function renderProfile() {
   let html = `<h1>${t("profile_title")}</h1><div class="sub">${t("profile_sub")}</div>`;
+
+  html += `<div class="card" style="background:linear-gradient(135deg,var(--teal-dark) 0%,var(--teal) 100%);color:#fff;border:none">
+    <div style="font-size:1rem;font-weight:600;margin-bottom:6px">${t("share_card_title")}</div>
+    <div style="font-size:0.88rem;line-height:1.5;opacity:0.9;margin-bottom:14px">${t("share_card_text")}</div>
+    <button class="btn small" style="background:#fff;color:var(--teal-dark)" onclick="shareApp('profile')">${t("share_app_btn")}</button>
+    ${isNativeIOS() ? `<a href="${APP_STORE_URL}?action=write-review" target="_blank" onclick="logEvent('rate_app_tap', {})" style="display:block;margin-top:14px;color:#fff;font-size:0.82rem;opacity:0.85">⭐ ${t("rate_app_lbl")} ›<span style="display:block;font-size:0.75rem;opacity:0.8;margin-top:2px">${t("rate_app_sub")}</span></a>` : ""}
+  </div>`;
 
   html += `<h2>${t("safety_community_h2")}</h2><div class="card">
     <div class="setRow" onclick="showGuidelines()" style="cursor:pointer"><span>${t("community_guidelines_lbl")}</span><span style="color:var(--text-soft)">›</span></div>

@@ -4,7 +4,8 @@
   "description": "Prototype (PWA) av appen «Sammen»: fellesskap og mental trening for menn.\r Et støtteverktøy — ikke en erstatning for behandling.",
   "main": "sw.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cap:ios": "npx cap copy ios && node scripts/register-ios-plugins.js"
   },
   "repository": {
     "type": "git",

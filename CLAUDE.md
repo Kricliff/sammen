@@ -39,6 +39,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 ## Build-lærdommer (dyrekjøpte — ikke gjenta feilene)
 
 - **Bruk `npx cap copy ios`, ALDRI `cap sync ios`** — sync overskriver Podfile og fjerner post_install-hooken.
+- **Egne native plugins i `ios/App/App/*.swift` må registreres etter `cap copy`**: Capacitor 8 laster bare klasser i `packageClassList` (i den genererte `ios/App/App/capacitor.config.json`), og `cap copy` fyller den kun fra npm-pakker. Kjør `node scripts/register-ios-plugins.js` etterpå (eller `npm run cap:ios`). Codemagic gjør det som eget steg. Før dette (nov. 2026) ble ICloudSync og FirebaseAnalytics aldri lastet på iOS. Nye Swift-filer må også legges inn i `project.pbxproj`.
 - **iOS bruker CocoaPods, ikke SPM.** RevenueCat v9 har ingen Package.swift; SPM-referansene er fjernet fra project.pbxproj. Rør dem ikke.
 - **Podfile har en `post_install`-hook som tvinger `IPHONEOS_DEPLOYMENT_TARGET = 15.0`** — uten den feiler bygget («compiling for iOS 13.0, but module Capacitor…»).
 - **`xcode: latest` i codemagic.yaml** — Apple krever iOS 26 SDK for opplasting. Aldri pin til gammel Xcode.
@@ -71,6 +72,9 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - **Translate**: MyMemory API, `langpair=en|{lang}` (kildespråk `en`, `auto` støttes ikke)
 - **Abonnement**: KUN Together Pro Monthly (`com.kricliff.together.pro.monthly`, $4.99), med 3 dagers gratis prøveperiode for nye abonnenter. Yearly/Lifetime er fjernet fra RevenueCat-offering (de fantes ikke i ASC og knakk getOfferings → avvisning 2.1(b)). Prøveperioden er konfigurert i App Store Connect → Subscriptions → Introductory Offers (IKKE i kode); paywallen viser trial-vilkår automatisk når `pkg.product.introPrice` finnes på RevenueCat-pakken.
 - **Notifications**: `@capacitor/local-notifications` — daglig påminnelse 45 dager planlagt fram; ukentlig refleksjonspåminnelse (id-range 4000-4099, neste 10 søndager); av-knapp kansellerer begge; Android-kanal `daily-reminder` opprettes før planlegging
+- **Deling og vurdering**: `shareApp(source)` (Web Share, ellers kopierer lenken) fra delekortet øverst i Profil og fra fullført-vinduet når et program er ferdig. `maybeAskForReview()` kaller Apples egen vurderingsdialog (`AppReviewPlugin.swift`, SKStoreReviewController, krav i retningslinje 5.6.1) etter 7 dager på rad med humør «Okay» eller bedre, eller når et program er fullført. Maks én gang per 120 dager (`state.reviewAskedAt`).
+- **Today's question på Hjem**: `homeQuestionCard()` under humørkortet. Svar-knappen sender via Community-porten hvis retningslinjene ikke er godtatt.
+- **Spillet «Skip stones» / «Kast smutt»** (Training → Switch off): canvas-spill med én knapp i `openStoneGame()`, uten tid og uten å tape. Rekorden ligger i `state.stoneBest`. Teller ikke som øvelse.
 - **Coach-kontaktskjema**: kun synlig når `L() === "no"` (norsk språkinnstilling, uavhengig av App Store-locale); oversettelsesnøkler (`coach_contact_*`) finnes derfor kun i `no:`-ordboken; mailer til together@cliffordcoaching.no
 
 ## App Store
