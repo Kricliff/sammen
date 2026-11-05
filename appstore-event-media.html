@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Together event media</title>
+<style>
+  body { margin: 0; padding: 32px; background: #dcdad6; font-family: -apple-system, sans-serif; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+  figure { margin: 0; }
+  figcaption { font-size: 13px; color: #555; margin-top: 8px; }
+  canvas { display: block; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+  #card { width: 960px; height: 540px; }
+  #details { width: 405px; height: 720px; }
+</style>
+</head>
+<body>
+<!--
+  App Store In-App Event media for "30 small steps" (men's health month).
+  Text-free on purpose: App Store overlays the event name and description.
+  Canvases are drawn at full export size (1920x1080 and 1080x1920) and only
+  scaled down on screen. Export: node serve.js, open this page, right-click
+  > Save image, or use the Playwright snippet in the commit that added it.
+  Same scene language as the in-app game (www/index.html, stoneDraw).
+-->
+<figure><canvas id="card" width="1920" height="1080"></canvas><figcaption>Event card, 1920 × 1080</figcaption></figure>
+<figure><canvas id="details" width="1080" height="1920"></canvas><figcaption>Event details page, 1080 × 1920</figcaption></figure>
+<script>
+function rng(seed) { return () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; }
+
+function drawScene(canvas, opt) {
+  const c = canvas.getContext("2d"), w = canvas.width, h = canvas.height, R = rng(opt.seed);
+  const k = Math.min(w, h) / 1080; // size unit
+  const horizon = h * opt.horizon, sunX = w * opt.sunX, sunY = horizon - h * opt.sunLift, sunR = 70 * k;
+
+  // Sky
+  let g = c.createLinearGradient(0, 0, 0, horizon);
+  g.addColorStop(0, "#163840"); g.addColorStop(0.5, "#3f6f70"); g.addColorStop(0.85, "#d99a86"); g.addColorStop(1, "#f2b49c");
+  c.fillStyle = g; c.fillRect(0, 0, w, horizon + 1);
+  g = c.createRadialGradient(sunX, sunY, sunR * 0.5, sunX, sunY, sunR * 6);
+  g.addColorStop(0, "rgba(255,220,198,0.6)"); g.addColorStop(1, "rgba(255,220,198,0)");
+  c.fillStyle = g; c.fillRect(0, 0, w, horizon);
+  c.fillStyle = "#f8bea6"; c.beginPath(); c.arc(sunX, sunY, sunR, 0, Math.PI * 2); c.fill();
+
+  // Mountains
+  const ridge = (n, amp, color, sharp, mirror) => {
+    const pts = []; let y = 0;
+    for (let i = 0; i <= n; i++) { y = Math.max(0.15, Math.min(1, y * 0.55 + R() * 0.9)); pts.push([w * i / n, horizon - amp * y]); }
+    const path = () => {
+      c.beginPath(); c.moveTo(0, horizon);
+      pts.forEach(([x, y], i) => {
+        if (i === 0 || sharp) c.lineTo(x, y);
+        else { const [px, py] = pts[i - 1]; c.quadraticCurveTo(px + (x - px) / 2, Math.min(py, y) - 8 * k, x, y); }
+      });
+      c.lineTo(w, horizon); c.closePath();
+    };
+    c.fillStyle = color; path(); c.fill();
+    if (mirror) { c.save(); c.globalAlpha = 0.2; c.translate(0, horizon); c.scale(1, -0.55); c.translate(0, -horizon); c.fillStyle = "#16363a"; path(); c.fill(); c.restore(); }
+  };
+  ridge(16, h * opt.farAmp, "#3b6466", true, false);
+  // keep the sun clear: lower near ridge
+  ridge(9, h * opt.nearAmp, "#24494c", false, true);
+  // redraw near ridge reflection under water happens in ridge(); now lake on top of the lower half
+  g = c.createLinearGradient(0, horizon, 0, h);
+  g.addColorStop(0, "rgba(95,142,140,0.92)"); g.addColorStop(0.3, "rgba(47,106,109,0.95)"); g.addColorStop(1, "#11343a");
+  c.fillStyle = g; c.fillRect(0, horizon, w, h - horizon);
+  // faint mirrored mountains again on top of the water
+  c.save(); c.globalAlpha = 0.18; c.translate(0, horizon); c.scale(1, -0.5); c.translate(0, -horizon);
+  c.fillStyle = "#1b3f43"; c.fillRect(0, horizon - h * opt.nearAmp * 0.7, w, h * opt.nearAmp * 0.7); c.restore();
+
+  // Perspective helpers: z in [0,1], 0 = bottom edge, 1 = horizon
+  const persp = z => z * 1.45 / (z + 0.45);
+  const Y = z => h - (h - horizon) * persp(z);
+  const S = z => 1 - 0.93 * persp(z);
+  const X = z => opt.pathX0 * w + (sunX - opt.pathX0 * w) * persp(z) + Math.sin(z * opt.wiggle) * w * 0.05 * S(z);
+
+  // Sun reflection
+  for (let i = 0; i < 90; i++) {
+    const d = R(), y = horizon + 4 + (h - horizon) * d * d;
+    const spread = (1 + d * 3) * sunR * 0.9;
+    const x = sunX + (R() - 0.5) * spread * 2;
+    const len = (14 + R() * 50) * (0.4 + d) * k;
+    c.strokeStyle = `rgba(255,208,186,${(0.55 - d * 0.35) * (0.4 + R() * 0.6)})`;
+    c.lineWidth = (1.5 + d * 3) * k;
+    c.beginPath(); c.moveTo(x - len / 2, y); c.lineTo(x + len / 2, y); c.stroke();
+  }
+  for (let i = 0; i < 60; i++) {
+    const d = R(), y = horizon + 4 + (h - horizon) * d * d, x = R() * w, len = (10 + R() * 40) * (0.4 + d) * k;
+    c.strokeStyle = `rgba(255,255,255,${0.08 + R() * 0.1})`; c.lineWidth = (1 + d * 2) * k;
+    c.beginPath(); c.moveTo(x - len / 2, y); c.lineTo(x + len / 2, y); c.stroke();
+  }
+
+  // 30 stepping stones toward the sun, back to front
+  const N = 30, stones = [];
+  for (let i = 0; i < N; i++) {
+    const z = 0.04 + 0.86 * Math.pow(i / (N - 1), 1.1);
+    stones.push({ z, rx: (62 + R() * 22) * k * (opt.stoneSize || 1), ry: (22 + R() * 8) * k * (opt.stoneSize || 1), rot: (R() - 0.5) * 0.35, tone: R() });
+  }
+  stones.reverse().forEach(s => {
+    const x = X(s.z), y = Y(s.z), sc = S(s.z);
+    const rx = s.rx * sc, ry = s.ry * sc;
+    // ripple ring
+    c.strokeStyle = `rgba(235,248,248,${0.18 + 0.2 * sc})`; c.lineWidth = Math.max(1, 2.4 * k * sc);
+    c.beginPath(); c.ellipse(x, y + ry * 0.35, rx * 1.55, ry * 1.25, s.rot, 0, Math.PI * 2); c.stroke();
+    // water shadow
+    c.fillStyle = "rgba(6,28,32,0.35)";
+    c.beginPath(); c.ellipse(x, y + ry * 0.45, rx * 1.05, ry * 0.85, s.rot, 0, Math.PI * 2); c.fill();
+    // stone body
+    const sg = c.createRadialGradient(x - rx * 0.35, y - ry * 0.6, 1, x, y, rx * 1.1);
+    const top = 205 - s.tone * 25, bot = 95 - s.tone * 15;
+    sg.addColorStop(0, `rgb(${top},${top + 6},${top + 3})`); sg.addColorStop(1, `rgb(${bot},${bot + 12},${bot + 10})`);
+    c.fillStyle = sg; c.beginPath(); c.ellipse(x, y, rx, ry, s.rot, 0, Math.PI * 2); c.fill();
+    // warm rim light from the sun
+    c.strokeStyle = `rgba(255,200,175,${0.35 * sc + 0.1})`; c.lineWidth = Math.max(1, 2 * k * sc);
+    c.beginPath(); c.ellipse(x, y, rx, ry, s.rot, Math.PI * 1.05, Math.PI * 1.75); c.stroke();
+  });
+
+  // Soft vignette
+  g = c.createRadialGradient(w / 2, h * 0.45, Math.min(w, h) * 0.3, w / 2, h * 0.5, Math.max(w, h) * 0.8);
+  g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(5,20,24,0.35)");
+  c.fillStyle = g; c.fillRect(0, 0, w, h);
+}
+
+// Landscape card: App Store overlays text at the bottom-left, so keep the
+// sun and the end of the path in the upper-right half.
+drawScene(document.getElementById("card"), { seed: 21, stoneSize: 0.75, horizon: 0.5, sunX: 0.66, sunLift: 0.17, farAmp: 0.13, nearAmp: 0.075, pathX0: 0.42, wiggle: 9 });
+// Portrait details page: the event title sits over the lower part.
+drawScene(document.getElementById("details"), { seed: 11, horizon: 0.44, sunX: 0.56, sunLift: 0.1, farAmp: 0.07, nearAmp: 0.04, pathX0: 0.46, wiggle: 8 });
+</script>
+</body>
+</html>
