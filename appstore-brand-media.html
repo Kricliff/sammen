@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Together brand media</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  Product page "Header" and "Search Results" art for App Store Connect.
+  General, not tied to any season or feature: brand colours, the logo mark
+  and three live screens of the app (Community, Home, Breathing).
+  Size via query string, e.g. ?w=1920&h=1280&lang=en, then capture the
+  #stage element at deviceScaleFactor 2 (3840x2560) or 2.73125 (5244x2950).
+-->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #888; }
+  #stage { position: relative; overflow: hidden;
+    background: radial-gradient(120% 90% at 50% 10%, #2f8a89 0%, #1f6363 45%, #133f40 100%); }
+  .mark { position: absolute; opacity: 0.13; }
+  .glow { position: absolute; left: 50%; top: 55%; width: 1400px; height: 900px; transform: translate(-50%,-50%);
+    background: radial-gradient(closest-side, rgba(248,190,166,0.35), rgba(248,190,166,0)); }
+  .phone { position: absolute; width: 390px; height: 844px; border-radius: 58px; background: #0d1414;
+    padding: 12px; box-shadow: 0 40px 90px rgba(0,0,0,0.45), 0 0 0 2px rgba(255,255,255,0.08); }
+  .phone iframe { width: 366px; height: 820px; border: none; border-radius: 46px; display: block; background: #f5f4f2; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg class="mark" id="mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="38" cy="50" r="24" fill="#5fc0bf"/><circle cx="62" cy="50" r="24" fill="#f0937d"/>
+    <path d="M50 29.2 A24 24 0 0 1 50 70.8 A24 24 0 0 1 50 29.2 Z" fill="#ffffff"/>
+  </svg>
+  <div class="glow"></div>
+  <div class="phone" id="pL"><iframe id="fL" src="www/index.html"></iframe></div>
+  <div class="phone" id="pR"><iframe id="fR" src="www/index.html"></iframe></div>
+  <div class="phone" id="pC"><iframe id="fC" src="www/index.html"></iframe></div>
+</div>
+<script>
+const q = new URLSearchParams(location.search);
+const W = +q.get("w") || 1920, H = +q.get("h") || 1280, LANG = q.get("lang") || "en";
+const stage = document.getElementById("stage");
+stage.style.width = W + "px"; stage.style.height = H + "px";
+
+// Layout: centre phone large, side phones smaller and lower. Scale to height.
+const s = Math.min(H / 1280, W / 1700);
+function place(id, cx, top, scale, rot) {
+  const el = document.getElementById(id);
+  el.style.left = (cx - 195) + "px"; el.style.top = top + "px";
+  el.style.transform = `scale(${scale * s}) rotate(${rot}deg)`; el.style.transformOrigin = "50% 0";
+}
+const cy = H * 0.5 - 844 * 1.12 * s / 2 + 40 * s;
+place("pC", W / 2, cy, 1.12, 0);
+place("pL", W / 2 - 520 * s, cy + 120 * s, 0.95, -4);
+place("pR", W / 2 + 520 * s, cy + 120 * s, 0.95, 4);
+const mark = document.getElementById("mark");
+const ms = 1500 * s; mark.style.width = ms + "px"; mark.style.height = ms + "px";
+mark.style.left = (W / 2 - ms / 2) + "px"; mark.style.top = (H * 0.5 - ms / 2) + "px";
+
+function seed(win) {
+  const levels = [3, 3, 4, 2, 3, 4, 5, 3, 4, 5, 3, 4, 5, 5];
+  win.eval(`state.moods = {}; ${levels.map((l, i) => `state.moods[daysAgo(${13 - i})] = {level:${l}, note:""};`).join(" ")}
+    delete state.moods[todayStr()];
+    state.dismissedNudges["nov-promo-" + new Date().getFullYear()] = todayStr();
+    state.guidelinesAccepted = true;`);
+}
+function prep(id, fn) {
+  const f = document.getElementById(id);
+  f.addEventListener("load", () => {
+    const win = f.contentWindow;
+    win.setLang(LANG);
+    const st = win.document.createElement("style");
+    st.textContent = `::-webkit-scrollbar{display:none} *{scrollbar-width:none} #splash{display:none!important}`;
+    win.document.head.appendChild(st);
+    seed(win); fn(win);
+  });
+}
+prep("fC", win => { win.eval(`currentTab = "home"`); win.render(); });
+prep("fL", win => {
+  const go = () => { win.eval(`communityLoaded = true; communityPosts = SEED_POSTS.slice(0, 3);
+    if (typeof communityUnsubscribe !== "undefined" && communityUnsubscribe) { communityUnsubscribe(); communityUnsubscribe = null; }
+    currentTab = "community";`); win.render(); };
+  go(); const iv = setInterval(go, 400); setTimeout(() => clearInterval(iv), 5000);
+});
+prep("fR", win => { win.openBreath(); win.toggleBreath(); setTimeout(() => win.stopBreathCycle(), 4300); });
+</script>
+</body>
+</html>
