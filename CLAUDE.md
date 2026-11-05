@@ -39,6 +39,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 ## Build-lærdommer (dyrekjøpte — ikke gjenta feilene)
 
 - **Bruk `npx cap copy ios`, ALDRI `cap sync ios`** — sync overskriver Podfile og fjerner post_install-hooken.
+- **Egne native plugins i `ios/App/App/*.swift` må registreres etter `cap copy`**: Capacitor 8 laster bare klasser i `packageClassList` (i den genererte `ios/App/App/capacitor.config.json`), og `cap copy` fyller den kun fra npm-pakker. Kjør `node scripts/register-ios-plugins.js` etterpå (eller `npm run cap:ios`). Codemagic gjør det som eget steg. Før dette (nov. 2026) ble ICloudSync og FirebaseAnalytics aldri lastet på iOS. Nye Swift-filer må også legges inn i `project.pbxproj`.
 - **iOS bruker CocoaPods, ikke SPM.** RevenueCat v9 har ingen Package.swift; SPM-referansene er fjernet fra project.pbxproj. Rør dem ikke.
 - **Podfile har en `post_install`-hook som tvinger `IPHONEOS_DEPLOYMENT_TARGET = 15.0`** — uten den feiler bygget («compiling for iOS 13.0, but module Capacitor…»).
 - **`xcode: latest` i codemagic.yaml** — Apple krever iOS 26 SDK for opplasting. Aldri pin til gammel Xcode.
@@ -56,6 +57,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - RevenueCat (`@revenuecat/purchases-capacitor`, API-nøkkel `appl_…` i www/index.html) for abonnement
 - Firebase (web-SDK via CDN — ingen native pods): Firestore + Anonymous Auth for Community + cloud backup
   - Prosjekt: `together-4188b`; samlinger: `posts` (innlegg, inkl. `replyCount`), `posts/{id}/replies` (svar-tråder), `reports` (moderasjonsrapporter), `backups/{uid}` (skybackup)
+  - Skybackupen (`scheduleFirebaseBackup`, hele state inkl. humør og dagbok) er på som standard og kan slås av under Profil → Your data (`state.settings.cloudBackup`). Avslag sletter `backups/{uid}`. Dette er beskrevet i privacy.html og må stemme med App Privacy i App Store Connect.
   - Anonym auth overlever IKKE avinstallering+reinstallering på iOS (ny UID hver gang) — cloud backup er derfor et sikkerhetsnett mens appen er installert, ikke en løsning for reinstallering. Manuell backup/restore (Profile → Your data) er den ekte reinstalleringsveien.
   - Firestore rules bruker `hasOnly([...])`-allowlist på update-feltene — nye felt (f.eks. `replyCount`) må legges til i allowlisten der, ellers feiler writes stille med `permission-denied`.
 - `IS_PRO` variabel styrer Pro-funksjoner
@@ -66,10 +68,14 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - **Community**: Firestore sanntid, anonym. 5 poster gratis, resten Pro (paginering 6/side).
   - **UGC-moderasjon (Apple 1.2)**: guidelines-gate må godtas før visning/posting; `OBJECTIONABLE_PATTERNS`-filter blokkerer ved posting (gjelder både innlegg og svar); «⋯ More» → Report/Block/Hide; innlegg/svar med ≥3 rapporter auto-skjules (`REPORT_HIDE_THRESHOLD`); `SUPPORT_EMAIL`-konstant styrer kontakt-e-post overalt
   - **Svar-tråder**: `renderReplyThread`, `submitReply`, `reportReply`/`submitReplyReport`; egen `hiddenReplies`-liste i state. Egen post-eier varsles IKKE med ekte push — `checkNewReplies()` sjekker `replyCount` mot `state.seenReplyCounts` og viser en in-app toast neste gang appen åpnes (ingen native push-infrastruktur).
+  - **Today's question** (`dailyPrompt()`, het tidligere «Today's prompt»): 60 spørsmål i `DAILY_PROMPTS`/`DAILY_PROMPTS_NO` roterer på lokal dato resten av året; i november brukes `NOVEMBER_PROMPTS` med ett spørsmål per kalenderdag (indeks = dato - 1, dag 19 = mannsdagen). EN- og NO-listene må ha samme lengde og rekkefølge. Refleksjonen i Training heter «Today's reflection» for å ikke forveksles.
   - Age rating i App Store Connect: **18+** (krav for anonymt UGC)
 - **Translate**: MyMemory API, `langpair=en|{lang}` (kildespråk `en`, `auto` støttes ikke)
 - **Abonnement**: KUN Together Pro Monthly (`com.kricliff.together.pro.monthly`, $4.99), med 3 dagers gratis prøveperiode for nye abonnenter. Yearly/Lifetime er fjernet fra RevenueCat-offering (de fantes ikke i ASC og knakk getOfferings → avvisning 2.1(b)). Prøveperioden er konfigurert i App Store Connect → Subscriptions → Introductory Offers (IKKE i kode); paywallen viser trial-vilkår automatisk når `pkg.product.introPrice` finnes på RevenueCat-pakken.
 - **Notifications**: `@capacitor/local-notifications` — daglig påminnelse 45 dager planlagt fram; ukentlig refleksjonspåminnelse (id-range 4000-4099, neste 10 søndager); av-knapp kansellerer begge; Android-kanal `daily-reminder` opprettes før planlegging
+- **Deling og vurdering**: `shareApp(source)` (Web Share, ellers kopierer lenken) fra delekortet øverst i Profil og fra fullført-vinduet når et program er ferdig. `maybeAskForReview()` kaller Apples egen vurderingsdialog (`AppReviewPlugin.swift`, SKStoreReviewController, krav i retningslinje 5.6.1) etter 7 dager på rad med humør «Okay» eller bedre, eller når et program er fullført. Maks én gang per 120 dager (`state.reviewAskedAt`).
+- **Today's question på Hjem**: `homeQuestionCard()` under humørkortet. Svar-knappen sender via Community-porten hvis retningslinjene ikke er godtatt.
+- **Spillet «Skip stones» / «Fiskesprett»** (Training → Switch off): canvas-spill med én knapp i `openStoneGame()`, uten tid og uten å tape. Rekorden ligger i `state.stoneBest`. Teller ikke som øvelse.
 - **Coach-kontaktskjema**: kun synlig når `L() === "no"` (norsk språkinnstilling, uavhengig av App Store-locale); oversettelsesnøkler (`coach_contact_*`) finnes derfor kun i `no:`-ordboken; mailer til together@cliffordcoaching.no
 
 ## App Store
@@ -79,7 +85,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - Avvisningshistorikk: 2.1(b) + 3.1.2(c) (RC-offering + pris — fikset), 1.2 UGC (moderasjon — fikset)
 - Review Notes-mal: ingen innlogging kreves; paywall via Profile → Go Pro; Community-test via gate → «⋯ More»
 - **Versjonsstatus**: 1.0.4 og 1.0.5 ble laget på Macen (aug. 2026, se git-loggen). 1.0.6 (okt. 2026, `review-notes-1.0.6.md`): programmene «30 små steg» (`steps30`) og «Gjennom mørketiden» (`winter`), søvn/humør-innsiktskort i Fremgang, november-spørsmål i Fellesskap, november-kort på Hjem, og `logEvent()`-sporing av `program_start`/`program_day_complete` i Firebase Analytics.
-- **Alt er gratis siden 2026-08-03**: `IS_PRO = true` er hardkodet og `initRevenueCat()` kalles ikke. Ingen betalingsmur vises. Butikktekstene (`appstore-description-*.txt`, `appstore-listing-no.txt`) nevner fortsatt Pro og prøveperiode, så de må oppdateres før neste innsending.
+- **Alt er gratis siden 2026-08-03**: `IS_PRO = true` er hardkodet og `initRevenueCat()` kalles ikke. Ingen betalingsmur vises. Butikktekstene for 1.0.7 ligger i `appstore-listing-en.txt`, `appstore-listing-no.txt` og `playstore-listing-*.txt` (ingen Pro, inkl. «What's New»).
 - **Sesongstyrt innhold** går på `isNovember()` (november-spørsmål, Hjem-kortet) og 19. november (mannsdag-melding i `todayMessage()`). Unngå varemerket «Movember» i appteksten, bruk «måneden for menns helse».
 
 ## Codemagic

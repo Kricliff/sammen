@@ -1,0 +1,40 @@
+ENGLISH APP STORE LISTING
+Paste into App Store Connect when the next version (1.0.7) is created.
+Name, subtitle and keywords for English are already in App Store Connect and are unchanged.
+
+=== PROMOTIONAL TEXT (max 170 chars, can be changed anytime without review) ===
+November is men's health month. Answer today's question, start 30 small steps, or just check in with yourself. Free, anonymous, no account.
+
+(From December, swap to something evergreen:
+Mental health built for men. Practical tools, a new question every day and an anonymous community that gets it. Free, no account needed.)
+
+=== DESCRIPTION ===
+Most mental health apps aren't built for men. Together is.
+
+Practical tools, an anonymous community and straightforward support that fits how men actually think. No therapy homework, no pressure. Everything is free.
+
+WHAT'S INSIDE
+
+- A daily mood check-in that takes seconds
+- Today's question: a new question every day to think about, or answer anonymously in the Community
+- Guided exercises for stress, anger, panic, sleep and hard moments
+- Programmes on confidence, fatherhood, anxiety, loneliness, grief, sleep and the dark season, one day at a time
+- An anonymous Community where men share what's really going on, with replies and support
+- Your progress in one place: mood trends, how your sleep affects your mood, a private journal and a weekly review
+- Short, research-backed articles on men's mental health
+- Skip stones: a calm little game for when your head needs a break
+
+Available in English and Norwegian, with full dark mode support.
+
+Built by Kristian Clifford, a certified coach and mental trainer. Together is a support tool, not a replacement for professional help. If you're in crisis, contact a professional or call your local crisis line.
+
+Your moods, journal and logs are private. No account, no name, no email. Your data is stored on your phone, with an anonymous cloud backup so you don't lose it, which you can turn off at any time. We use anonymous, aggregated usage statistics to improve the app, never for advertising or tracking. Privacy policy: kricliff.github.io/sammen/privacy.html
+
+Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+
+=== WHAT'S NEW (1.0.7) ===
+- Today's question: 60 new questions to think about or answer anonymously, now also on the Home screen. Every day in November has its own question.
+- New: Skip stones, a calm little game under Training for when your head needs a break.
+- Share Together with a mate straight from your profile.
+- Clearer, more natural wording throughout the app.
+- You can now turn off the automatic cloud backup under Profile, which also deletes it.

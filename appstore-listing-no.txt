@@ -1,5 +1,5 @@
 NORSK APP STORE-LOKALISERING (Bokmål)
-Klar til å limes inn neste gang en ny versjon opprettes i App Store Connect
+Klar til å limes inn når versjon 1.0.7 opprettes i App Store Connect
 (App Information-siden er låst til app-navn kan endres til du oppretter ny versjon).
 
 === APP NAME (17 tegn, maks 30) ===
@@ -10,47 +10,45 @@ Together for menn
 Mental trening for menn
 
 === PROMOTIONAL TEXT (maks 170, kan endres når som helst uten ny gjennomgang) ===
-November er måneden for menns helse. Start 30 små steg: én konkret handling om dagen, for kroppen, hodet og menneskene rundt deg. Gratis.
+November er måneden for menns helse. Svar på dagens spørsmål, start 30 små steg, eller bare sjekk inn med deg selv. Gratis, anonymt, ingen konto.
 
-(Etter november, bytt tilbake til noe tidløst, f.eks.:
-Mental helse laget for menn. Praktiske verktøy, et anonymt fellesskap og støtte som passer hvordan menn faktisk tenker. Gratis, ingen konto.)
+(Fra desember, bytt til noe tidløst:
+Mental helse laget for menn. Praktiske verktøy, et nytt spørsmål hver dag og et anonymt fellesskap som skjønner det. Gratis, ingen konto.)
 
 === KEYWORDS (88 tegn, maks 100) ===
 mental helse,menn,mindfulness,pust,stress,angst,coaching,selvutvikling,dagbok,fellesskap
 
-=== DESCRIPTION (kortere versjon, maks 4000 tegn) ===
+=== DESCRIPTION (maks 4000 tegn) ===
 De fleste mental helse-apper er ikke laget for menn. Together er det.
 
-Praktiske verktøy, ekte fellesskap og rett-frem støtte som faktisk passer hvordan menn tenker. Ingen terapi-lekser, ingen streaks å holde gående. Alt er gratis.
+Praktiske verktøy, et anonymt fellesskap og rett-frem støtte som passer hvordan menn faktisk tenker. Ingen terapi-lekser, ikke noe press. Alt er gratis.
 
 DETTE FÅR DU
 
 - Daglig humørsjekk som tar sekunder
+- Dagens spørsmål: et nytt spørsmål hver dag å tenke over, eller svare anonymt på i Fellesskap
 - Guidede øvelser for stress, sinne, panikk, søvn og tunge øyeblikk
-- Strukturerte programmer om selvtillit, farskap, angst, ensomhet, sorg og mer
-- Et anonymt Fellesskap for å dele det som faktisk skjer, med svar og støtte
-- Fremgangen din samlet: humørtrend, hvordan søvnen påvirker humøret, dagbok og ukentlig gjennomgang
-- Forskningsbaserte artikler om menns mentale helse
+- Programmer om selvtillit, farskap, angst, ensomhet, sorg, søvn og mørketiden, én dag om gangen
+- Et anonymt Fellesskap der menn deler det som faktisk skjer, med svar og støtte
+- Fremgangen din samlet: humørtrend, hvordan søvnen påvirker humøret, privat dagbok og ukentlig gjennomgang
+- Korte, forskningsbaserte artikler om menns mentale helse
+- Fiskesprett: et rolig lite spill for når hodet trenger en pause
 
 Tilgjengelig på norsk og engelsk, med full støtte for mørk modus.
 
-Bygget av Kristian Clifford, sertifisert coach og mental trener. Together er et verktøy, ikke en erstatning for profesjonell hjelp. Hvis du er i krise, ta kontakt med en fagperson eller ring din lokale krisetelefon.
+Laget av Kristian Clifford, sertifisert coach og mental trener. Together er et støtteverktøy, ikke en erstatning for profesjonell hjelp. Hvis du er i krise, ta kontakt med en fagperson eller ring din lokale krisetelefon.
 
-Humør, dagbok og logger er private. De lagres på enheten din, med en anonym sikkerhetskopi så du ikke mister dem. Ingen konto, ikke navn, ikke e-post. Vi bruker anonym, samlet bruksstatistikk for å forbedre appen, aldri til reklame eller sporing. Personvernerklæring: kricliff.github.io/sammen/privacy.html
+Humør, dagbok og logger er private. Ingen konto, ikke navn, ikke e-post. Dataene lagres på telefonen din, med en anonym skybackup så du ikke mister dem, som du kan slå av når du vil. Vi bruker anonym, samlet bruksstatistikk for å forbedre appen, aldri til reklame eller sporing. Personvernerklæring: kricliff.github.io/sammen/privacy.html
 
 Bruksvilkår: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
-=== WHAT'S NEW (1.0.6) ===
-- Nytt program: 30 små steg. Én konkret handling om dagen, for kroppen, hodet og menneskene rundt deg.
-- Nytt program: Gjennom mørketiden. 14 dager for jevnere humør og energi når dagene blir korte.
-- Ny innsikt i Fremgang: se hvordan søvnen og humøret ditt henger sammen.
-- Nye spørsmål i Fellesskap gjennom november, måneden for menns helse.
-
-=== WHAT'S NEW (1.0.6, engelsk) ===
-- New programme: 30 small steps. One concrete action a day for your body, your head and the people around you.
-- New programme: Through the dark season. 14 days to keep your mood and energy steadier as the days get short.
-- New insight in Progress: see how your sleep and your mood connect.
-- New Community prompts through November, the month for men's health.
+=== WHAT'S NEW (1.0.7) ===
+- Dagens spørsmål: 60 nye spørsmål å tenke over eller svare anonymt på, nå også på Hjem. Hver dag i november har sitt eget spørsmål.
+- Nytt: Fiskesprett, et rolig lite spill under Trening for når hodet trenger en pause.
+- Del Together med en kompis rett fra profilen din.
+- Mange små forbedringer i tekstene i appen.
+- Du kan nå slå av den automatiske skybackupen under Profil, og da slettes den.
+(Engelsk versjon står i appstore-listing-en.txt.)
 
 === HUSK OGSÅ ===
 Skjermbilder: kan gjenbruke de eksisterende engelske skjermbildene (appstore-screenshots.html),

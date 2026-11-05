@@ -80,45 +80,47 @@
   </div>
   <button class="dl-btn" onclick="capture('shot1','together-1-home')">Download PNG</button>
 </div>
-
 <div class="shotWrap">
-  <div class="canvas bg-teal" id="shot2">
+  <div class="canvas bg-coral" id="shot2">
+    <div class="headline">One honest question a day.</div>
+    <div class="frame"><iframe id="f3" src="www/index.html"></iframe></div>
+  </div>
+  <button class="dl-btn" onclick="capture('shot2','together-2-question')">Download PNG</button>
+</div>
+<div class="shotWrap">
+  <div class="canvas bg-teal" id="shot3">
     <div class="headline">Breathe through the moment.</div>
     <div class="frame"><iframe id="f2" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot2','together-2-breathing')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot3','together-3-breathing')">Download PNG</button>
 </div>
-
 <div class="shotWrap">
-  <div class="canvas bg-coral" id="shot3">
-    <div class="headline">You're not alone in this.</div>
-    <div class="frame"><iframe id="f3" src="www/index.html"></iframe></div>
+  <div class="canvas bg-light" id="shot4">
+    <div class="headline">One day at a time.</div>
+    <div class="frame"><iframe id="f6" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot3','together-3-community')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot4','together-4-programmes')">Download PNG</button>
 </div>
-
 <div class="shotWrap">
-  <div class="canvas bg-teal" id="shot4">
+  <div class="canvas bg-teal" id="shot5">
     <div class="headline">Track your progress, completely private.</div>
     <div class="frame"><iframe id="f4" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot4','together-4-profile')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot5','together-5-progress')">Download PNG</button>
 </div>
-
 <div class="shotWrap">
-  <div class="canvas bg-dark" id="shot5">
+  <div class="canvas bg-coral" id="shot6">
+    <div class="headline">Give your head a break.</div>
+    <div class="frame"><iframe id="f7" src="www/index.html"></iframe></div>
+  </div>
+  <button class="dl-btn" onclick="capture('shot6','together-6-skip-stones')">Download PNG</button>
+</div>
+<div class="shotWrap">
+  <div class="canvas bg-dark" id="shot7">
     <div class="headline">Beautiful in the dark, too.</div>
     <div class="frame"><iframe id="f5" src="www/index.html"></iframe></div>
   </div>
-  <button class="dl-btn" onclick="capture('shot5','together-5-dark')">Download PNG</button>
-</div>
-
-<div class="shotWrap">
-  <div class="canvas bg-coral" id="shot6">
-    <div class="headline">Everything to grow, in one place.</div>
-    <div class="frame"><iframe id="f6" src="www/index.html"></iframe></div>
-  </div>
-  <button class="dl-btn" onclick="capture('shot6','together-6-training')">Download PNG</button>
+  <button class="dl-btn" onclick="capture('shot7','together-7-dark')">Download PNG</button>
 </div>
 
 <script>
@@ -156,7 +158,11 @@ function setup(id, fn) {
 }
 function win_ready(win, fn) { win.setLang("en"); hideScrollbar(win); fn(win); }
 
-setup("f1", win => { seedMoods(win); win.render(); resetScroll(win); });
+setup("f1", win => {
+  seedMoods(win);
+  win.eval(`delete state.moods[todayStr()]; state.dismissedNudges["nov-promo-" + new Date().getFullYear()] = todayStr();`);
+  win.render(); resetScroll(win);
+});
 
 setup("f2", win => {
   win.openBreath();
@@ -194,9 +200,24 @@ setup("f4", win => {
 
 setup("f6", win => {
   seedMoods(win);
-  win.eval(`currentTab = "training"; window._trainingTab = "exercises";`);
+  win.eval(`state.activePrograms = [{ id: "steps30", startDate: daysAgo(4) }]; currentTab = "training"; window._trainingTab = "programs";`);
   win.render();
   resetScroll(win);
+});
+
+// Skip stones: throw a good stone and freeze the scene mid-flight, with a
+// trail of ripples on the water and the skip counter showing.
+setup("f7", win => {
+  win.openStoneGame();
+  setTimeout(() => {
+    win.eval(`stoneThrow(0.84)`);
+    const iv = setInterval(() => {
+      if (win.eval(`stoneGame && stoneGame.stone ? stoneGame.stone.skips : 0`) >= 4) {
+        clearInterval(iv);
+        win.eval(`stoneFrame = function () {}`);
+      }
+    }, 20);
+  }, 1200);
 });
 
 setup("f5", win => {

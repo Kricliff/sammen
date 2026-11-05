@@ -16,6 +16,8 @@ workflows:
         script: npm install --legacy-peer-deps
       - name: Capacitor copy
         script: npx cap copy ios
+      - name: Register local iOS plugins
+        script: node scripts/register-ios-plugins.js
       - name: Install CocoaPods
         script: |
           cd ios/App

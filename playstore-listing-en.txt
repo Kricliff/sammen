@@ -5,27 +5,29 @@ Ready to paste in once the app is created in Play Console.
 Together: Men's Mental Health
 
 === SHORT DESCRIPTION (max 80 chars) ===
-Practical mental health tools built for men. Free, anonymous, no account.
+Mental health tools built for men. A new question every day. Free, no account.
 
 === FULL DESCRIPTION (max 4000 chars) ===
 Most mental health apps aren't built for men. Together is.
 
-Practical tools, real community, and straightforward support that actually fits how men think. No therapy homework, no streaks to keep up. Everything is free.
+Practical tools, an anonymous community and straightforward support that fits how men actually think. No therapy homework, no pressure. Everything is free.
 
 WHAT'S INSIDE
 
-- Daily mood check-ins that take seconds
+- A daily mood check-in that takes seconds
+- Today's question: a new question every day to think about, or answer anonymously in the Community
 - Guided exercises for stress, anger, panic, sleep and hard moments
-- Structured programmes on confidence, fatherhood, anxiety, loneliness, grief and more
-- An anonymous Community to share what's really going on, with replies and support
-- Your progress in one place: mood trends, how your sleep affects your mood, journal and weekly review
-- Research-backed articles on men's mental health
+- Programmes on confidence, fatherhood, anxiety, loneliness, grief, sleep and the dark season, one day at a time
+- An anonymous Community where men share what's really going on, with replies and support
+- Your progress in one place: mood trends, how your sleep affects your mood, a private journal and a weekly review
+- Short, research-backed articles on men's mental health
+- Skip stones: a calm little game for when your head needs a break
 
 Available in English and Norwegian, with full dark mode support.
 
-Built by Kristian Clifford, a certified coach and mental trainer. Together is a tool, not a replacement for professional help. If you're in crisis, contact a professional or call your local crisis line.
+Built by Kristian Clifford, a certified coach and mental trainer. Together is a support tool, not a replacement for professional help. If you're in crisis, contact a professional or call your local crisis line.
 
-Your moods, journal and logs are private. They're stored on your device, with an anonymous backup so you don't lose them. No account, no name, no email. We use anonymous, aggregated usage statistics to improve the app, never for advertising or tracking. Privacy policy: kricliff.github.io/sammen/privacy.html
+Your moods, journal and logs are private. No account, no name, no email. Your data is stored on your phone, with an anonymous cloud backup so you don't lose it, which you can turn off at any time. We use anonymous, aggregated usage statistics to improve the app, never for advertising or tracking. Privacy policy: kricliff.github.io/sammen/privacy.html
 
 === CATEGORY ===
 Health & Fitness (or Lifestyle, whichever performs better once live)
