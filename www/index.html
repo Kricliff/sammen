@@ -305,7 +305,7 @@ const defaultState = {
   completedExercises: [],
   activePrograms: [],
   reactions: {},
-  settings: { notifications: true, notifTime: "09:00", weeklyReflection: false, weeklyReflectionTime: "18:00", crisisContact: "", icloudPromptDismissed: false },
+  settings: { notifications: true, notifTime: "09:00", weeklyReflection: false, weeklyReflectionTime: "18:00", crisisContact: "", icloudPromptDismissed: false, cloudBackup: true },
   dismissedNudges: {},
   reflections: {},
   journal: [],
@@ -419,7 +419,9 @@ const T = {
     journal_history_empty: "No journal entries yet.", weekly_history_empty: "No weekly reflections yet.",
     crisis_contact: "Personal crisis contact (optional)", crisis_contact_ph: "Name and number of someone you trust",
     your_data: "Your data", backup_my_data: "Back up my data", restore_from_backup: "Restore from backup",
-    data_note: "Your data is stored only on this phone. Make a backup so you don't lose it if you delete or reinstall the app.",
+    data_note: "Your data is stored on this phone. The cloud backup is tied to this install, so make a manual backup before you delete or reinstall the app.",
+    cloud_backup_lbl: "Automatic cloud backup", cloud_backup_sub: "An anonymous copy of your data, so you don't lose it. Turning it off deletes the copy.",
+    cloud_backup_off_toast: "Cloud backup turned off and deleted.", cloud_backup_on_toast: "Cloud backup turned on.",
     found_broken: "Found something broken?", report_fix: "Report it and we'll fix it.",
     backup_desc: "Copy this backup and keep it somewhere safe (Notes, email, or Files). If you delete or reinstall the app, paste it back under Restore to get your data back.",
     copy_backup: "Copy backup", share_btn: "Share…", close: "Close",
@@ -804,7 +806,9 @@ const T = {
     coach_contact_submit: "Send henvendelse", coach_contact_note: "Jeg tar kontakt innen 24 timer.",
     coach_contact_missing: "Fyll ut navn, minst én kontaktmåte og grunn først", coach_contact_sent: "Åpner e-post … husk å sende den",
     your_data: "Dine data", backup_my_data: "Sikkerhetskopier data", restore_from_backup: "Gjenopprett fra kopi",
-    data_note: "Dataene dine finnes bare på denne telefonen. Ta en sikkerhetskopi for å beholde dem hvis du sletter eller installerer appen på nytt.",
+    data_note: "Dataene dine lagres på denne telefonen. Skybackupen er knyttet til denne installasjonen, så ta en manuell sikkerhetskopi før du sletter eller installerer appen på nytt.",
+    cloud_backup_lbl: "Automatisk skybackup", cloud_backup_sub: "En anonym kopi av dataene dine, så du ikke mister dem. Slår du den av, slettes kopien.",
+    cloud_backup_off_toast: "Skybackup er slått av og slettet.", cloud_backup_on_toast: "Skybackup er slått på.",
     found_broken: "Fant du noe som ikke virker?", report_fix: "Meld fra, så fikser vi det.",
     backup_desc: "Kopier denne sikkerhetskopien og oppbevar den trygt (Notater, e-post eller Filer). Hvis du sletter eller installerer appen på nytt, limer du den inn under Gjenopprett for å få dataene tilbake.",
     copy_backup: "Kopier sikkerhetskopi", share_btn: "Del…", close: "Lukk",
@@ -1220,7 +1224,7 @@ async function initFirebase() {
    the manual backup/restore feature remains the way to survive reinstalls. */
 let _fbBackupTimer = null;
 function scheduleFirebaseBackup() {
-  if (!fbDb || !fbUser) return;
+  if (!fbDb || !fbUser || state.settings.cloudBackup === false) return;
   clearTimeout(_fbBackupTimer);
   _fbBackupTimer = setTimeout(() => {
     fbDb.collection('backups').doc(fbUser.uid).set({
@@ -3644,6 +3648,9 @@ function renderProfile() {
   html += `<h2>${t("your_data")}</h2><div class="card">
     <div class="setRow" onclick="openBackup()" style="cursor:pointer"><span>${t("backup_my_data")}</span><span style="color:var(--text-soft)">›</span></div>
     <div class="setRow" onclick="openRestore()" style="cursor:pointer"><span>${t("restore_from_backup")}</span><span style="color:var(--text-soft)">›</span></div>
+    <div class="setRow" style="gap:12px">
+      <span>${t("cloud_backup_lbl")}<span style="display:block;font-size:0.76rem;color:var(--text-soft);line-height:1.4;margin-top:2px">${t("cloud_backup_sub")}</span></span>
+      <label class="switch" style="flex-shrink:0"><input type="checkbox" ${state.settings.cloudBackup !== false ? "checked" : ""} onchange="toggleCloudBackup(this.checked)"><span class="sl"></span></label></div>
   </div>
   <div style="font-size:0.78rem;color:var(--text-soft);line-height:1.5;margin:-4px 2px 0">${t("data_note")}</div>`;
 
@@ -3725,6 +3732,15 @@ function editPseudonym() {
   `);
 }
 function savePseudonym() { const v = document.getElementById("pseudoInput").value.trim(); if (v) { state.pseudonym = v; save(); } closeModal(); render(); }
+async function toggleCloudBackup(on) {
+  haptic();
+  state.settings.cloudBackup = on;
+  save(); // save() also pushes a fresh backup when turned on
+  if (on) { toast(t("cloud_backup_on_toast")); return; }
+  clearTimeout(_fbBackupTimer);
+  try { if (fbDb && fbUser) await fbDb.collection('backups').doc(fbUser.uid).delete(); } catch (e) { console.warn('deleteCloudBackup:', e); }
+  toast(t("cloud_backup_off_toast"));
+}
 function toggleNotif(on) {
   haptic();
   state.settings.notifications = on; save();

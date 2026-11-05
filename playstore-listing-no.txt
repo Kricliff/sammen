@@ -5,27 +5,29 @@ Klar til å limes inn når appen er opprettet i Play Console.
 Together for menn
 
 === KORT BESKRIVELSE (maks 80 tegn) ===
-Praktiske verktøy for menns mentale helse. Gratis, anonymt, ingen konto.
+Mental helse laget for menn. Nytt spørsmål hver dag. Gratis, ingen konto.
 
 === FULL BESKRIVELSE (maks 4000 tegn) ===
 De fleste mental helse-apper er ikke laget for menn. Together er det.
 
-Praktiske verktøy, ekte fellesskap og rett-frem støtte som faktisk passer hvordan menn tenker. Ingen terapi-lekser, ingen streaks å holde gående. Alt er gratis.
+Praktiske verktøy, et anonymt fellesskap og rett-frem støtte som passer hvordan menn faktisk tenker. Ingen terapi-lekser, ikke noe press. Alt er gratis.
 
 DETTE FÅR DU
 
 - Daglig humørsjekk som tar sekunder
+- Dagens spørsmål: et nytt spørsmål hver dag å tenke over, eller svare anonymt på i Fellesskap
 - Guidede øvelser for stress, sinne, panikk, søvn og tunge øyeblikk
-- Strukturerte programmer om selvtillit, farskap, angst, ensomhet, sorg og mer
-- Et anonymt Fellesskap for å dele det som faktisk skjer, med svar og støtte
-- Fremgangen din samlet: humørtrend, hvordan søvnen påvirker humøret, dagbok og ukentlig gjennomgang
-- Forskningsbaserte artikler om menns mentale helse
+- Programmer om selvtillit, farskap, angst, ensomhet, sorg, søvn og mørketiden, én dag om gangen
+- Et anonymt Fellesskap der menn deler det som faktisk skjer, med svar og støtte
+- Fremgangen din samlet: humørtrend, hvordan søvnen påvirker humøret, privat dagbok og ukentlig gjennomgang
+- Korte, forskningsbaserte artikler om menns mentale helse
+- Kast smutt: et rolig lite spill for når hodet trenger en pause
 
 Tilgjengelig på norsk og engelsk, med full støtte for mørk modus.
 
-Bygget av Kristian Clifford, sertifisert coach og mental trener. Together er et verktøy, ikke en erstatning for profesjonell hjelp. Hvis du er i krise, ta kontakt med en fagperson eller ring din lokale krisetelefon.
+Laget av Kristian Clifford, sertifisert coach og mental trener. Together er et støtteverktøy, ikke en erstatning for profesjonell hjelp. Hvis du er i krise, ta kontakt med en fagperson eller ring din lokale krisetelefon.
 
-Humør, dagbok og logger er private. De lagres på enheten din, med en anonym sikkerhetskopi så du ikke mister dem. Ingen konto, ikke navn, ikke e-post. Vi bruker anonym, samlet bruksstatistikk for å forbedre appen, aldri til reklame eller sporing. Personvernerklæring: kricliff.github.io/sammen/privacy.html
+Humør, dagbok og logger er private. Ingen konto, ikke navn, ikke e-post. Dataene lagres på telefonen din, med en anonym skybackup så du ikke mister dem, som du kan slå av når du vil. Vi bruker anonym, samlet bruksstatistikk for å forbedre appen, aldri til reklame eller sporing. Personvernerklæring: kricliff.github.io/sammen/privacy.html
 
 === KATEGORI ===
 Helse og trening (eller Livsstil, avhengig av hva som fungerer best)

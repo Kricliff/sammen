@@ -57,6 +57,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - RevenueCat (`@revenuecat/purchases-capacitor`, API-nøkkel `appl_…` i www/index.html) for abonnement
 - Firebase (web-SDK via CDN — ingen native pods): Firestore + Anonymous Auth for Community + cloud backup
   - Prosjekt: `together-4188b`; samlinger: `posts` (innlegg, inkl. `replyCount`), `posts/{id}/replies` (svar-tråder), `reports` (moderasjonsrapporter), `backups/{uid}` (skybackup)
+  - Skybackupen (`scheduleFirebaseBackup`, hele state inkl. humør og dagbok) er på som standard og kan slås av under Profil → Your data (`state.settings.cloudBackup`). Avslag sletter `backups/{uid}`. Dette er beskrevet i privacy.html og må stemme med App Privacy i App Store Connect.
   - Anonym auth overlever IKKE avinstallering+reinstallering på iOS (ny UID hver gang) — cloud backup er derfor et sikkerhetsnett mens appen er installert, ikke en løsning for reinstallering. Manuell backup/restore (Profile → Your data) er den ekte reinstalleringsveien.
   - Firestore rules bruker `hasOnly([...])`-allowlist på update-feltene — nye felt (f.eks. `replyCount`) må legges til i allowlisten der, ellers feiler writes stille med `permission-denied`.
 - `IS_PRO` variabel styrer Pro-funksjoner
@@ -84,7 +85,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - Avvisningshistorikk: 2.1(b) + 3.1.2(c) (RC-offering + pris — fikset), 1.2 UGC (moderasjon — fikset)
 - Review Notes-mal: ingen innlogging kreves; paywall via Profile → Go Pro; Community-test via gate → «⋯ More»
 - **Versjonsstatus**: 1.0.4 og 1.0.5 ble laget på Macen (aug. 2026, se git-loggen). 1.0.6 (okt. 2026, `review-notes-1.0.6.md`): programmene «30 små steg» (`steps30`) og «Gjennom mørketiden» (`winter`), søvn/humør-innsiktskort i Fremgang, november-spørsmål i Fellesskap, november-kort på Hjem, og `logEvent()`-sporing av `program_start`/`program_day_complete` i Firebase Analytics.
-- **Alt er gratis siden 2026-08-03**: `IS_PRO = true` er hardkodet og `initRevenueCat()` kalles ikke. Ingen betalingsmur vises. Butikktekstene (`appstore-description-*.txt`, `appstore-listing-no.txt`) nevner fortsatt Pro og prøveperiode, så de må oppdateres før neste innsending.
+- **Alt er gratis siden 2026-08-03**: `IS_PRO = true` er hardkodet og `initRevenueCat()` kalles ikke. Ingen betalingsmur vises. Butikktekstene for 1.0.7 ligger i `appstore-listing-en.txt`, `appstore-listing-no.txt` og `playstore-listing-*.txt` (ingen Pro, inkl. «What's New»).
 - **Sesongstyrt innhold** går på `isNovember()` (november-spørsmål, Hjem-kortet) og 19. november (mannsdag-melding i `todayMessage()`). Unngå varemerket «Movember» i appteksten, bruk «måneden for menns helse».
 
 ## Codemagic
