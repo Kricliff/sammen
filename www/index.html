@@ -1167,7 +1167,7 @@ const T = {
     prog_finished_title: "Programmet er fullført",
     prog_finished_text: "Du har fullført {p}. Det krever innsats. Hold fast på vanene som fungerte for deg.",
     prog_finished_share: "Kjenner du noen som kunne hatt nytte av dette også? Send ham appen.",
-    unwind_h2: "Koble av", game_title: "Kast smutt", game_desc: "Et lite spill for å gi hodet en pause",
+    unwind_h2: "Koble av", game_title: "Fiskesprett", game_desc: "Et lite spill for å gi hodet en pause",
     game_hint: "Hold inne for å ta sats. Slipp når markøren er i det lyse feltet.",
     game_skips: "hopp", game_skip_one: "hopp", game_best: "Rekord", game_new_best: "Ny rekord!",
     game_low: "Det skjer. Plukk opp en ny stein.", game_mid: "Fint kast.", game_high: "Det var et skikkelig kast.",
@@ -3452,7 +3452,7 @@ function sleepMoodCard() {
 function renderProgressOverview() {
   const dates = lastNDates(14);
   const labels = [new Date(dates[0]), new Date(dates[13])].map(d => d.getDate() + "/" + (d.getMonth() + 1));
-  let html = `<div class="card"><b style="font-size:0.95rem">${t("mood_trend_h2")} &mdash; ${t("last_14_days")}</b>
+  let html = `<div class="card"><b style="font-size:0.95rem">${t("mood_trend_h2")} <span style="font-weight:400;color:var(--text-soft);font-size:0.78rem">${t("last_14_days")}</span></b>
     <div class="barChart">${dates.map(d => {
       const l = moodOn(d);
       return l === null

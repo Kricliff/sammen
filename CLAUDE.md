@@ -75,7 +75,7 @@ Kristian Clifford (coach og mental trener) bygger en mental helse-app for menn. 
 - **Notifications**: `@capacitor/local-notifications` — daglig påminnelse 45 dager planlagt fram; ukentlig refleksjonspåminnelse (id-range 4000-4099, neste 10 søndager); av-knapp kansellerer begge; Android-kanal `daily-reminder` opprettes før planlegging
 - **Deling og vurdering**: `shareApp(source)` (Web Share, ellers kopierer lenken) fra delekortet øverst i Profil og fra fullført-vinduet når et program er ferdig. `maybeAskForReview()` kaller Apples egen vurderingsdialog (`AppReviewPlugin.swift`, SKStoreReviewController, krav i retningslinje 5.6.1) etter 7 dager på rad med humør «Okay» eller bedre, eller når et program er fullført. Maks én gang per 120 dager (`state.reviewAskedAt`).
 - **Today's question på Hjem**: `homeQuestionCard()` under humørkortet. Svar-knappen sender via Community-porten hvis retningslinjene ikke er godtatt.
-- **Spillet «Skip stones» / «Kast smutt»** (Training → Switch off): canvas-spill med én knapp i `openStoneGame()`, uten tid og uten å tape. Rekorden ligger i `state.stoneBest`. Teller ikke som øvelse.
+- **Spillet «Skip stones» / «Fiskesprett»** (Training → Switch off): canvas-spill med én knapp i `openStoneGame()`, uten tid og uten å tape. Rekorden ligger i `state.stoneBest`. Teller ikke som øvelse.
 - **Coach-kontaktskjema**: kun synlig når `L() === "no"` (norsk språkinnstilling, uavhengig av App Store-locale); oversettelsesnøkler (`coach_contact_*`) finnes derfor kun i `no:`-ordboken; mailer til together@cliffordcoaching.no
 
 ## App Store

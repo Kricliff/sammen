@@ -32,7 +32,7 @@ DETTE FÅR DU
 - Et anonymt Fellesskap der menn deler det som faktisk skjer, med svar og støtte
 - Fremgangen din samlet: humørtrend, hvordan søvnen påvirker humøret, privat dagbok og ukentlig gjennomgang
 - Korte, forskningsbaserte artikler om menns mentale helse
-- Kast smutt: et rolig lite spill for når hodet trenger en pause
+- Fiskesprett: et rolig lite spill for når hodet trenger en pause
 
 Tilgjengelig på norsk og engelsk, med full støtte for mørk modus.
 
@@ -44,7 +44,7 @@ Bruksvilkår: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
 === WHAT'S NEW (1.0.7) ===
 - Dagens spørsmål: 60 nye spørsmål å tenke over eller svare anonymt på, nå også på Hjem. Hver dag i november har sitt eget spørsmål.
-- Nytt: Kast smutt, et rolig lite spill under Trening for når hodet trenger en pause.
+- Nytt: Fiskesprett, et rolig lite spill under Trening for når hodet trenger en pause.
 - Del Together med en kompis rett fra profilen din.
 - Mange små forbedringer i tekstene i appen.
 - Du kan nå slå av den automatiske skybackupen under Profil, og da slettes den.
